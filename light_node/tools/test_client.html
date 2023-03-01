@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>File Upload</title>
+    <meta charset="utf-8" />
+    <style>
+        #response {
+            width: 100%;
+            height: calc(100vh - 250px);
+            resize: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <label for="ip_address">IP Address:</label>
+        <input type="text" id="ip_address" name="ip_address" /><br />
+
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" /><br />
+
+        <label for="file">Upload File:</label>
+        <input type="file" id="file" name="file" /><br />
+
+        <button type="button" onclick="upload()">Send</button>
+        <button type="button" onclick="getResult()">Get Result</button>
+    </form>
+
+    <textarea id="response" name="response"></textarea>
+
+    <script>
+        function logMessage(msg) {
+            const responseBox = document.getElementById("response");
+            const timestamp = new Date().toLocaleString();
+            const newMessage = `${timestamp}: ${msg}\n${responseBox.value}`;
+            responseBox.value = newMessage;
+        }
+
+        function upload() {
+            const id = document.getElementById("id").value;
+            const fileInput = document.getElementById("file");
+            const file = fileInput.files[0];
+            const ip_address = document.getElementById("ip_address").value;
+
+            if (!file) {
+                logMessage("Error: No file selected.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.readAsBinaryString(file);
+            reader.onload = function () {
+                const binary = btoa(reader.result);
+                const data = { id, binary };
+
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", `http://${ip_address}:8080/compute`);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        logMessage(xhr.responseText);
+                    } else {
+                        logMessage(`Error: ${xhr.statusText}`);
+                    }
+                };
+                xhr.onerror = function () {
+                    logMessage("Error: Connection to server failed.");
+                };
+                xhr.send(JSON.stringify(data));
+            };
+        }
+
+        function getResult() {
+            const id = document.getElementById("id").value;
+            const ip_address = document.getElementById("ip_address").value;
+            const data = { id };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `http://${ip_address}:8080/get_result`);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    logMessage(xhr.responseText);
+                } else {
+                    logMessage(`Error: ${xhr.statusText}`);
+                }
+            };
+            xhr.onerror = function () {
+                logMessage("Error: Connection to server failed.");
+            };
+            xhr.send(JSON.stringify(data));
+        }
+
+    </script>
+</body>
+
+</html>

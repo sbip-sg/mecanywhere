@@ -1,0 +1,6 @@
+{
+    "heartbeat": {
+        "url": "http://localhost:7000/heartbeat",
+        "interval": 10
+    }
+}
