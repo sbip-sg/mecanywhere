@@ -48,7 +48,11 @@ contract DiscoveryContract {
                     keccak256(abi.encodePacked(ipAddressList[i])) ==
                     keccak256(abi.encodePacked(ipAddress))
                 ) {
-                    delete ipAddressList[i];
+                    // Shift elements to fill gap left by removed element
+                    for (uint256 j = i; j < ipAddressList.length - 1; j++) {
+                        ipAddressList[j] = ipAddressList[j + 1];
+                    }
+                    ipAddressList.pop();
                     break;
                 }
             }
