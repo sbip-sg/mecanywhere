@@ -4,7 +4,6 @@ from compute_task import ComputeTask
 from heartbeat_task import HeartbeatTask
 from result import InMemoryResultMapping, ResultMapping
 from fastapi.middleware.cors import CORSMiddleware
-from update_strategy import HttpReqUpdateStrategy
 from config import Config
 
 
@@ -19,8 +18,7 @@ app.add_middleware(
 )
 
 _result_mapping = InMemoryResultMapping()
-_compute_task = ComputeTask(update_strategy=HttpReqUpdateStrategy(
-    "http://localhost:8080/internel_update_result"))
+_compute_task = ComputeTask(result_mapping=_result_mapping)
 
 _heartbeat_task = None
 

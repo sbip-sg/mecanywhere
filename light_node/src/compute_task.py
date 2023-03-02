@@ -3,11 +3,11 @@ import base64
 import cloudpickle
 from message import ComputeRequest
 import asyncio
-from update_strategy import UpdateStrategy
+from result import ResultMapping
 
 
 class ComputeTask:
-    async def poll_for_item(queue: Queue, update_strategy: UpdateStrategy):
+    async def poll_for_item(queue: Queue, result_mapping: ResultMapping):
         while True:
             await asyncio.sleep(0.05)
             item = queue.get()
@@ -20,17 +20,15 @@ class ComputeTask:
             except:
                 result = ""
             finally:
-                data = {'id': id, 'result': result}
-                asyncio.create_task(update_strategy.update(data))
+                result_mapping.set(id, result)
 
-    def _loop(queue: Queue, update_strategy) -> None:
-        asyncio.run(ComputeTask.poll_for_item(queue, update_strategy))
+    def _loop(queue: Queue, result_mapping) -> None:
+        asyncio.run(ComputeTask.poll_for_item(queue, result_mapping))
 
-    def __init__(self, update_strategy) -> None:
+    def __init__(self, result_mapping) -> None:
         self._queue = Queue()
-        self._update_strategy = update_strategy
         self._process = Process(target=ComputeTask._loop, args=(
-            self._queue, self._update_strategy))
+            self._queue, result_mapping))
 
     def start(self) -> None:
         self._process.start()
