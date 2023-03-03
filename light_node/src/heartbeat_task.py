@@ -12,7 +12,10 @@ class HeartbeatTask:
 
     async def _run(self):
         while True:
-            async with aiohttp.ClientSession() as session:
-                await session.post(self.url, json={})
+            try:
+                async with aiohttp.ClientSession() as session:
+                    await session.post(self.url, json={})
+            except Exception as e:
+                print(e)
 
             await asyncio.sleep(self.periodic_interval)
