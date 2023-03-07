@@ -16,9 +16,6 @@ app.add_middleware(
     allow_origins=["*"],
 )
 
-_discovery_contract = None
-_ip_assigner = None
-
 
 async def get_discovery_contract() -> DiscoveryContract:
     global _discovery_contract

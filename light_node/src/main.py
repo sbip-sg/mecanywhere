@@ -17,11 +17,6 @@ app.add_middleware(
     allow_origins=["*"],
 )
 
-_result_mapping = InMemoryResultMapping()
-_compute_task = ComputeTask(result_mapping=_result_mapping)
-
-_heartbeat_task = None
-
 
 async def get_result_mapping():
     global _result_mapping
@@ -35,8 +30,12 @@ async def get_compute_task():
 
 @app.on_event("startup")
 async def start_up():
+    global _result_mapping
     global _compute_task
     global _heartbeat_task
+
+    _result_mapping = InMemoryResultMapping()
+    _compute_task = ComputeTask(result_mapping=_result_mapping)
 
     _compute_task.start()
     config = Config('../config.json')
