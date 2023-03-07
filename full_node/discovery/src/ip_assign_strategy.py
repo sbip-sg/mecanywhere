@@ -7,6 +7,10 @@ class IpAssignStrategy(ABC):
     def assign(self) -> str:
         pass
 
+    @abstractmethod
+    def remove(self, ip: str) -> None:
+        pass
+
 
 class RoundRobinAssignStrategy(IpAssignStrategy):
     def __init__(self, contract: DiscoveryContract) -> None:
@@ -20,3 +24,9 @@ class RoundRobinAssignStrategy(IpAssignStrategy):
         ip = self.ip_timestamp_list.pop()[0]
 
         return ip
+
+    def remove(self, ip: str) -> None:
+        try:
+            self.ip_timestamp_list.remove(ip)
+        except:
+            pass

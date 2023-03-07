@@ -2,8 +2,9 @@ from contract import DiscoveryContract, EthDiscoveryContract
 from config import Config
 from ip_assign_strategy import RoundRobinAssignStrategy, IpAssignStrategy
 from fastapi import FastAPI, Depends, Request, Query
-from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
+from common import get_current_timestamp
+from cleanup_task import CleanupTask
 
 app = FastAPI()
 
@@ -29,14 +30,11 @@ async def get_ip_assigner() -> IpAssignStrategy:
     return _ip_assigner
 
 
-def get_current_timestamp() -> int:
-    return int(datetime.utcnow().timestamp())
-
-
 @app.on_event("startup")
 async def start_up():
     global _discovery_contract
     global _ip_assigner
+    global _cleanup_task
 
     config = Config("../config.json")
 
@@ -47,6 +45,13 @@ async def start_up():
         transaction_gas=config.get_transaction_gas())
 
     _ip_assigner = RoundRobinAssignStrategy(_discovery_contract)
+
+    _cleanup_task = CleanupTask(
+        config.get_cleanup_interval(),
+        config.get_cleanup_expire(),
+        _discovery_contract,
+        _ip_assigner)
+    _cleanup_task.run()
 
 
 @app.get("/register_ip")

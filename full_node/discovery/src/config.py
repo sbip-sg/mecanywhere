@@ -17,3 +17,9 @@ class Config:
 
     def get_transaction_gas(self) -> int:
         return self.configuration["contract"]["transaction_gas"]
+
+    def get_cleanup_interval(self) -> int:
+        return self.configuration["cleanup"]["interval_in_sec"]
+
+    def get_cleanup_expire(self) -> int:
+        return self.configuration["cleanup"]["expire_in_sec"]
