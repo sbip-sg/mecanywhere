@@ -1,7 +1,7 @@
 {
     "contract": {
         "contract_address": "0x5f530d2b5B177525Db76fb0520F23494a7fCfA0B",
-        "abi_path": "/Users/elilim/project/mec_anywhere/full_node/contract/build/contracts/DiscoveryContract.json",
+        "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
         "url": "http://localhost:8545/",
         "transaction_gas": 200000
     },

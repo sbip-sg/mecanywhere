@@ -36,7 +36,7 @@ class EthDiscoveryContract(DiscoveryContract):
         tx_params = {
             'from': self.w3.eth.accounts[0],
             'gas': self.transaction_gas,
-            'gasPrice': self.w3.toWei('50', 'gwei')
+            'gasPrice': self.w3.to_wei('50', 'gwei')
         }
 
         # Sending the transaction to the network
@@ -44,7 +44,7 @@ class EthDiscoveryContract(DiscoveryContract):
             ip_address, timestamp).transact(tx_params)
 
         # Waiting for the transaction to be mined
-        tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
 
     def getIpAddressTimestamp(self, ip_address) -> str:
         return self.contract.functions.getIpAddressTimestamp(ip_address).call()
@@ -57,7 +57,7 @@ class EthDiscoveryContract(DiscoveryContract):
         tx_params = {
             'from': self.w3.eth.accounts[0],
             'gas': self.transaction_gas,
-            'gasPrice': self.w3.toWei('50', 'gwei')
+            'gasPrice': self.w3.to_wei('50', 'gwei')
         }
 
         # Sending the transaction to the network
@@ -65,4 +65,4 @@ class EthDiscoveryContract(DiscoveryContract):
             ip_address).transact(tx_params)
 
         # Waiting for the transaction to be mined
-        tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
+        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
