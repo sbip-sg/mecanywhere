@@ -14,7 +14,7 @@ pip install -r requirements.txt
 ## Usage
 ```
 cd src
-uvicorn main:app --port 8080 --workers 1
+uvicorn main:app --port 8080 --workers 1 --reload
 ```
 
 ## Compile a distributed task for python

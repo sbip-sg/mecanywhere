@@ -11,10 +11,12 @@ class HeartbeatTask:
         asyncio.create_task(self._run())
 
     async def _run(self):
+        headers={"Authorization": ""} #TODO
+        session = aiohttp.ClientSession(headers=headers)
         while True:
             try:
-                async with aiohttp.ClientSession() as session:
-                    await session.post(self.url, json={})
+                async with session.post(self.url, json={}):
+                    pass
             except Exception as e:
                 print(e)
 
