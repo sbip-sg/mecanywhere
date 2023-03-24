@@ -1,13 +1,19 @@
-from fastapi import FastAPI, Depends
+import asyncio
+from fastapi import FastAPI, Depends, status, HTTPException
 from message import ComputeResultRequest, UpdateResultRequest, ComputeRequest
 from compute_task import ComputeTask
 from heartbeat_task import HeartbeatTask
 from result import InMemoryResultMapping, ResultMapping
 from fastapi.middleware.cors import CORSMiddleware
 from config import Config
+import aiohttp
 
 
 app = FastAPI()
+config = Config('../config.json')
+session_headers = {"Authorization": ""}
+session = aiohttp.ClientSession(headers=session_headers)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -34,14 +40,30 @@ async def start_up():
     global _compute_task
     global _heartbeat_task
 
-    _result_mapping = InMemoryResultMapping()
-    _compute_task = ComputeTask(result_mapping=_result_mapping)
+    async with session.get(config.get_register_host_url()) as result:
+        if result.status == status.HTTP_200_OK:
+            _result_mapping = InMemoryResultMapping()
+            _compute_task = ComputeTask(result_mapping=_result_mapping)
 
-    _compute_task.start()
-    config = Config('../config.json')
-    _heartbeat_task = HeartbeatTask(
-        url=config.get_heartbeat_url(), periodic_interval=config.get_heartbeat_interval_sec())
-    _heartbeat_task.start()
+            _compute_task.start()
+
+            _heartbeat_task = HeartbeatTask(
+                url=config.get_heartbeat_url(), 
+                periodic_interval=config.get_heartbeat_interval_sec(),
+                session=session)
+
+            await _heartbeat_task.start()
+        else:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unable to register as host.")
+
+
+@app.on_event("shutdown")
+async def shut_down():
+    await _heartbeat_task.terminate()
+    await _compute_task.terminate()
+    async with session.get(config.get_deregister_host_url()) as r:
+        pass
+    await session.close()
 
 
 @app.post("/compute")

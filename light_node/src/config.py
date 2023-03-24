@@ -7,7 +7,13 @@ class Config:
             self.configuration = json.load(f)
 
     def get_heartbeat_url(self) -> str:
-        return self.configuration['heartbeat']['url']
+        return self.configuration['full_node']['url'] + "/heartbeat"
 
     def get_heartbeat_interval_sec(self) -> int:
         return self.configuration['heartbeat']['interval']
+    
+    def get_register_host_url(self) -> str:
+        return self.configuration['full_node']['url'] + "/register_host"
+
+    def get_deregister_host_url(self) -> str:
+        return self.configuration['full_node']['url'] + "/deregister_host"
