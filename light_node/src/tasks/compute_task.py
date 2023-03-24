@@ -2,9 +2,9 @@ from multiprocessing import Queue, Process
 import queue as python_queue
 import base64
 import cloudpickle
-from message import ComputeRequest
 import asyncio
-from result import ResultMapping
+from models.message import ComputeRequest
+from models.result import ResultMapping
 
 
 class ComputeTask:
@@ -25,7 +25,7 @@ class ComputeTask:
                 result = ""
             finally:
                 result_mapping.set(id, result)
-        
+
     def _loop(self, queue: Queue, result_mapping) -> None:
         asyncio.ensure_future(self.poll_for_item(queue, result_mapping))
 
@@ -33,8 +33,7 @@ class ComputeTask:
         self._queue = Queue()
         self._loop_running = asyncio.Event()
         self._loop_running.set()
-        self._process = Process(target=self._loop, args=(
-            self._queue, result_mapping))
+        self._process = Process(target=self._loop, args=(self._queue, result_mapping))
 
     def start(self) -> None:
         self._process.start()

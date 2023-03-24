@@ -5,7 +5,7 @@ from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from common import get_current_timestamp
 from cleanup_task import CleanupTask
-from credential_authentication import CredentialAuthenticationMiddleware
+from middleware.credential_authentication import CredentialAuthenticationMiddleware
 import aiohttp
 
 
