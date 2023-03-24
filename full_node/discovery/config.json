@@ -8,5 +8,8 @@
     "cleanup": {
         "interval_in_sec": 600,
         "expire_in_sec": 600
+    },
+    "did": {
+        "url": "http://localhost:9007/"
     }
 }

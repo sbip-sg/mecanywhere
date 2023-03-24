@@ -23,3 +23,9 @@ class Config:
 
     def get_cleanup_expire(self) -> int:
         return self.configuration["cleanup"]["expire_in_sec"]
+
+    def get_did_service_url(self) -> str:
+        return self.configuration["did"]["url"]
+    
+    def get_did_service_verify_credential_url(self) -> str:
+        return self.get_did_service_url() + "/api/v1/credential/verify"
