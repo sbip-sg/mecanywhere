@@ -23,3 +23,6 @@ class Config:
 
     def get_cleanup_expire(self) -> int:
         return self.configuration["cleanup"]["expire_in_sec"]
+
+    def get_verify_credential_url(self) -> str:
+        return self.configuration["did_verify_credential"]

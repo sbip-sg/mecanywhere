@@ -1,12 +1,13 @@
 {
     "contract": {
-        "contract_address": "0x5f530d2b5B177525Db76fb0520F23494a7fCfA0B",
-        "abi_path": "/Users/elilim/project/mec_anywhere/full_node/contract/build/contracts/DiscoveryContract.json",
+        "contract_address": "",
+        "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
         "url": "http://localhost:8545/",
         "transaction_gas": 200000
     },
     "cleanup": {
         "interval_in_sec": 600,
         "expire_in_sec": 600
-    }
+    },
+    "did_verify_credential": "/api/v1/credential/verify"
 }

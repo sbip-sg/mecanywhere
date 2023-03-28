@@ -21,8 +21,10 @@ class RoundRobinAssignStrategy(IpAssignStrategy):
         if len(self.ip_timestamp_list) == 0:
             self.ip_timestamp_list = self.contract.getAllIpAddressTimestamps()
 
-        ip = self.ip_timestamp_list.pop()[0]
+        if len(self.ip_timestamp_list) == 0:
+            return 0
 
+        ip = self.ip_timestamp_list.pop()[0]
         return ip
 
     def remove(self, ip: str) -> None:
