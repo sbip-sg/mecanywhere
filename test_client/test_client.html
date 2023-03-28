@@ -15,8 +15,9 @@
 
 <body>
     <form>
+        <button type="button" onclick="getHost()">Get Host</button>
         <label for="ip_address">IP Address:</label>
-        <input type="text" id="ip_address" name="ip_address" /><br />
+        <input id="ip_address" name="ip_address" /><br />
 
         <label for="id">ID:</label>
         <input type="text" id="id" name="id" /><br />
@@ -36,6 +37,28 @@
             const timestamp = new Date().toLocaleString();
             const newMessage = `${timestamp}: ${msg}\n${responseBox.value}`;
             responseBox.value = newMessage;
+        }
+
+        function displayIp(msg) {
+            document.getElementById("ip_address").value = msg;
+            document.getElementById("ip_address").innerHTML = msg;
+        }
+
+        function getHost() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", `http://localhost:7000/assign_host`);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                        displayIp(Object.values(JSON.parse(xhr.responseText))[0]);
+                    } else {
+                        displayIp(`Error: ${xhr.statusText}`);
+                }
+            };
+            xhr.onerror = function () {
+                logMessage("Error: Connection to server failed.");
+            };
+            xhr.send();
         }
 
         function upload() {

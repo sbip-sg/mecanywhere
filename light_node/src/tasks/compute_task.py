@@ -27,7 +27,7 @@ class ComputeTask:
                 result_mapping.set(id, result)
 
     def _loop(self, queue: Queue, result_mapping) -> None:
-        asyncio.ensure_future(self.poll_for_item(queue, result_mapping))
+        asyncio.run(self.poll_for_item(queue, result_mapping))
 
     def __init__(self, result_mapping) -> None:
         self._queue = Queue()
