@@ -1,12 +1,13 @@
-from contract import DiscoveryContract, EthDiscoveryContract
 from config import Config
-from ip_assign_strategy import RoundRobinAssignStrategy, IpAssignStrategy
 from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from common import get_current_timestamp
-from cleanup_task import CleanupTask
-from middleware.credential_authentication import CredentialAuthenticationMiddleware
 import aiohttp
+from contract import DiscoveryContract, EthDiscoveryContract
+from tasks.cleanup_task import CleanupTask
+from middleware.credential_authentication import CredentialAuthenticationMiddleware
+from services.registration_service import RegistrationService
+from services.assignment_service import AssignmentService
+from services.monitoring_service import MonitoringService
 
 
 app = FastAPI()
@@ -25,62 +26,79 @@ app.add_middleware(CredentialAuthenticationMiddleware, config=config, session=se
 
 
 async def get_discovery_contract() -> DiscoveryContract:
-    global _discovery_contract
     return _discovery_contract
 
+async def get_assignment_service() -> AssignmentService:
+    return _assignment_service
 
-async def get_ip_assigner() -> IpAssignStrategy:
-    global _ip_assigner
-    return _ip_assigner
+async def get_registration_service() -> RegistrationService:
+    return _registration_service
+
+async def get_monitoring_service() -> MonitoringService:
+    return _monitoring_service
 
 
 @app.on_event("startup")
 async def start_up():
     global _discovery_contract
-    global _ip_assigner
+    global _assignment_service
+    global _registration_service
+    global _monitoring_service
     global _cleanup_task
 
     _discovery_contract = EthDiscoveryContract(
         abi_path=config.get_abi_path(),
         contract_address=config.get_contract_address(),
         url=config.get_contract_url(),
-        transaction_gas=config.get_transaction_gas())
+        transaction_gas=config.get_transaction_gas(),
+    )
 
-    _ip_assigner = RoundRobinAssignStrategy(_discovery_contract)
+    _assignment_service = AssignmentService(_discovery_contract)
+    _registration_service = RegistrationService(_discovery_contract)
+    _monitoring_service = MonitoringService(_discovery_contract)
 
     _cleanup_task = CleanupTask(
         config.get_cleanup_interval(),
         config.get_cleanup_expire(),
         _discovery_contract,
-        _ip_assigner)
+        _assignment_service,
+    )
     _cleanup_task.run()
 
 
 @app.get("/register_host")
-async def register_host(request: Request, contract: DiscoveryContract = Depends(get_discovery_contract)):
+async def register_host(
+    request: Request,
+    registration_service: RegistrationService = Depends(get_registration_service),
+):
     ip_address = request.client.host
-    contract.set_ip_address_timestamp(ip_address, get_current_timestamp())
+    registration_service.register_host(ip_address)
     return {"response": "ok"}
 
 
 @app.get("/assign_host")
-async def assign_host(ip_assigner: IpAssignStrategy = Depends(get_ip_assigner)):
-    try:
-        ip_address = ip_assigner.assign()
-        return {"ip_address": ip_address}
-    except:
-        return {"ip_address": ""}
+async def assign_host(
+    assignment_service: AssignmentService = Depends(get_assignment_service),
+):
+    ip_address = assignment_service.assign()
+    return {"ip_address": ip_address}
 
 
 @app.post("/heartbeat")
-async def heartbeat(request: Request, contract: DiscoveryContract = Depends(get_discovery_contract)):
+async def heartbeat(
+    request: Request,
+    monitoring_service: MonitoringService = Depends(get_monitoring_service),
+):
     ip_address = request.client.host
-    contract.set_ip_address_timestamp(ip_address, get_current_timestamp())
+    monitoring_service.heartbeat(ip_address)
     return {"response": "ok"}
 
 
 @app.get("/deregister_host")
-async def deregister_host(request: Request, contract: DiscoveryContract = Depends(get_discovery_contract)):
+async def deregister_host(
+    request: Request,
+    registration_service: RegistrationService = Depends(get_registration_service),
+):
     ip_address = request.client.host
-    contract.removeIpAddress(ip_address)
+    registration_service.deregister_host(ip_address)
     return {"removed": ip_address}
