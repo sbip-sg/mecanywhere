@@ -34,3 +34,4 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
         #     return Response("Authentication failed.", status_code=status.HTTP_401_UNAUTHORIZED)
         response = await call_next(request)
         return response
+    
