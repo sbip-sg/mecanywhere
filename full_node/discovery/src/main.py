@@ -1,5 +1,5 @@
 from config import Config
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import aiohttp
 from contract import EthDiscoveryContract
@@ -13,11 +13,10 @@ from routers.assignment_router import assignment_router
 from routers.monitoring_router import monitoring_router
 
 
-app = FastAPI()
 config = Config("../config.json")
 session = aiohttp.ClientSession()
 
-
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -25,24 +24,11 @@ app.add_middleware(
     allow_headers=["*"],
     allow_origins=["*"],
 )
-
 app.include_router(registration_router)
 
-
-authenticated_app = FastAPI()
-
-
-authenticated_app.add_middleware(
-    CredentialAuthenticationMiddleware,
-    config=config,
-    session=session,
-)
-
-authenticated_app.include_router(assignment_router)
-authenticated_app.include_router(monitoring_router)
-
-
-app.mount("/api", authenticated_app)
+ca_middleware = CredentialAuthenticationMiddleware(app, config, session)
+app.include_router(assignment_router, dependencies=[Depends(ca_middleware.has_access)])
+app.include_router(monitoring_router, dependencies=[Depends(ca_middleware.has_access)])
 
 
 @app.on_event("startup")
