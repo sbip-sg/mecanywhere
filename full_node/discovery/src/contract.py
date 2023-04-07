@@ -33,7 +33,6 @@ class EthDiscoveryContract(DiscoveryContract):
 
         self.contract = self.w3.eth.contract(
             address=contract_address, abi=self.abi)
-        print("Contract connected to: " + contract_address)
 
     def __new__(cls, abi_path, contract_address, url, transaction_gas) -> Self:
         if cls._contract_instance is None:

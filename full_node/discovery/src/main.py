@@ -25,7 +25,6 @@ app.add_middleware(
     allow_origins=["*"],
 )
 app.include_router(registration_router)
-
 ca_middleware = CredentialAuthenticationMiddleware(app, config, session)
 app.include_router(assignment_router, dependencies=[Depends(ca_middleware.has_access)])
 app.include_router(monitoring_router, dependencies=[Depends(ca_middleware.has_access)])

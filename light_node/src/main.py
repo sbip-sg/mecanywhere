@@ -6,12 +6,12 @@ from tasks.compute_task import ComputeTask
 from tasks.heartbeat_task import HeartbeatTask
 from config import Config
 import aiohttp
-
+from credential_example import credential_example
 
 app = FastAPI()
 config = Config("../config.json")
-session_headers = {"Authorization": ""}
-session = aiohttp.ClientSession(headers=session_headers)
+headers = {"Authorization":"Bearer "}
+session = aiohttp.ClientSession(headers=headers)
 
 
 app.add_middleware(
@@ -38,9 +38,25 @@ async def start_up():
     global _result_mapping
     global _compute_task
     global _heartbeat_task
+    await register(credential_example)
 
-    async with session.get(config.get_register_host_url()) as result:
-        if result.status == status.HTTP_200_OK:
+
+@app.on_event("shutdown")
+async def shut_down():
+    await _heartbeat_task.terminate()
+    await _compute_task.terminate()
+    async with session.get(config.get_deregister_host_url()) as r:
+        pass
+    await session.close()
+
+
+@app.post("/register")
+async def register(credentials: dict):
+    global _result_mapping
+    global _compute_task
+    global _heartbeat_task
+    async with session.post(config.get_register_host_url(), json=credentials) as registration_res:
+        if registration_res.status == status.HTTP_200_OK:
             _result_mapping = InMemoryResultMapping()
             _compute_task = ComputeTask(result_mapping=_result_mapping)
 
@@ -53,20 +69,15 @@ async def start_up():
             )
 
             await _heartbeat_task.start()
+
+            registration_res_json = await registration_res.json()
+            access_token = registration_res_json["access_token"]
+            session.headers["Authorization"] = f"Bearer {access_token}"
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Unable to register as host.",
             )
-
-
-@app.on_event("shutdown")
-async def shut_down():
-    await _heartbeat_task.terminate()
-    await _compute_task.terminate()
-    async with session.get(config.get_deregister_host_url()) as r:
-        pass
-    await session.close()
 
 
 @app.post("/compute")
