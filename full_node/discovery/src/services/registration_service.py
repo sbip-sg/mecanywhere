@@ -11,3 +11,10 @@ class RegistrationService(object):
 
     def deregister_host(self, ip_address: str) -> None:
         self.contract.removeIpAddress(ip_address)
+
+    def register_user(self, ip_address: str) -> None:
+        pass
+
+    def deregister_user(self, ip_address: str) -> None:
+        pass
+    

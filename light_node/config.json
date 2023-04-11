@@ -2,6 +2,9 @@
     "full_node_heartbeat": "http://localhost:7000/heartbeat",
     "full_node_register_host": "http://localhost:7000/registration/register_host",
     "full_node_deregister_host": "http://localhost:7000/registration/deregister_host",
+    "full_node_register_user": "http://localhost:7000/registration/register_user",
+    "full_node_deregister_user": "http://localhost:7000/registration/deregister_user",
+    "full_node_assign_host": "http://localhost:7000/assign_host",
     "heartbeat": {
         "interval": 10
     }

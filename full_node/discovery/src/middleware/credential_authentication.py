@@ -31,7 +31,7 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
         ) as result:
             result_status = result.status
             result_json = await result.json()
-            is_verified = result_json["result"]
+            is_verified = "result" in result_json and result_json["result"]
             return result_status == status.HTTP_200_OK and is_verified
 
     # Returns true if the token is valid and the credential is verified
