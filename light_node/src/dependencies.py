@@ -1,28 +1,21 @@
-from main import _result_mapping, _compute_task, _heartbeat_task, _registered_as_host, _registered_as_user, session, config
-from models.result import ResultMapping
-from tasks.compute_task import ComputeTask
-from tasks.heartbeat_task import HeartbeatTask
+import main
+from services.host import HostRegistrationService
+from services.user import UserRegistrationService
 from config import Config
 import aiohttp
 
 
-async def get_result_mapping() -> ResultMapping:
-    return _result_mapping
+def get_host_registration_service() -> HostRegistrationService:
+    return main.host_registration_service
 
-async def get_compute_task() -> ComputeTask:
-    return _compute_task
 
-async def get_heartbeat_task() -> HeartbeatTask:
-    return _heartbeat_task
+def get_user_registration_service() -> UserRegistrationService:
+    return main.user_registration_service
 
-async def get_registered_as_host():
-    return _registered_as_host
 
-async def get_registered_as_user():
-    return _registered_as_user
+def get_session() -> aiohttp.ClientSession:
+    return main.session
 
-async def get_session() -> aiohttp.ClientSession:
-    return session
 
-async def get_config() -> Config:
-    return config
+def get_config() -> Config:
+    return main.config

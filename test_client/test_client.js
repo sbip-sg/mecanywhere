@@ -45,23 +45,23 @@ function createRequestAndDisplayInElement(type, url, id, ...responseKeys) {
     return xhr;
 }
 
-// ==================== User ====================
+// ==================== User functionality ====================
 
 function registerUser() {
     const id = JSON.parse(document.getElementById("user VC").value);
     const data = { "credential": id };
 
-    const xhr = createRequestAndLog("POST", `http://localhost:8000/register_user`);
+    const xhr = createRequestAndLog("POST", `http://localhost:8000/user/register_user`);
     xhr.send(JSON.stringify(data));
 }
 
 function deregisterUser() {
-    const xhr = createRequestAndLog("GET", `http://localhost:8000/deregister_user`);
+    const xhr = createRequestAndLog("GET", `http://localhost:8000/user/deregister_user`);
     xhr.send();
 }
 
 function getHost() {
-    const xhr = createRequestAndDisplayInElement("GET", `http://localhost:8000/get_host`, "ip_address", "ip_address");
+    const xhr = createRequestAndDisplayInElement("GET", `http://localhost:8000/user/get_host`, "ip_address", "ip_address");
     xhr.send();
 }
 
@@ -82,7 +82,7 @@ function upload() {
         const binary = btoa(reader.result);
         const data = { id, binary };
 
-        const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/compute`);
+        const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/compute`);
         xhr.send(JSON.stringify(data));
     };
 }
@@ -92,22 +92,22 @@ function getResult() {
     const ip_address = JSON.parse(document.getElementById("ip_address").value);
     const data = { id };
 
-    const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/get_result`);
+    const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/get_result`);
     xhr.send(JSON.stringify(data));
 }
 
-// ==================== Host ====================
+// ==================== Host functionality ====================
 
 function registerHost() {
     const id = JSON.parse(document.getElementById("host VC").value);
     const data = { "credential": id };
 
-    const xhr = createRequestAndLog("POST", `http://localhost:8000/register_host`);
+    const xhr = createRequestAndLog("POST", `http://localhost:8000/host/register_host`);
     xhr.send(JSON.stringify(data));
 }
 
 function deregisterHost() {
-    const xhr = createRequestAndLog("GET", `http://localhost:8000/deregister_host`);
+    const xhr = createRequestAndLog("GET", `http://localhost:8000/host/deregister_host`);
     xhr.send();
 }
 
