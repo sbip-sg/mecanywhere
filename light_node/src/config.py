@@ -17,3 +17,13 @@ class Config:
 
     def get_deregister_host_url(self) -> str:
         return self.configuration["full_node_deregister_host"]
+    
+    def get_register_user_url(self) -> str:
+        return self.configuration["full_node_register_user"]
+
+    def get_deregister_user_url(self) -> str:
+        return self.configuration["full_node_deregister_user"]
+
+    def get_assign_host_url(self) -> str:
+        return self.configuration["full_node_assign_host"]
+    

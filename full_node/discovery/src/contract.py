@@ -1,3 +1,4 @@
+from typing import Self
 from web3 import Web3
 import json
 from abc import ABC, abstractmethod
@@ -22,6 +23,8 @@ class DiscoveryContract(ABC):
 
 
 class EthDiscoveryContract(DiscoveryContract):
+    _contract_instance = None
+
     def __init__(self, abi_path, contract_address, url, transaction_gas) -> None:
         self.w3 = Web3(Web3.HTTPProvider(url))
         self.transaction_gas = transaction_gas
@@ -30,6 +33,11 @@ class EthDiscoveryContract(DiscoveryContract):
 
         self.contract = self.w3.eth.contract(
             address=contract_address, abi=self.abi)
+
+    def __new__(cls, abi_path, contract_address, url, transaction_gas) -> Self:
+        if cls._contract_instance is None:
+            cls._contract_instance = super().__new__(cls)
+        return cls._contract_instance
 
     def set_ip_address_timestamp(self, ip_address, timestamp) -> None:
         # Transaction parameters

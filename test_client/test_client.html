@@ -11,112 +11,63 @@
             resize: none;
         }
     </style>
+    <script src="test_client.js"></script>
 </head>
 
 <body>
-    <form>
-        <button type="button" onclick="getHost()">Get Host</button>
-        <label for="ip_address">IP Address:</label>
-        <input id="ip_address" name="ip_address" /><br />
+    <div style="float: left; width: 50%">
+        <h1>End-user</h1>
+        <form>
+            <label for="user public key">public key:</label>
+            <textarea id="user public key" name="user public key" rows="2" cols="50"></textarea><br />
 
-        <label for="id">ID:</label>
-        <input type="text" id="id" name="id" /><br />
+            <button type="button" onclick="createDID(`user`)">Create DID</button>
+            <label for="user DID">DID:</label>
+            <textarea id="user DID" name="user DID" rows="2" cols="50"></textarea><br />
 
-        <label for="file">Upload File:</label>
-        <input type="file" id="file" name="file" /><br />
+            <button type="button" onclick="createVC(`user`)">Create VC</button>
+            <label for="user VC">VC:</label>
+            <textarea id="user VC" name="user VC" rows="2" cols="50"></textarea><br />
 
-        <button type="button" onclick="upload()">Send</button>
-        <button type="button" onclick="getResult()">Get Result</button>
-    </form>
+            <button type="button" onclick="registerUser()">Register User</button>
+            <button type="button" onclick="deregisterUser()">Deregister User</button><br />
 
-    <textarea id="response" name="response"></textarea>
+            <button type="button" onclick="getHost()">Get Host</button>
+            <label for="ip_address">Host IP Address:</label>
+            <input id="ip_address" name="ip_address" /><br />
 
-    <script>
-        function logMessage(msg) {
-            const responseBox = document.getElementById("response");
-            const timestamp = new Date().toLocaleString();
-            const newMessage = `${timestamp}: ${msg}\n${responseBox.value}`;
-            responseBox.value = newMessage;
-        }
+            <label for="id">ID:</label>
+            <input type="text" id="id" name="id" value="1" /><br />
 
-        function displayIp(msg) {
-            document.getElementById("ip_address").value = msg;
-            document.getElementById("ip_address").innerHTML = msg;
-        }
+            <label for="file">Upload File:</label>
+            <input type="file" id="file" name="file" /><br />
 
-        function getHost() {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", `http://localhost:7000/assign_host`);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                        displayIp(Object.values(JSON.parse(xhr.responseText))[0]);
-                    } else {
-                        displayIp(`Error: ${xhr.statusText}`);
-                }
-            };
-            xhr.onerror = function () {
-                logMessage("Error: Connection to server failed.");
-            };
-            xhr.send();
-        }
+            <button type="button" onclick="upload()">Send to IP</button>
+            <button type="button" onclick="getResult()">Get Result</button>
+        </form>
+    </div>
 
-        function upload() {
-            const id = document.getElementById("id").value;
-            const fileInput = document.getElementById("file");
-            const file = fileInput.files[0];
-            const ip_address = document.getElementById("ip_address").value;
+    <div style="float: left; width: 50%">
+        <h1>Host</h1>
 
-            if (!file) {
-                logMessage("Error: No file selected.");
-                return;
-            }
+        <form>
+            <label for="host public key">public key:</label>
+            <textarea id="host public key" name="host public key" rows="2" cols="50"></textarea><br />
 
-            const reader = new FileReader();
-            reader.readAsBinaryString(file);
-            reader.onload = function () {
-                const binary = btoa(reader.result);
-                const data = { id, binary };
+            <button type="button" onclick="createDID(`host`)">Create DID</button>
+            <label for="host DID">DID:</label>
+            <textarea id="host DID" name="host DID" rows="2" cols="50"></textarea><br />
 
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", `http://${ip_address}:8080/compute`);
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        logMessage(xhr.responseText);
-                    } else {
-                        logMessage(`Error: ${xhr.statusText}`);
-                    }
-                };
-                xhr.onerror = function () {
-                    logMessage("Error: Connection to server failed.");
-                };
-                xhr.send(JSON.stringify(data));
-            };
-        }
+            <button type="button" onclick="createVC(`host`)">Create VC</button>
+            <label for="host VC">VC:</label>
+            <textarea id="host VC" name="host VC" rows="2" cols="50"></textarea><br />
 
-        function getResult() {
-            const id = document.getElementById("id").value;
-            const ip_address = document.getElementById("ip_address").value;
-            const data = { id };
+            <button type="button" onclick="registerHost()">Register Host</button>
+            <button type="button" onclick="deregisterHost()">Deregister Host</button>
+        </form>
 
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", `http://${ip_address}:8080/get_result`);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    logMessage(xhr.responseText);
-                } else {
-                    logMessage(`Error: ${xhr.statusText}`);
-                }
-            };
-            xhr.onerror = function () {
-                logMessage("Error: Connection to server failed.");
-            };
-            xhr.send(JSON.stringify(data));
-        }
-
-    </script>
+        <textarea id="response" name="response"></textarea>
+    </div>
 </body>
 
 </html>

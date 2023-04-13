@@ -23,5 +23,5 @@ class HeartbeatTask:
 
             await asyncio.sleep(self.periodic_interval)
 
-    async def terminate(self) -> None:
+    def terminate(self) -> None:
         self._loop_running.clear()
