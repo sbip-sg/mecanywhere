@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config import Config
 import aiohttp
-from credential_example import credential_example
 from routers.host_router import host_router
 from routers.user_router import user_router
 from services.host import HostRegistrationService

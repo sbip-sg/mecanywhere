@@ -60,16 +60,15 @@ function deregisterUser() {
     xhr.send();
 }
 
-function getHost() {
-    const xhr = createRequestAndDisplayInElement("GET", `http://localhost:8000/user/get_host`, "ip_address", "ip_address");
-    xhr.send();
-}
+// function getHost() {
+//     const xhr = createRequestAndDisplayInElement("GET", `http://localhost:8000/user/get_host`, "ip_address", "ip_address");
+//     xhr.send();
+// }
 
 function upload() {
     const id = document.getElementById("id").value;
     const fileInput = document.getElementById("file");
     const file = fileInput.files[0];
-    const ip_address = JSON.parse(document.getElementById("ip_address").value);
 
     if (!file) {
         logMessage("Error: No file selected.");
@@ -80,21 +79,21 @@ function upload() {
     reader.readAsBinaryString(file);
     reader.onload = function () {
         const binary = btoa(reader.result);
-        const data = { id, binary };
+        const data = { "task": binary };
 
-        const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/compute`);
+        const xhr = createRequestAndLog("POST", `http://localhost:8000/user/publish_task`);
         xhr.send(JSON.stringify(data));
     };
 }
 
-function getResult() {
-    const id = document.getElementById("id").value;
-    const ip_address = JSON.parse(document.getElementById("ip_address").value);
-    const data = { id };
+// function getResult() {
+//     const id = document.getElementById("id").value;
+//     const ip_address = JSON.parse(document.getElementById("ip_address").value);
+//     const data = { id };
 
-    const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/get_result`);
-    xhr.send(JSON.stringify(data));
-}
+//     const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/get_result`);
+//     xhr.send(JSON.stringify(data));
+// }
 
 // ==================== Host functionality ====================
 
