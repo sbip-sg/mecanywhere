@@ -18,7 +18,9 @@
     <div style="float: left; width: 50%">
         <h1>End-user</h1>
         <form>
-            <label for="user public key">public key:</label>
+            <p>=================== Authentication under the hood ==================</p>
+            
+            <label for="user public key">public key from wallet:</label>
             <textarea id="user public key" name="user public key" rows="2" cols="50"></textarea><br />
 
             <button type="button" onclick="createDID(`user`)">Create DID</button>
@@ -28,6 +30,8 @@
             <button type="button" onclick="createVC(`user`)">Create VC</button>
             <label for="user VC">VC:</label>
             <textarea id="user VC" name="user VC" rows="2" cols="50"></textarea><br />
+            
+            <p>=========================== Functions ==========================</p>
 
             <button type="button" onclick="registerUser()">Register User</button>
             <button type="button" onclick="deregisterUser()">Deregister User</button><br />
@@ -51,7 +55,9 @@
         <h1>Host</h1>
 
         <form>
-            <label for="host public key">public key:</label>
+            <p>=================== Authentication under the hood ==================</p>
+            
+            <label for="host public key">public key from wallet:</label>
             <textarea id="host public key" name="host public key" rows="2" cols="50"></textarea><br />
 
             <button type="button" onclick="createDID(`host`)">Create DID</button>
@@ -61,6 +67,8 @@
             <button type="button" onclick="createVC(`host`)">Create VC</button>
             <label for="host VC">VC:</label>
             <textarea id="host VC" name="host VC" rows="2" cols="50"></textarea><br />
+
+            <p>=========================== Functions ==========================</p>
 
             <button type="button" onclick="registerHost()">Register Host</button>
             <button type="button" onclick="deregisterHost()">Deregister Host</button>
