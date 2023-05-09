@@ -1,10 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from dependencies import (
-    get_config,
-    get_session,
-    get_host_registration_service
-)
-from models.message import ComputeResultRequest, ComputeRequest
+from dependencies import get_config, get_session, get_host_registration_service
 from services.host import HostRegistrationService
 from config import Config
 import aiohttp
@@ -13,7 +8,11 @@ import aiohttp
 host_router = APIRouter(
     prefix="/host",
     tags=["host"],
-    dependencies=[Depends(get_config), Depends(get_session), Depends(get_host_registration_service)],
+    dependencies=[
+        Depends(get_config),
+        Depends(get_session),
+        Depends(get_host_registration_service),
+    ],
 )
 
 
@@ -59,16 +58,10 @@ async def register_host(
         return await deregistration_res.json()
 
 
-@host_router.post("/compute")
-async def compute(req: ComputeRequest, host_service: HostRegistrationService = Depends(get_host_registration_service)):
-    host_service.compute(req)
-    return {"response": "ok"}
-
-
-@host_router.post("/get_result")
-async def get_result(
-    req: ComputeResultRequest,
-    host_service: HostRegistrationService = Depends(get_host_registration_service),
-):
-    result = host_service.get_result(req.id)
-    return {"result": result}
+# @host_router.post("/get_result")
+# async def get_result(
+#     req: ComputeResultRequest,
+#     host_service: HostRegistrationService = Depends(get_host_registration_service),
+# ):
+#     result = host_service.get_result(req.id)
+#     return {"result": result}

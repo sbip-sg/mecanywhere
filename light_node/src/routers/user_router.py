@@ -7,6 +7,8 @@ from dependencies import (
     get_user_registration_service,
 )
 from services.user import UserRegistrationService
+from services.task_publisher import TaskPublisher
+from models.message import ComputeRequest
 
 
 user_router = APIRouter(
@@ -22,7 +24,7 @@ user_router = APIRouter(
 
 @user_router.post("/register_user")
 async def register_user(
-    credentials: dict,
+    credentials: dict,  # TODO: create a model for this
     session: aiohttp.ClientSession = Depends(get_session),
     config: Config = Depends(get_config),
     user_service: UserRegistrationService = Depends(get_user_registration_service),
@@ -66,3 +68,11 @@ async def get_host(
 ):
     async with session.get(config.get_assign_host_url()) as res:
         return await res.json()
+
+
+@user_router.post("/publish_task")
+async def publish_task(request: dict, task_publisher: TaskPublisher = Depends()):
+    task = request["task"]
+    response = task_publisher.callRPC(task, "", "consumer")
+    return {"response": response}
+    # TODO: close publisher connection

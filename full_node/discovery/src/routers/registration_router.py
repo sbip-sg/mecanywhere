@@ -79,3 +79,4 @@ async def deregister_user(
     # TODO: blacklist token
 
     return {"removed": ip_address}
+

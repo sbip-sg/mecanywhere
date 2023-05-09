@@ -10,13 +10,13 @@ function displayInElement(id, msg) {
     document.getElementById(id).innerHTML = msg;
 }
 
-function createRequestAndLog(type, url) {
+function createRequestAndLog(type, url, entity) {
     const xhr = new XMLHttpRequest();
     xhr.open(type, url);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.onload = function () {
         if (xhr.status === 200) {
-            logMessage(xhr.responseText);
+            logMessage(entity + ": " + xhr.responseText);
         } else {
             logMessage(`Error: ${xhr.statusText}`);
         }
@@ -51,25 +51,24 @@ function registerUser() {
     const id = JSON.parse(document.getElementById("user VC").value);
     const data = { "credential": id };
 
-    const xhr = createRequestAndLog("POST", `http://localhost:8000/user/register_user`);
+    const xhr = createRequestAndLog("POST", `http://localhost:8000/user/register_user`, "User");
     xhr.send(JSON.stringify(data));
 }
 
 function deregisterUser() {
-    const xhr = createRequestAndLog("GET", `http://localhost:8000/user/deregister_user`);
+    const xhr = createRequestAndLog("GET", `http://localhost:8000/user/deregister_user`, "User");
     xhr.send();
 }
 
-function getHost() {
-    const xhr = createRequestAndDisplayInElement("GET", `http://localhost:8000/user/get_host`, "ip_address", "ip_address");
-    xhr.send();
-}
+// function getHost() {
+//     const xhr = createRequestAndDisplayInElement("GET", `http://localhost:8000/user/get_host`, "ip_address", "ip_address");
+//     xhr.send();
+// }
 
 function upload() {
     const id = document.getElementById("id").value;
     const fileInput = document.getElementById("file");
     const file = fileInput.files[0];
-    const ip_address = JSON.parse(document.getElementById("ip_address").value);
 
     if (!file) {
         logMessage("Error: No file selected.");
@@ -80,21 +79,21 @@ function upload() {
     reader.readAsBinaryString(file);
     reader.onload = function () {
         const binary = btoa(reader.result);
-        const data = { id, binary };
+        const data = { "task": binary };
 
-        const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/compute`);
+        const xhr = createRequestAndLog("POST", `http://localhost:8000/user/publish_task`, "User");
         xhr.send(JSON.stringify(data));
     };
 }
 
-function getResult() {
-    const id = document.getElementById("id").value;
-    const ip_address = JSON.parse(document.getElementById("ip_address").value);
-    const data = { id };
+// function getResult() {
+//     const id = document.getElementById("id").value;
+//     const ip_address = JSON.parse(document.getElementById("ip_address").value);
+//     const data = { id };
 
-    const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/get_result`);
-    xhr.send(JSON.stringify(data));
-}
+//     const xhr = createRequestAndLog("POST", `http://${ip_address}:8000/host/get_result`);
+//     xhr.send(JSON.stringify(data));
+// }
 
 // ==================== Host functionality ====================
 
@@ -102,12 +101,12 @@ function registerHost() {
     const id = JSON.parse(document.getElementById("host VC").value);
     const data = { "credential": id };
 
-    const xhr = createRequestAndLog("POST", `http://localhost:8000/host/register_host`);
+    const xhr = createRequestAndLog("POST", `http://localhost:8000/host/register_host`, "Host");
     xhr.send(JSON.stringify(data));
 }
 
 function deregisterHost() {
-    const xhr = createRequestAndLog("GET", `http://localhost:8000/host/deregister_host`);
+    const xhr = createRequestAndLog("GET", `http://localhost:8000/host/deregister_host`, "Host");
     xhr.send();
 }
 
