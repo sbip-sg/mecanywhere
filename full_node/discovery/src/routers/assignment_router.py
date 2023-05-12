@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Body, Depends
+from models.responses import AssignmentResponse
 from models.did import DIDModel
 from services.assignment_service import AssignmentService
 from dependencies import get_assignment_service
@@ -9,12 +10,15 @@ assignment_router = APIRouter(
 )
 
 
-@assignment_router.get(
-    "/assign_host", description="Returns host queue for client to join"
+@assignment_router.post(
+    "/assign_host",
+    description="Returns host queue for client to join",
+    response_model=AssignmentResponse,
 )
 async def assign_host(
-    did: DIDModel = Body(..., description="DID of the client"),
+    didModel: DIDModel = Body(..., description="DID of the client"),
     assignment_service: AssignmentService = Depends(get_assignment_service),
 ):
+    did = didModel.did
     queue = assignment_service.assign(did)
     return {"queue": queue}

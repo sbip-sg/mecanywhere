@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from models.responses import RegistrationResponse
 from models.requests import RegistrationRequest
 from models.did import DIDModel
 from services.registration_service import RegistrationService
@@ -21,7 +22,7 @@ registration_router = APIRouter(
 )
 
 
-@registration_router.post("/register_host")
+@registration_router.post("/register_host", response_model=RegistrationResponse)
 async def register_host(
     request: RegistrationRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
@@ -31,16 +32,18 @@ async def register_host(
 ):
     credential = request.credential
     did = request.did
-    if not credential:
+    if credential == {}:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="No credential provided"
         )
     access_token = await ca_middleware.verify_and_create_vc_access_token(credential)
     registration_service.register_host(did)
-    return {"response": "ok", "access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
-@registration_router.post("/deregister_host")
+@registration_router.post(
+    "/deregister_host", status_code=status.HTTP_200_OK, response_model=None
+)
 async def deregister_host(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
@@ -53,13 +56,10 @@ async def deregister_host(
     if not await ca_middleware.has_access(authorization):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     registration_service.deregister_host(did)
-
     # TODO: blacklist token
 
-    return {"removed": did}
 
-
-@registration_router.post("/register_user")
+@registration_router.post("/register_user", response_model=RegistrationResponse)
 async def register_user(
     request: RegistrationRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
@@ -69,16 +69,18 @@ async def register_user(
 ):
     credential = request.credential
     did = request.did
-    if not credential:
+    if credential == {}:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="No credential provided"
         )
     access_token = await ca_middleware.verify_and_create_vc_access_token(credential)
     registration_service.register_user(did)
-    return {"response": "ok", "access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
-@registration_router.post("/deregister_user")
+@registration_router.post(
+    "/deregister_user", status_code=status.HTTP_200_OK, response_model=None
+)
 async def deregister_user(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
@@ -91,7 +93,4 @@ async def deregister_user(
     if not await ca_middleware.has_access(authorization):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     registration_service.deregister_user(did)
-
     # TODO: blacklist token
-
-    return {"removed": did}

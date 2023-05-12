@@ -1,4 +1,5 @@
 from contract import DiscoveryContract
+from common import get_current_timestamp
 
 
 class AssignmentService(object):
@@ -6,7 +7,7 @@ class AssignmentService(object):
         self.contract = contract
 
     def assign(self, did: str) -> str:
-        return self.contract.get_user_queue()
+        return self.contract.get_user_queue(get_current_timestamp())
 
     def remove(self) -> None:
         pass
