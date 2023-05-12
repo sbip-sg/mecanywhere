@@ -11,7 +11,8 @@ echo ===========================================================================
 echo Waiting for Docker container to start up...
 
 REM Run Truffle migration command in a separate console
-set /p confirmTruffle=Do you need to migrate the smart contracts? (Y/N):
+set confirmTruffle=Y
+set /p confirmTruffle=Do you need to migrate the smart contracts? (Y/N): (%confirmTruffle%)
 if /i "%confirmTruffle%"=="Y" (
   echo ===========================================================================================
   echo Starting truffle migration...

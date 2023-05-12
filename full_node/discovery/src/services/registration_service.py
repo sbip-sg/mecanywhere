@@ -6,15 +6,15 @@ class RegistrationService(object):
     def __init__(self, contract: DiscoveryContract) -> None:
         self.contract = contract
 
-    def register_host(self, ip_address: str) -> None:
-        self.contract.set_ip_address_timestamp(ip_address, get_current_timestamp())
+    def register_host(self, did: str) -> None:
+        self.contract.set_user(did, get_current_timestamp(), 0)
 
-    def deregister_host(self, ip_address: str) -> None:
-        self.contract.removeIpAddress(ip_address)
+    def deregister_host(self, did: str) -> None:
+        self.contract.remove_user(did)
 
-    def register_user(self, ip_address: str) -> None:
+    def register_user(self, did: str) -> None:
         pass
 
-    def deregister_user(self, ip_address: str) -> None:
+    def deregister_user(self, did: str) -> None:
         pass
     
