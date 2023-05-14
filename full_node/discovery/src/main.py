@@ -40,7 +40,6 @@ async def start_up():
         abi_path=config.get_abi_path(),
         contract_address=config.get_contract_address(),
         url=config.get_contract_url(),
-        transaction_gas=config.get_transaction_gas(),
     )
 
     assignment_service = AssignmentService(discovery_contract)

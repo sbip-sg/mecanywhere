@@ -21,8 +21,5 @@ class Config:
     def get_contract_url(self) -> str:
         return self.configuration["contract"]["url"]
 
-    def get_transaction_gas(self) -> int:
-        return self.configuration["contract"]["transaction_gas"]
-
     def get_verify_vc_url(self) -> str:
         return self.configuration["did_verify_credential"]

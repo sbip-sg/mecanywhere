@@ -25,56 +25,79 @@ class DiscoveryContract(ABC):
     def remove_users(self, dids: List[str]) -> None:
         pass
 
+
 class EthDiscoveryContract(DiscoveryContract):
     _contract_instance = None
 
-    def __init__(self, abi_path, contract_address, url, transaction_gas) -> None:
+    def __init__(self, abi_path, contract_address, url) -> None:
         self.w3 = Web3(Web3.HTTPProvider(url))
-        self.transaction_gas = transaction_gas
         self.tx_params = {
-            'from': self.w3.eth.accounts[0],
-            'gas': self.transaction_gas,
-            'gasPrice': self.w3.to_wei('50', 'gwei')
+            "from": self.w3.eth.accounts[0],
+            "gasPrice": self.w3.to_wei("50", "gwei"),
         }
         with open(abi_path) as abi_definition:
-            self.abi = json.load(abi_definition)['abi']
+            self.abi = json.load(abi_definition)["abi"]
 
-        self.contract = self.w3.eth.contract(
-            address=contract_address, abi=self.abi)
+        self.contract = self.w3.eth.contract(address=contract_address, abi=self.abi)
 
-    def __new__(cls, abi_path, contract_address, url, transaction_gas) -> Self:
+    def __new__(cls, abi_path, contract_address, url) -> Self:
         if cls._contract_instance is None:
             cls._contract_instance = super().__new__(cls)
         return cls._contract_instance
 
     # record user in the contract
     def set_user(self, did: str, timestamp: int, latency: int) -> None:
-        # Sending the transaction to the network
-        tx_hash = self.contract.functions.setUser(
-            did, timestamp, latency).transact(self.tx_params)
+        try:
+            self.tx_params["gas"] = 400000
+            # Sending the transaction to the network
+            tx_hash = self.contract.functions.setUser(did, timestamp, latency).transact(
+                self.tx_params
+            )
 
-        # Waiting for the transaction to be mined
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+            # Waiting for the transaction to be mined
+            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        except ValueError as e:
+            print(e)
 
     # get arbitrary queue name from the contract
     def get_user_queue(self, current_timestamp: int) -> str:
-        tx_hash = self.contract.functions.lazyRemoveExpiredUsers(current_timestamp).transact(self.tx_params)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
-        return self.contract.functions.getFirstUserQueue().call()
+        try:
+            self.tx_params["gas"] = 300000
+            tx_hash = self.contract.functions.lazyRemoveExpiredUsers(
+                current_timestamp
+            ).transact(self.tx_params)
+            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+            return self.contract.functions.getFirstUserQueue().call()
+        except ValueError as e:
+            print(e)
 
     # get all dids and timestamps from the contract
     def get_all_did_to_timestamps(self) -> List[Tuple[str, int]]:
-        user_list, timestamp_list = self.contract.functions.getAllDidToTimestamps().call()
-        return [(did, timestamp) for (did, timestamp) in zip(user_list, timestamp_list)]
+        try:
+            (
+                user_list,
+                timestamp_list,
+            ) = self.contract.functions.getAllDidToTimestamps().call()
+            return [
+                (did, timestamp) for (did, timestamp) in zip(user_list, timestamp_list)
+            ]
+        except ValueError as e:
+            print(e)
 
     # remove user from the contract
     def remove_user(self, did: str) -> None:
-        tx_hash = self.contract.functions.removeUser(
-            did).transact(self.tx_params)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        try:
+            self.tx_params["gas"] = 300000
+            tx_hash = self.contract.functions.removeUser(did).transact(self.tx_params)
+            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        except ValueError as e:
+            print(e)
 
     # remove users from the contract
     def remove_users(self, dids: List[str]) -> None:
-        tx_hash = self.contract.functions.removeUsers(
-            dids).transact(self.tx_params)
-        tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        try:
+            self.tx_params["gas"] = 300000
+            tx_hash = self.contract.functions.removeUsers(dids).transact(self.tx_params)
+            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+        except ValueError as e:
+            print(e)

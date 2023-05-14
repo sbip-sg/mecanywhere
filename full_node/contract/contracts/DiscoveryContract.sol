@@ -8,12 +8,14 @@ contract DiscoveryContract {
 
     struct User {
         string did;
+        uint256 index;
+        bool isUser;
         uint256 timestamp;
         uint256 latency;
         string queue;
     }
 
-    mapping(string => uint256) private didToIndex;
+    mapping(string => User) private didToUser;
     User[] private users;
     uint256 private userCount = 0;
 
@@ -22,25 +24,21 @@ contract DiscoveryContract {
     }
 
     function setUser(string memory did, uint256 timestamp, uint256 latency) public {
-        if (didToIndex[did] != 0) {
-            users[didToIndex[did]].timestamp = timestamp;
-            users[didToIndex[did]].latency = latency;
+        if (didToUser[did].isUser) {
+            uint256 index = didToUser[did].index;
+            users[index].timestamp = timestamp;
+            users[index].latency = latency;
             return;
         }
-        didToIndex[did] = userCount;
-        users.push(User(did, timestamp, latency, did));
-        userCount = users.length + 1;
+        User memory newUser = User(did, userCount, true, timestamp, latency, did);
+        users.push(newUser);
+        didToUser[did] = newUser;
+        userCount = userCount + 1;
     }
 
     function lazyRemoveExpiredUsers(uint256 currentTimestamp) public {
-        uint256 i = 0;
-        while (i < userCount) {
-            i++;
-            if (currentTimestamp - users[i].timestamp > EXPIRY_DURATION) {
-                removeUser(users[i].did);
-            } else {
-                break;
-            }
+        while (userCount > 0 && currentTimestamp - users[0].timestamp > EXPIRY_DURATION) {
+            removeUser(users[0].did);
         }
     }
 
@@ -49,6 +47,10 @@ contract DiscoveryContract {
             return "";
         }
         return users[0].queue;
+    }
+
+    function getUserCount() public view returns (uint256) {
+        return userCount;
     }
 
     function getAllDidToTimestamps()
@@ -66,15 +68,15 @@ contract DiscoveryContract {
     }
 
     function removeUser(string memory did) public {
-        require(didToIndex[did] != 0, "Id does not exist");
-        uint256 indexToRemove = didToIndex[did];
-        uint256 lastIndex = userCount - 1;
-        User memory lastUser = users[lastIndex];
+        require(didToUser[did].isUser, "Id does not exist");
+        uint256 indexToRemove = didToUser[did].index;
+        User memory lastUser = users[userCount - 1];
+        lastUser.index = indexToRemove;
+        didToUser[lastUser.did] = lastUser;
         users[indexToRemove] = lastUser;
-        didToIndex[lastUser.did] = indexToRemove;
         userCount = userCount - 1;
-        delete users[lastIndex];
-        delete didToIndex[did];
+        users.pop();
+        delete didToUser[did];
     }
 
     function removeUsers(string[] memory dids) public {
