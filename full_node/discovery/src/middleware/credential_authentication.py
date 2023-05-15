@@ -5,6 +5,7 @@ from jose.exceptions import JOSEError
 from datetime import datetime, timedelta
 from config import Config
 from aiohttp import ClientSession
+from models.credential import CredentialModel
 from starlette.middleware.base import BaseHTTPMiddleware
 
 
@@ -25,7 +26,7 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
         self.config = config
         self.session = session
 
-    async def verify_vc(self, credential: dict):
+    async def _verify_vc(self, credential: dict):
         async with self.session.post(
             self.config.get_verify_vc_url(), json=credential
         ) as result:
@@ -61,13 +62,13 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired."
                 )
-            return await self.verify_vc(payload)
+            return await self._verify_vc(payload)
 
         except JOSEError as e:  # catches any exception
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
 
     # Creates a token with the given data and expiration time
-    def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    def _create_access_token(data: dict, expires_delta: timedelta | None = None):
         to_encode = data.copy()
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
@@ -81,11 +82,12 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
 
     # Creates a token with the given vc and expiration time
     async def verify_and_create_vc_access_token(
-        self, credential: dict, expires_delta: timedelta | None = None
+        self, credential: CredentialModel, expires_delta: timedelta | None = None
     ):
-        if await self.verify_vc(credential):
-            return CredentialAuthenticationMiddleware.create_access_token(
-                credential, expires_delta
+        credentialDict = dict(credential)
+        if await self._verify_vc(credentialDict):
+            return CredentialAuthenticationMiddleware._create_access_token(
+                credentialDict, expires_delta
             )
         else:
             raise HTTPException(

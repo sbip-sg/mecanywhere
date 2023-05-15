@@ -3,7 +3,6 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import aiohttp
 from contract import EthDiscoveryContract
-from tasks.cleanup_task import CleanupTask
 from middleware.credential_authentication import CredentialAuthenticationMiddleware
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
@@ -17,7 +16,7 @@ from routers.assignment_router import assignment_router
 from routers.monitoring_router import monitoring_router
 
 
-config = Config("../config.json")
+config = Config("../config.json", "../../config.json")
 session = aiohttp.ClientSession()
 
 app = FastAPI()
@@ -44,14 +43,12 @@ async def start_up():
     global monitoring_service
     global account_creation_service
     global login_service
-    global _cleanup_task
 
 
     discovery_contract = EthDiscoveryContract(
         abi_path=config.get_abi_path(),
         contract_address=config.get_contract_address(),
         url=config.get_contract_url(),
-        transaction_gas=config.get_transaction_gas(),
     )
 
     assignment_service = AssignmentService(discovery_contract)
@@ -59,11 +56,3 @@ async def start_up():
     monitoring_service = MonitoringService(discovery_contract)
     account_creation_service = AccountCreationService()
     login_service = LoginService()
-
-    _cleanup_task = CleanupTask(
-        config.get_cleanup_interval(),
-        config.get_cleanup_expire(),
-        discovery_contract,
-        assignment_service,
-    )
-    _cleanup_task.run()

@@ -1,13 +1,8 @@
 {
     "contract": {
-        "contract_address": "0x69565A95FaC461605CE764714A5b92695C02dd7F",
+        "contract_address": "0x31eE32B9050bC43C095A124e17100b8b2E93A9C5",
         "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
-        "url": "http://localhost:8545/",
-        "transaction_gas": 200000
-    },
-    "cleanup": {
-        "interval_in_sec": 600,
-        "expire_in_sec": 600
+        "url": "http://localhost:8545/"
     },
     "did_verify_credential": "http://localhost:8080/api/v1/credential/verify"
 }

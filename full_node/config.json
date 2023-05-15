@@ -1,0 +1,5 @@
+{
+    "full_node": {
+        "host_expiry_duration_sec": 600
+    }
+}
