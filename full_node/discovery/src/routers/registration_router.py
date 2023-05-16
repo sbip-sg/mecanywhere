@@ -36,9 +36,16 @@ async def register_host(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="No credential provided"
         )
-    access_token = await ca_middleware.verify_and_create_vc_access_token(credential)
+    (access_token, refresh_token) = await ca_middleware.verify_and_create_tokens(
+        did, credential
+    )
     registration_service.register_host(did)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "access_token_type": "bearer",
+        "refresh_token": refresh_token,
+        "refresh_token_type": "bearer",
+    }
 
 
 @registration_router.post(
@@ -73,9 +80,16 @@ async def register_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="No credential provided"
         )
-    access_token = await ca_middleware.verify_and_create_vc_access_token(credential)
+    (access_token, refresh_token) = await ca_middleware.verify_and_create_tokens(
+        did, credential
+    )
     registration_service.register_user(did)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "access_token_type": "bearer",
+        "refresh_token": refresh_token,
+        "refresh_token_type": "bearer",
+    }
 
 
 @registration_router.post(
@@ -94,3 +108,11 @@ async def deregister_user(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     registration_service.deregister_user(did)
     # TODO: blacklist token
+
+
+@registration_router.post("/refresh_access")
+async def refresh_access(refresh_token: str, ca_middleware: CredentialAuthenticationMiddleware = Depends(
+        get_credential_authentication_middleware
+    ),):
+    access_token = await ca_middleware.refresh_access(refresh_token)
+    return {"access_token": access_token, "access_token_type": "bearer"}
