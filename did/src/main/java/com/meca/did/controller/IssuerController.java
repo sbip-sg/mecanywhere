@@ -7,7 +7,6 @@ import com.meca.did.protocol.base.DIDAuthentication;
 import com.meca.did.protocol.base.DIDPrivateKey;
 import com.meca.did.protocol.request.CreateCredentialPojoArgs;
 import com.meca.did.protocol.request.CreateCredentialRequest;
-import com.meca.did.protocol.request.VerifyCredentialRequest;
 import com.meca.did.protocol.response.ResponseData;
 import com.meca.did.service.CredentialPojoService;
 import com.meca.did.util.DataToolUtils;
@@ -31,36 +30,13 @@ import java.util.Map;
 @RestController
 @ConditionalOnProperty(prefix = "is", name = "issuer")
 @RequestMapping("api/v1/credential")
-public class CredentialController {
+public class IssuerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CredentialController.class);
+    private static final Logger logger = LoggerFactory.getLogger(IssuerController.class);
 
     private static final long EXPIRATION_DATE = 1000L * 60 * 60 * 24 * 365 * 100;
 
     private final CredentialPojoService credentialPojoService;
-
-    @ApiOperation(value = "Verify a credential")
-    @PostMapping("/verify")
-    public ResponseData<Boolean> verifyCredential(
-            @ApiParam(name = "verifyCredentialRequest", value = "Credential to be verified")
-            @RequestBody VerifyCredentialRequest verifyCredentialRequest) {
-
-        logger.info("verifyCredentialModel:{}", verifyCredentialRequest);
-
-        if (null == verifyCredentialRequest) {
-            return new ResponseData<>(null, ErrorCode.ILLEGAL_INPUT);
-        }
-        // call method to verifyEvidence credential.
-        try {
-            CredentialPojo credential = DataToolUtils.deserialize(
-                    DataToolUtils.mapToCompactJson(verifyCredentialRequest.getCredential()),
-                    CredentialPojo.class);
-            return credentialPojoService.verify(credential.getIssuer(), credential);
-        } catch (Exception e) {
-            logger.error("verifyCredential error", e);
-            return new ResponseData<>(null, ErrorCode.TRANSACTION_EXECUTE_ERROR);
-        }
-    }
 
     /**
      * institutional publication of Credential.
