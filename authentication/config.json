@@ -1,3 +1,7 @@
 {
-    "db_url": "sqlite:///./example.db"
+    "db_url": "sqlite:///./example.db",
+    "issuer_url": "http://localhost:9090",
+    "create_credential_route": "/api/v1/credential/create",
+    "issuer_did": "did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8",
+    "cpt_id": 2000000
 }
