@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "Credential")
+@Api(tags = "Verifier")
 @AllArgsConstructor
 @CrossOrigin
 @RestController

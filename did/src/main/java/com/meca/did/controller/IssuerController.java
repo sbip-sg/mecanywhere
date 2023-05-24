@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Api(tags = "Credential")
+@Api(tags = "Issuer")
 @AllArgsConstructor
 @CrossOrigin
 @RestController
