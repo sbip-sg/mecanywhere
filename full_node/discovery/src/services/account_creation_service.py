@@ -9,8 +9,13 @@ class AccountCreationService:
         self.session = get_session()
 
     def create_user(self, email: str, password: str, public_key: str, public_key_wallet: str):
+        print(email)
+        print(password)
+        print(public_key)
+        print(public_key_wallet)
         try:
             did = self.create_did(public_key)
+            print(did)
             if did:
                 credential = self.create_credential(did)
                 if credential:
@@ -43,7 +48,9 @@ class AccountCreationService:
             response = requests.post("http://localhost:8080/api/v1/did/create", json=payload)
             if response.status_code == 200:
                 data = json.loads(response.content.decode('utf-8'))
+                print(data)
                 did = data['result']['did']
+                print(did)
                 return did
             else:
                 return None
