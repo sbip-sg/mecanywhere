@@ -10,15 +10,23 @@ class IssuerService:
         self.session = session
 
     async def create_vc(self, claim_data: ClaimData):
-        claim = {
+        request_payload = {
             "claimData": {**claim_data.dict()},
             "cptId": self.config.get_cpt_id(),
             "issuer": self.config.get_issuer_did(),
         }
 
-        async with self.session.post(
-            self.config.get_create_credential_url(), json=claim
-        ) as result:
+        return await self._post_request(self.config.get_create_credential_url(), request_payload)
+
+    async def create_schema(self, schema):
+        request_payload = {
+            "claim": {**schema.dict()},
+            "publisher": self.config.get_issuer_did()
+        }
+        return await self._post_request(self.config.get_create_schema_url(), request_payload)
+
+    async def _post_request(self, url, payload):
+        async with self.session.post(url, json=payload) as result:
             result_status = result.status
             result_json = await result.json()
             if result_status == status.HTTP_200_OK:

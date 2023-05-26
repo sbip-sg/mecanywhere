@@ -21,6 +21,9 @@ class Config:
     def get_create_credential_url(self) -> str:
         return self.get_issuer_url() + self.configuration["create_credential_route"]
     
+    def get_create_schema_url(self) -> str:
+        return self.get_issuer_url() + self.configuration["create_schema_route"]
+    
     def get_issuer_did(self) -> str:
         return self.configuration["issuer_did"]
     
