@@ -1,30 +1,20 @@
 @echo off
 REM Prerequisites: Docker ganache container, Node, Java, Maven, jq
+echo STARTING DID SERVICE...
 
-echo Starting DID service...
 set publicKey=4261665221056439992349256207169667065315027578390647705456165282391832261498313490844998910722927847484140730450920258944230161311480552650871661291293643
 set /p publicKey=Enter your (issuer) public key: (%publicKey%)
 set privateKey=1328425420547362631071238982342267720425764562371687816399115197280144756941
 set /p privateKey=Enter your (issuer) private key: (%privateKey%)
 
-REM Start Docker container
-docker restart ganache
-
-REM Wait for container to start up
-echo ===========================================================================================
-echo Waiting for Docker container to start up...
-
-REM Run Truffle migration command in a separate console
-set confirmTruffle=Y
-set /p confirmTruffle=Do you need to migrate the smart contracts? (Y/N): (%confirmTruffle%)
-if /i "%confirmTruffle%"=="Y" (
+REM Compile jar file
+set confirmCompile=Y
+set /p confirmCompile=Do you need to compile the jar file? (Y/N): (%confirmCompile%)
+if /i "%confirmCompile%"=="Y" (
     echo ===========================================================================================
-    echo Starting truffle migration...
+    echo Compiling jar file...
     echo ===========================================================================================
-    cd contract
-    @REM npm ci --prefer-offline --no-audit
-    call truffle migrate --network development
-    cd ..
+    call mvn install -DskipTests
 )
 
 REM Start Spring Boot application in a separate console
@@ -52,5 +42,3 @@ if "%did%"=="" (
   echo %privateKey% > keys/%fileName%
   echo Private key saved to keys/%fileName%
 )
-
-pause
