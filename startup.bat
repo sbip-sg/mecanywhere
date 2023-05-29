@@ -4,7 +4,7 @@ REM Start Docker container
 docker start ganache
 
 REM Start rabbitmq
-
+echo Ensure your rabbitmq server is started
 
 REM Install contract dependencies
 set confirmContract=Y

@@ -39,7 +39,7 @@ pip install -r requirements.txt
 
 ### Usage
 
-Run the python service
+Run `auth-startup.bat` or run the python service
 ```
 source venv/bin/activate
 uvicorn main:app --port 8000 --reload
