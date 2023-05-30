@@ -6,7 +6,7 @@ from models.did import DIDModel
 from services.registration_service import RegistrationService
 from dependencies import (
     get_registration_service,
-    get_credential_authentication_middleware,
+    get_ca_middleware,
 )
 from middleware.credential_authentication import CredentialAuthenticationMiddleware
 
@@ -15,7 +15,7 @@ security = HTTPBearer()
 registration_router = APIRouter(
     dependencies=[
         Depends(get_registration_service),
-        Depends(get_credential_authentication_middleware),
+        Depends(get_ca_middleware),
     ],
     prefix="/registration",
     tags=["registration"],
@@ -27,7 +27,7 @@ async def register_host(
     request: RegistrationRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
 ):
     credential = request.credential
@@ -55,7 +55,7 @@ async def deregister_host(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
     authorization: HTTPAuthorizationCredentials = Depends(security),
 ):
@@ -71,7 +71,7 @@ async def register_user(
     request: RegistrationRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
 ):
     credential = request.credential
@@ -99,7 +99,7 @@ async def deregister_user(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
     authorization: HTTPAuthorizationCredentials = Depends(security),
 ):
@@ -112,7 +112,7 @@ async def deregister_user(
 
 @registration_router.post("/refresh_access")
 async def refresh_access(refresh_token: str, ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),):
     access_token = await ca_middleware.refresh_access(refresh_token)
     return {"access_token": access_token, "access_token_type": "bearer"}

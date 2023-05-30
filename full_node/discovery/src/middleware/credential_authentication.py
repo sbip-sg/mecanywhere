@@ -1,4 +1,5 @@
 from enum import Enum
+import json
 from fastapi import status, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
@@ -6,9 +7,8 @@ from jose.exceptions import JOSEError
 from datetime import datetime, timedelta
 from config import Config
 from aiohttp import ClientSession
-from models.did import DIDModel
 from models.credential import CredentialModel
-from starlette.middleware.base import BaseHTTPMiddleware
+import redis
 
 
 ALGORITHM = "HS256"
@@ -29,23 +29,38 @@ class TokenType(Enum):
 # does not override dispatch to allow docs to render.
 # Credential refers to HTTP Authorization header with Bearer token.
 # VC refers to Verifiable Credential.
-class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, config: Config, session: ClientSession):
-        super().__init__(app)
+class CredentialAuthenticationMiddleware:
+    def __init__(self, config: Config, session: ClientSession, redis: redis.Redis):
         self.config = config
         self.session = session
+        self.redis = redis
 
     async def _verify_vc(self, did: str, vc: dict):
+        verifiedDID = self.redis.get(json.dumps(vc))
+        if verifiedDID is not None:
+            return verifiedDID == did
+
         async with self.session.post(
             self.config.get_verify_vc_url(), json=vc
         ) as result:
             result_status = result.status
             result_json = await result.json()
-            is_verified = "result" in result_json and result_json["result"]
-            return (
+            is_result_true = "result" in result_json and result_json["result"]
+            is_verified = (
                 result_status == status.HTTP_200_OK
-                and is_verified
+                and is_result_true
                 and did == vc["credential"]["claim"]["DID"]
+            )
+            if is_verified:
+                self.redis.set(json.dumps(vc), did)
+            return is_verified
+
+    def check_expiry(self, expiry: float):
+        if datetime.fromtimestamp(expiry) < datetime.utcnow():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token expired.",
+                headers={"WWW-Authenticate": "Bearer"},
             )
 
     # Returns true if the token is valid and the vc is verified
@@ -66,14 +81,12 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
                 key=ACCESS_SECRET_KEY,
                 algorithms=[ALGORITHM],
             )
-            if datetime.fromtimestamp(payload["exp"]) < datetime.utcnow():
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Token expired.",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
+
+            self.check_expiry(payload["exp"])
+
             vc = {"credential": payload["credential"]}
-            return await self._verify_vc(payload["did"], vc)
+            did = payload["did"]
+            return await self._verify_vc(did, vc)
 
         except JOSEError as e:  # catches any exception
             raise HTTPException(
@@ -131,16 +144,12 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
                 key=REFRESH_SECRET_KEY,
                 algorithms=[ALGORITHM],
             )
-            if datetime.fromtimestamp(payload["exp"]) < datetime.utcnow():
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Token expired.",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
+            self.check_expiry(payload["exp"])
             vc = {"credential": payload["credential"]}
-            if await self._verify_vc(payload["did"], vc):
+            did = payload["did"]
+            if await self._verify_vc(did, vc):
                 return CredentialAuthenticationMiddleware._create_token(
-                    payload["did"], vc, TokenType.ACCESS
+                    did, vc, TokenType.ACCESS
                 )
             else:
                 raise HTTPException(
