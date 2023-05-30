@@ -59,7 +59,7 @@ class EthDiscoveryContract(DiscoveryContract):
         except ValueError as e:
             print(e)
 
-    # get arbitrary queue name from the contract
+    # get arbitrary user's queue name from the contract
     def get_user_queue(self, current_timestamp: int) -> str:
         try:
             self.tx_params["gas"] = 300000

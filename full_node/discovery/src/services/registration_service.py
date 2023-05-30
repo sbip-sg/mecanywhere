@@ -12,9 +12,9 @@ class RegistrationService(object):
     def deregister_host(self, did: str) -> None:
         self.contract.remove_user(did)
 
-    def register_user(self, did: str) -> None:
+    def register_client(self, did: str) -> None:
         pass
 
-    def deregister_user(self, did: str) -> None:
+    def deregister_client(self, did: str) -> None:
         pass
     

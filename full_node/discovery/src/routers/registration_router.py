@@ -66,8 +66,8 @@ async def deregister_host(
     # TODO: blacklist token
 
 
-@registration_router.post("/register_user", response_model=RegistrationResponse)
-async def register_user(
+@registration_router.post("/register_client", response_model=RegistrationResponse)
+async def register_client(
     request: RegistrationRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
@@ -83,7 +83,7 @@ async def register_user(
     (access_token, refresh_token) = await ca_middleware.verify_and_create_tokens(
         did, credential
     )
-    registration_service.register_user(did)
+    registration_service.register_client(did)
     return {
         "access_token": access_token,
         "access_token_type": "bearer",
@@ -93,9 +93,9 @@ async def register_user(
 
 
 @registration_router.post(
-    "/deregister_user", status_code=status.HTTP_200_OK, response_model=None
+    "/deregister_client", status_code=status.HTTP_200_OK, response_model=None
 )
-async def deregister_user(
+async def deregister_client(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
@@ -106,7 +106,7 @@ async def deregister_user(
     did = didModel.did
     if not await ca_middleware.has_access(authorization):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    registration_service.deregister_user(did)
+    registration_service.deregister_client(did)
     # TODO: blacklist token
 
 
