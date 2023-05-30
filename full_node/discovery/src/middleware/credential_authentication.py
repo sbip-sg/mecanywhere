@@ -12,8 +12,6 @@ import redis
 
 
 ALGORITHM = "HS256"
-ACCESS_SECRET_KEY = "secret"
-REFRESH_SECRET_KEY = "secretsecret"
 ACCESS_TOKEN_DEFAULT_EXPIRE_MINUTES = 15
 REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES = 60 * 24  # 1 day
 
@@ -36,7 +34,8 @@ class CredentialAuthenticationMiddleware:
         self.redis = redis
 
     async def _verify_vc(self, did: str, vc: dict):
-        verifiedDID = self.redis.get(json.dumps(vc))
+        json_vc = json.dumps(vc)
+        verifiedDID = self.redis.get(json_vc)
         if verifiedDID is not None:
             return verifiedDID == did
 
@@ -52,7 +51,10 @@ class CredentialAuthenticationMiddleware:
                 and did == vc["credential"]["claim"]["DID"]
             )
             if is_verified:
-                self.redis.set(json.dumps(vc), did)
+                self.redis.set(json_vc, did)
+                self.redis.expire(
+                    json_vc, timedelta(minutes=REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES)
+                )
             return is_verified
 
     def check_expiry(self, expiry: float):
@@ -78,7 +80,7 @@ class CredentialAuthenticationMiddleware:
         try:
             payload = jwt.decode(
                 token,
-                key=ACCESS_SECRET_KEY,
+                key=self.config.get_access_token_key(),
                 algorithms=[ALGORITHM],
             )
 
@@ -97,14 +99,18 @@ class CredentialAuthenticationMiddleware:
 
     # Creates a token with the given subject and expiration time
     def _create_token(
-        did: str, vc: dict, type: TokenType, expires_delta: timedelta | None = None
+        self,
+        did: str,
+        vc: dict,
+        type: TokenType,
+        expires_delta: timedelta | None = None,
     ):
         if type == TokenType.ACCESS:
             default_expires = ACCESS_TOKEN_DEFAULT_EXPIRE_MINUTES
-            typed_secret_key = ACCESS_SECRET_KEY
+            typed_secret_key = self.config.get_access_token_key()
         else:
             default_expires = REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES
-            typed_secret_key = REFRESH_SECRET_KEY
+            typed_secret_key = self.config.get_refresh_token_key()
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
         else:
@@ -124,12 +130,8 @@ class CredentialAuthenticationMiddleware:
     ):
         if await self._verify_vc(did, vc):
             return (
-                CredentialAuthenticationMiddleware._create_token(
-                    did, vc, TokenType.ACCESS, access_expires_delta
-                ),
-                CredentialAuthenticationMiddleware._create_token(
-                    did, vc, TokenType.REFRESH, refresh_expires_delta
-                ),
+                self._create_token(did, vc, TokenType.ACCESS, access_expires_delta),
+                self._create_token(did, vc, TokenType.REFRESH, refresh_expires_delta),
             )
         else:
             raise HTTPException(
@@ -141,16 +143,14 @@ class CredentialAuthenticationMiddleware:
         try:
             payload = jwt.decode(
                 refresh_token,
-                key=REFRESH_SECRET_KEY,
+                key=self.config.get_refresh_token_key(),
                 algorithms=[ALGORITHM],
             )
             self.check_expiry(payload["exp"])
             vc = {"credential": payload["credential"]}
             did = payload["did"]
             if await self._verify_vc(did, vc):
-                return CredentialAuthenticationMiddleware._create_token(
-                    did, vc, TokenType.ACCESS
-                )
+                return self._create_token(did, vc, TokenType.ACCESS)
             else:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
