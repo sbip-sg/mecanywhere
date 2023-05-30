@@ -41,7 +41,7 @@ if /i "%confirmTruffle%"=="Y" (
 
 
 cd did
-did-local-startup.bat
+call did-local-startup.bat
 cd ..
 start "issuer" cmd.exe /k "cd authentication && auth-startup.bat"
 start "fullnode" cmd.exe /k "cd full_node && fullnode-startup.bat"
