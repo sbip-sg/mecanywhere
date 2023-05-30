@@ -92,7 +92,7 @@ sudo java -jar target/did-0.0.1-SNAPSHOT.jar &
 6. Register the issuer
 
 ```
-# We started a fresh local blockchain network, so we need to register an issuer. This will register a DID did:bdsv:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8 that we will use as the issuer.
+# We started a fresh local blockchain network, so we need to register an issuer. This will register a DID did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8 that we will use as the issuer.
 
 curl --header "Content-Type: application/json" \
   --request POST \
@@ -146,7 +146,7 @@ docker run -d -p 9007:9007 didIssuer
 
 3. There are multiple opeartions that we can do with a DID. For example, you can invoke `POST /api/v1/did/addPublicKey` to add a new public key to the DID and invoke `POST /api/v1/did/addAuthentication` to add a new authentication. However, we do not often use them in the project. If you find a need to use these operations in the future, most of the operations should be somewhat ready to use already.
 
-4. Before issuing any credentials, you must register a CPT. To register a CPT, you can invoke `/api/v1/cpt/register`, specify the schema of the CPT in the request body, and specify the `publisher` DID which should be `did:bdsv:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8` if you followed the steps in [Getting Started](#getting-started).
+4. Before issuing any credentials, you must register a CPT. To register a CPT, you can invoke `/api/v1/cpt/register`, specify the schema of the CPT in the request body, and specify the `publisher` DID which should be `did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8` if you followed the steps in [Getting Started](#getting-started).
 
 5. To issue a credential, you can invoke `/api/v1/credential/create` with the credential you want to issue in the request body under `claimData` filed, the `cptId` you obtained from the previous step, and the `issuer` DID. The entire object under `result` field in the actual credential that you can use.
 
@@ -154,19 +154,19 @@ docker run -d -p 9007:9007 didIssuer
 
 ## Important files and folders
 
-- The components in `src/main/java/bdsv/did/controller` serve mainly as a mediator between users (requests) and applications. They perform minimal business logic before forwarding the requests to the service layer.
+- The components in `src/main/java/meca/did/controller` serve mainly as a mediator between users (requests) and applications. They perform minimal business logic before forwarding the requests to the service layer.
 
-- The components (except Engines) in `src/main/java/bdsv/did/service` serve as the service layer that perform the main logic such as generate a DID and compute a hash. After that the requests will be forwarded to the data access layer, engines in this case.
+- The components (except Engines) in `src/main/java/meca/did/service` serve as the service layer that perform the main logic such as generate a DID and compute a hash. After that the requests will be forwarded to the data access layer, engines in this case.
 
-- The engines are the components that interact with the blockchain through smart contracts. The configurations such as smart contract addresses and binaries are defined in `src/main/java/bdsv/did/contract`
+- The engines are the components that interact with the blockchain through smart contracts. The configurations such as smart contract addresses and binaries are defined in `src/main/java/meca/did/contract`
 
-- The classes in `src/main/java/bdsv/did/protocol` mainly define the models that we use throughout the program lifecycle.
+- The classes in `src/main/java/meca/did/protocol` mainly define the models that we use throughout the program lifecycle.
 
 - The general configurations such as port number are located `src/main/resources/` folder.
 
 - The ethreum smart contracts are located in `contract` folder.
 
-- The error codes and thier description returned in the responses are defined in `src/main/java/bdsv/did/constant/ErrorCode.java`
+- The error codes and thier description returned in the responses are defined in `src/main/java/meca/did/constant/ErrorCode.java`
 
 ## Future improvements
 

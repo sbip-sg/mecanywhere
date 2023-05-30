@@ -73,7 +73,7 @@ class AccountCreationService:
                     "age": 29
                 },
                 "cptId": 2000000,
-                "issuer": "did:bdsv:0x52c328ef8b382b1d71cc262b868d803a137ab8d8"
+                "issuer": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8"
             }
             response = requests.post("http://localhost:8080/api/v1/credential/create", json=payload)
             if response.status_code == 200:
