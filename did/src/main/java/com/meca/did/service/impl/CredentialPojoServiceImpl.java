@@ -99,7 +99,7 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
                 claimStr = (String) claimObject;
             }
 
-            HashMap<String, Object> claimMap = DataToolUtils.deserialize(claimStr, HashMap.class);
+            HashMap<String, Object> claimMap = (HashMap<String, Object>) DataToolUtils.deserialize(claimStr, HashMap.class);
             result.setClaim(claimMap);
 
             String privateKey = args.getDIDAuthentication().getDIDPrivateKey().getPrivateKey().trim();
@@ -145,7 +145,7 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             Object value = entry.getValue();
             if (value instanceof Map) {
-                generateSalt((HashMap) value, fixed);
+                generateSalt((HashMap<String, Object>) value, fixed);
             } else if (value instanceof List) {
                 boolean isMapOrList = generateSaltFromList((ArrayList<Object>) value, fixed);
                 if (!isMapOrList) {

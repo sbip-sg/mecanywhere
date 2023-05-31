@@ -2,8 +2,6 @@ package com.meca.did.command;
 
 import com.meca.did.util.DataToolUtils;
 
-import java.util.Arrays;
-
 public class EncryptCommand {
     public static void main(String[] args) throws Exception {
         String data = "Test data";

@@ -91,7 +91,7 @@ public class CredentialPojo implements IProof, JsonSerializer, Hashable {
         if (DataToolUtils.isValidFromToJson(credentialJson)) {
             credentialString = DataToolUtils.removeTagFromToJson(credentialJson);
         }
-        Map<String, Object> credentialMap = DataToolUtils
+        Map<String, Object> credentialMap = (HashMap<String, Object>) DataToolUtils
                 .deserialize(credentialString, HashMap.class);
 
         Object type = credentialMap.get(ParamKeyConstant.PROOF_TYPE);

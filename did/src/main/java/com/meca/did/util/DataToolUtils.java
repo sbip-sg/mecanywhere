@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -80,24 +81,26 @@ public class DataToolUtils {
 
     private static final List<String> CONVERT_UTC_LONG_KEYLIST = new ArrayList<>();
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER;
 
     //private static final ObjectWriter OBJECT_WRITER;
     //private static final ObjectReader OBJECT_READER;
     private static final ObjectWriter OBJECT_WRITER_UN_PRETTY_PRINTER;
 
     static {
-        // sort by letter
-        OBJECT_MAPPER.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
-        // when map is serialization, sort by key
-        OBJECT_MAPPER.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-        // ignore mismatched fields
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        OBJECT_MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-        // use field for serialize and deSerialize
-        OBJECT_MAPPER.setVisibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.NONE);
-        OBJECT_MAPPER.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE);
-        OBJECT_MAPPER.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        OBJECT_MAPPER = JsonMapper.builder()
+            // sort by letter
+            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
+            // when map is serialization, sort by key
+            .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+            // ignore mismatched fields
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+            // use field for serialize and deSerialize
+            .visibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.NONE)
+            .visibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
+            .visibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+            .build();
 
         OBJECT_WRITER_UN_PRETTY_PRINTER = OBJECT_MAPPER.writer();
 
