@@ -109,15 +109,15 @@ curl --header "Content-Type: application/json" \
 8. (Optional) You can view Swagger API specification by go to the following URL(s)
 
 ```
-# You can view the Swagger API specification at <ip:port>/swagger-ui.html
+# You can view the Swagger API specification at <ip:port>/swagger-ui
 
 # For example, to view the Swagger API specification for the DID service running on localhost on port 80
 
-http://localhost:80/swagger-ui.html
+http://localhost:80/swagger-ui
 
 # To view the Swagger API specification for the issuer service running on localhost on port 8080
 
-http://localhost:8080/swagger-ui.html
+http://localhost:8080/swagger-ui
 ```
 
 8. (Optional) Build Docker container for deployment (SBIP Server)
