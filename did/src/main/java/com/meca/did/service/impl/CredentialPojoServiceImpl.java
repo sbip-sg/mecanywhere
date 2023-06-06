@@ -6,6 +6,8 @@ import com.meca.did.constant.ParamKeyConstant;
 import com.meca.did.protocol.base.Cpt;
 import com.meca.did.protocol.base.CredentialPojo;
 import com.meca.did.protocol.base.DIDDocument;
+import com.meca.did.protocol.base.PresentationPojo;
+import com.meca.did.protocol.base.Proof;
 import com.meca.did.protocol.response.ResponseData;
 import com.meca.did.protocol.request.CreateCredentialPojoArgs;
 import com.meca.did.service.CptService;
@@ -188,7 +190,7 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
     }
 
     @Override
-    public ResponseData<Boolean> verify(String issuerDID, CredentialPojo credential) {
+    public ResponseData<Boolean> verifyCredential(String issuerDID, CredentialPojo credential) {
         if (credential == null) {
             logger.error("[verify] The input credential is invalid.");
             return new ResponseData<Boolean>(false, ErrorCode.ILLEGAL_INPUT);
@@ -202,7 +204,7 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
 //        if (CredentialPojoUtils.isLiteCredential(credential)) {
 //            return verifyLiteCredential(credential, null, null);
 //        }
-        ErrorCode errorCode = verifyContent(credential, null, null);
+        ErrorCode errorCode = verifyCredentialContent(credential, null, null);
         if (errorCode.getCode() != ErrorCode.SUCCESS.getCode()) {
             logger.error("[verify] credential verify failed. error message :{}", errorCode);
             return new ResponseData<Boolean>(false, errorCode);
@@ -210,7 +212,7 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
         return new ResponseData<Boolean>(true, ErrorCode.SUCCESS);
     }
 
-    private ErrorCode verifyContent(
+    private ErrorCode verifyCredentialContent(
             CredentialPojo credential,
             String publicKey,
             String DIDPublicKeyId
@@ -237,44 +239,48 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
             return errorCode;
         }
         Map<String, Object> salt = credential.getSalt();
-        String rawData;
-        rawData = CredentialPojoUtils
-                .getCredentialThumbprintWithoutSig(credential, salt, null);
-
+        String thumbprint = CredentialPojoUtils.getCredentialThumbprintWithoutSig(credential, salt, null);
+        String signature = credential.getSignature();
         String dIdIssuer = credential.getIssuer();
         if (StringUtils.isEmpty(publicKey)) {
-            // Fetch public key from chain
-            ResponseData<DIDDocument> innerResponseData =
-                    didService.getDIDDocument(dIdIssuer);
-            if (innerResponseData.getErrorCode() != ErrorCode.SUCCESS.getCode()) {
-                logger.error(
-                        "Error occurred when fetching DID document for: {}, msg: {}",
-                        dIdIssuer, innerResponseData.getErrorMessage());
-                if (innerResponseData.getErrorCode() == ErrorCode.DID_DOES_NOT_EXIST.getCode()) {
-                    return ErrorCode.CREDENTIAL_ISSUER_NOT_EXISTS;
-                }
-                return ErrorCode.getTypeByErrorCode(innerResponseData.getErrorCode());
-            } else {
-                DIDDocument DIDDocument = innerResponseData.getResult();
-                errorCode = DataToolUtils.verifySecp256k1SignatureFromDID(
-                        rawData, credential.getSignature(), DIDDocument, DIDPublicKeyId);
-                return errorCode;
-            }
-        } else {
-            boolean result;
-            try {
-                result = DataToolUtils.verifySecp256k1Signature(rawData,
-                        credential.getSignature(), new BigInteger(publicKey));
-
-            } catch (Exception e) {
-                logger.error("[verifyContent] verify signature fail.", e);
-                return ErrorCode.CREDENTIAL_SIGNATURE_BROKEN;
-            }
-            if (!result) {
-                return ErrorCode.CREDENTIAL_VERIFY_FAIL;
-            }
-            return ErrorCode.SUCCESS;
+            return verifyProofWithDID(DIDPublicKeyId, dIdIssuer, thumbprint, signature);
         }
+        return verifyProofWithPublicKey(DIDPublicKeyId, thumbprint, signature);
+    }
+
+    private ErrorCode verifyProofWithDID(String DIDPublicKeyId, String proverDID, String thumbprint, String signature) {
+        // Fetch public key from chain
+        ResponseData<DIDDocument> innerResponseData =
+                didService.getDIDDocument(proverDID);
+        if (innerResponseData.getErrorCode() != ErrorCode.SUCCESS.getCode()) {
+            logger.error(
+                    "Error occurred when fetching DID document for: {}, msg: {}",
+                    proverDID, innerResponseData.getErrorMessage());
+            if (innerResponseData.getErrorCode() == ErrorCode.DID_DOES_NOT_EXIST.getCode()) {
+                return ErrorCode.CREDENTIAL_ISSUER_NOT_EXISTS;
+            }
+            return ErrorCode.getTypeByErrorCode(innerResponseData.getErrorCode());
+        }
+
+        DIDDocument DIDDocument = innerResponseData.getResult();
+        return DataToolUtils.verifySecp256k1SignatureFromDID(
+                thumbprint, signature, DIDDocument, DIDPublicKeyId);
+    }
+    
+    private ErrorCode verifyProofWithPublicKey(String publicKey, String thumbprint, String signature) {
+        boolean result;
+        try {
+            result = DataToolUtils.verifySecp256k1Signature(thumbprint,
+                    signature, new BigInteger(publicKey));
+
+        } catch (Exception e) {
+            logger.error("[verifyContent] verify signature fail.", e);
+            return ErrorCode.CREDENTIAL_SIGNATURE_BROKEN;
+        }
+        if (!result) {
+            return ErrorCode.CREDENTIAL_VERIFY_FAIL;
+        }
+        return ErrorCode.SUCCESS;
     }
 
     private ErrorCode verifyCptFormat(
@@ -330,4 +336,33 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
             return ErrorCode.CREDENTIAL_ERROR;
         }
     }
+
+    @Override
+    public ResponseData<Boolean> verifyPresentation(PresentationPojo presentation) {
+        if (presentation == null) {
+            logger.error("[verifyPresentation] The input presentation is invalid.");
+            return new ResponseData<Boolean>(false, ErrorCode.ILLEGAL_INPUT);
+        }
+        
+        String thumbprint;
+        try {
+            Map<String, Object> map = DataToolUtils.objToMap(presentation);
+            map.remove("proof");
+            thumbprint = DataToolUtils.mapToCompactJson(map);
+        } catch (Exception e) {
+            logger.error("[verifyPresentation] The thumbprint is invalid.");
+            return new ResponseData<Boolean>(false, ErrorCode.ILLEGAL_INPUT);
+        }
+        
+        String signature = presentation.getProof().getSignatureValue();
+        ErrorCode errorCode = verifyProofWithDID(null, presentation.getHolder(), thumbprint, signature);
+        if (errorCode.getCode() != ErrorCode.SUCCESS.getCode()) {
+            logger.error("[verifyPresentation] presentation verify failed. error message :{}", errorCode);
+            return new ResponseData<Boolean>(false, errorCode);
+        }
+        
+        CredentialPojo credential = presentation.getVc();
+        return verifyCredential(credential.getIssuer(), credential);
+    }
+
 }

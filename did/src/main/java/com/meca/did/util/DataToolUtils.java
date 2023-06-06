@@ -604,6 +604,7 @@ public class DataToolUtils {
         try {
             secp256k1SigBase64Deserialization(signature);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return ErrorCode.CREDENTIAL_SIGNATURE_BROKEN;
         }
 
@@ -665,7 +666,15 @@ public class DataToolUtils {
         byte[] s = new byte[32];
         System.arraycopy(sigBytes, 0, r, 0, 32);
         System.arraycopy(sigBytes, 32, s, 0, 32);
-        return new Sign.SignatureData(sigBytes[64], r, s);
+        byte v;
+        if (sigBytes.length == 65) {
+            v = sigBytes[64];
+        } else if (sigBytes.length == 64) {
+            v = 28;
+        } else {
+            throw new RuntimeException("Invalid signature length");
+        }
+        return new Sign.SignatureData(v, r, s);
     }
 
     /**
@@ -717,7 +726,7 @@ public class DataToolUtils {
             }
             Sign.SignatureData sigData =
                     secp256k1SigBase64Deserialization(signatureBase64);
-            byte[] hashBytes = Hash.sha3(rawData.getBytes());
+            byte[] hashBytes = Hash.sha3(rawData.getBytes(StandardCharsets.UTF_8));
             BigInteger k = Sign.signedMessageHashToKey(hashBytes, sigData);
             logger.info(String.valueOf(publicKey.equals(k)));
             return publicKey.equals(k);

@@ -152,6 +152,13 @@ docker run -d -p 9007:9007 didIssuer
 
 6. To verify a credential, invoke `/api/v1/credential/verify` with the entire credential you want to verify under `credential` field in the request body. The returned response will be `true` if the credential is valid or `false` if it is invalid.
 
+7. A verifiable presentation is signed by the holder of the credential, thus it should be created and signed on the client side, typically in Javascript. Sign the json body of the presentation without the proof section. You may use the `crypto-js` and `secp256k1` libraries in Javascript to sign it like so:
+
+```
+const hash = Buffer.from(CryptoJS.SHA3(message, { outputLength: 256 }).toString(CryptoJS.enc.Hex), 'hex');
+const signature = secp256k1.ecdsaSign(hash, hexToUtf8(privateKey));
+```
+
 ## Important files and folders
 
 - The components in `src/main/java/meca/did/controller` serve mainly as a mediator between users (requests) and applications. They perform minimal business logic before forwarding the requests to the service layer.

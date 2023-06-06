@@ -9,6 +9,8 @@ import com.meca.did.protocol.inf.IProof;
 import com.meca.did.protocol.inf.JsonSerializer;
 import com.meca.did.util.CredentialPojoUtils;
 import com.meca.did.util.DataToolUtils;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,46 +34,64 @@ public class CredentialPojo implements IProof, JsonSerializer, Hashable {
     /**
      * Required: The context field.
      */
+    @ApiModelProperty(example = "https://www.w3.org/2018/credentials/v1")
     private String context;
 
     /**
      * Required: The ID.
      */
+    @ApiModelProperty(example = "ae559160-c1bb-4f15-845e-af7d7912e07b")
     private String id;
 
     /**
      * Required: The CPT type in standard integer format.
      */
+    @ApiModelProperty(example = "1")
     private Integer cptId;
 
     /**
      * Required: The issuer DID.
      */
+    @ApiModelProperty(example = "did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8")
     private String issuer;
 
     /**
      * Required: The create date.
      */
+    @ApiModelProperty(example = "1644379660")
     private Long issuanceDate;
 
     /**
      * Required: The expire date.
      */
+    @ApiModelProperty(example = "4797979660")
     private Long expirationDate;
 
     /**
      * Required: The claim data.
      */
+    @ApiModelProperty(example = "{\n"
+        + "      \"gender\": \"M\",\n"
+        + "      \"name\": \"Chai\",\n"
+        + "      \"DID\": \"did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f\"\n"
+        + "    }")
     private Map<String, Object> claim;
 
     /**
      * Required: The credential proof data.
      */
+    @ApiModelProperty(example = "{\n"
+        + "      \"creator\": \"did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8\",\n"
+        + "      \"signature\": \"G1r9auOBUNK6qa/vnWsSdpBg5UW4bXc2nAnbRTRI/kxFHv8w4S5VYUx6cyQ3YxEnErbWMhsvOfA83kiQ/bH5A8A=\",\n"
+        + "      \"created\": \"1578467662\",\n"
+        + "      \"type\": \"Secp256k1\"\n"
+        + "    }")
     private Map<String, Object> proof;
 
     /**
      * Required: The credential type default is VerifiableCredential.
      */
+    @ApiModelProperty(example = "[\"VerifiableCredential\"]")
     private List<String> type;
 
     /**
