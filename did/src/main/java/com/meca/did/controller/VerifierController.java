@@ -7,7 +7,6 @@ import com.meca.did.protocol.request.VerifyCredentialRequest;
 import com.meca.did.protocol.request.VerifyPresentationRequest;
 import com.meca.did.protocol.response.ResponseData;
 import com.meca.did.service.CredentialPojoService;
-import com.meca.did.util.DataToolUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,9 +41,7 @@ public class VerifierController {
         }
         // call method to verifyEvidence credential.
         try {
-            CredentialPojo credential = DataToolUtils.deserialize(
-                    DataToolUtils.mapToCompactJson(verifyCredentialRequest.getCredential()),
-                    CredentialPojo.class);
+            CredentialPojo credential = verifyCredentialRequest.getCredential();
             return credentialPojoService.verifyCredential(credential.getIssuer(), credential);
         } catch (Exception e) {
             logger.error("verifyCredential error", e);

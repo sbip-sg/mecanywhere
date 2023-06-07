@@ -86,7 +86,7 @@ public class CredentialPojo implements IProof, JsonSerializer, Hashable {
         + "      \"created\": \"1578467662\",\n"
         + "      \"type\": \"Secp256k1\"\n"
         + "    }")
-    private Map<String, Object> proof;
+    private Proof proof;
 
     /**
      * Required: The credential type default is VerifiableCredential.
@@ -154,7 +154,7 @@ public class CredentialPojo implements IProof, JsonSerializer, Hashable {
      * @return signature value
      */
     public String getSignature() {
-        return toString(getValueFromProof(proof, ParamKeyConstant.PROOF_SIGNATURE));
+        return proof.getSignatureValue();
     }
 
     /**
@@ -163,7 +163,7 @@ public class CredentialPojo implements IProof, JsonSerializer, Hashable {
      * @return proof type
      */
     public String getProofType() {
-        return toString(getValueFromProof(proof, ParamKeyConstant.PROOF_TYPE));
+        return proof.getType();
     }
 
     /**
@@ -172,7 +172,7 @@ public class CredentialPojo implements IProof, JsonSerializer, Hashable {
      * @return salt
      */
     public Map<String, Object> getSalt() {
-        return (Map<String, Object>) getValueFromProof(proof, ParamKeyConstant.PROOF_SALT);
+        return proof.getSalt();
     }
 
     /**
@@ -181,20 +181,7 @@ public class CredentialPojo implements IProof, JsonSerializer, Hashable {
      * @param salt map of salt
      */
     public void setSalt(Map<String, Object> salt) {
-        putProofValue(ParamKeyConstant.PROOF_SALT, salt);
-    }
-
-    /**
-     * put the key-value into proof.
-     *
-     * @param key   the key of proof
-     * @param value the value of proof
-     */
-    public void putProofValue(String key, Object value) {
-        if (proof == null) {
-            proof = new HashMap<>();
-        }
-        proof.put(key, value);
+        proof.setSalt(salt);
     }
 
     /**

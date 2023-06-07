@@ -2,7 +2,6 @@ package com.meca.did.service.impl;
 
 import com.meca.did.constant.CredentialConstant;
 import com.meca.did.constant.ErrorCode;
-import com.meca.did.constant.ParamKeyConstant;
 import com.meca.did.protocol.base.Cpt;
 import com.meca.did.protocol.base.CredentialPojo;
 import com.meca.did.protocol.base.DIDDocument;
@@ -116,15 +115,12 @@ public class CredentialPojoServiceImpl implements CredentialPojoService {
 
             String signature = DataToolUtils.secp256k1Sign(rawData, new BigInteger(privateKey));
 
-            result.putProofValue(ParamKeyConstant.PROOF_CREATED, result.getIssuanceDate());
-
+            Long proofCreatedDate = result.getIssuanceDate();
             String DIDPublicKeyId = args.getDIDAuthentication().getDIDPublicKeyId();
-            result.putProofValue(ParamKeyConstant.PROOF_CREATOR, DIDPublicKeyId);
-
             String proofType = CredentialConstant.CredentialProofType.ECDSA.getTypeName();
-            result.putProofValue(ParamKeyConstant.PROOF_TYPE, proofType);
-            result.putProofValue(ParamKeyConstant.PROOF_SIGNATURE, signature);
-            result.setSalt(saltMap);
+            Proof proof = new Proof(proofType, proofCreatedDate, DIDPublicKeyId, saltMap, signature);
+            result.setProof(proof);
+
             ResponseData<CredentialPojo> responseData = new ResponseData<>(
                     result,
                     ErrorCode.SUCCESS

@@ -306,7 +306,6 @@ public class DIDServiceImpl implements DIDService {
             return new ResponseData<>(false, ErrorCode.DID_PRIVATEKEY_INVALID);
         }
 
-        // TODO check this DID document that this pubkey MUST exist first
         String removedPubKeyToDID = DIDUtils
                 .convertPublicKeyToDID(publicKeyArgs.getPublicKey());
         if (removedPubKeyToDID.equalsIgnoreCase(dID)) {
@@ -321,6 +320,7 @@ public class DIDServiceImpl implements DIDService {
             );
         }
         List<PublicKeyProperty> publicKeys = responseData.getResult().getPublicKey();
+        boolean isPublicKeyExist = false;
         for (PublicKeyProperty pk : publicKeys) {
             if (pk.getPublicKey().equalsIgnoreCase(publicKeyArgs.getPublicKey())) {
                 if (publicKeys.size() == 1) {
@@ -328,7 +328,12 @@ public class DIDServiceImpl implements DIDService {
                     return new ResponseData<>(false,
                             ErrorCode.DID_CANNOT_REMOVE_ITS_OWN_PUB_KEY_WITHOUT_BACKUP);
                 }
+                isPublicKeyExist = true;
             }
+        }
+        if (!isPublicKeyExist) {
+            logger.error("Cannot find the public key: {} in DID: {}", publicKeyArgs.getPublicKey(), dID);
+            return new ResponseData<>(false, ErrorCode.DID_PUBLIC_KEY_NOT_EXIST);
         }
 
         // Add correct tag by externally call revokeAuthentication once
