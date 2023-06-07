@@ -130,11 +130,11 @@ http://localhost:8080/swagger-ui
 # Run docker build commands in the did directory. Build 2 docker files, DockerFile2 for did service and DockerFile3 for issuer
 
 cd did
-docker build -f DockerFile2 -t didService .
-docker build -f DockerFile3 -t didIssuer .
+docker build -f DockerFile2 -t verifier .
+docker build -f DockerFile3 -t issuer .
 
-docker run -d -p 9006:9006 didService
-docker run -d -p 9007:9007 didIssuer
+docker run -d -p 8080:8080 verifier
+docker run -d -p 9090:9090 issuer
 
 ```
 

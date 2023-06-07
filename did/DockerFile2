@@ -1,0 +1,5 @@
+FROM openjdk:11
+COPY target/did-0.0.1-SNAPSHOT.jar /did2.jar
+CMD ["java", "-Dspring.profiles.active=verifier", "-jar", "/did2.jar"]
+EXPOSE 8080
+
