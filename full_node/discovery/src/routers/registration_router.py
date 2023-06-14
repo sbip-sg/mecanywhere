@@ -6,7 +6,7 @@ from models.did import DIDModel
 from services.registration_service import RegistrationService
 from dependencies import (
     get_registration_service,
-    get_credential_authentication_middleware,
+    get_ca_middleware,
 )
 from middleware.credential_authentication import CredentialAuthenticationMiddleware
 
@@ -15,7 +15,7 @@ security = HTTPBearer()
 registration_router = APIRouter(
     dependencies=[
         Depends(get_registration_service),
-        Depends(get_credential_authentication_middleware),
+        Depends(get_ca_middleware),
     ],
     prefix="/registration",
     tags=["registration"],
@@ -27,7 +27,7 @@ async def register_host(
     request: RegistrationRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
 ):
     credential = request.credential
@@ -55,7 +55,7 @@ async def deregister_host(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
     authorization: HTTPAuthorizationCredentials = Depends(security),
 ):
@@ -66,12 +66,12 @@ async def deregister_host(
     # TODO: blacklist token
 
 
-@registration_router.post("/register_user", response_model=RegistrationResponse)
-async def register_user(
+@registration_router.post("/register_client", response_model=RegistrationResponse)
+async def register_client(
     request: RegistrationRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
 ):
     credential = request.credential
@@ -83,7 +83,7 @@ async def register_user(
     (access_token, refresh_token) = await ca_middleware.verify_and_create_tokens(
         did, credential
     )
-    registration_service.register_user(did)
+    registration_service.register_client(did)
     return {
         "access_token": access_token,
         "access_token_type": "bearer",
@@ -93,26 +93,26 @@ async def register_user(
 
 
 @registration_router.post(
-    "/deregister_user", status_code=status.HTTP_200_OK, response_model=None
+    "/deregister_client", status_code=status.HTTP_200_OK, response_model=None
 )
-async def deregister_user(
+async def deregister_client(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
     ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),
     authorization: HTTPAuthorizationCredentials = Depends(security),
 ):
     did = didModel.did
     if not await ca_middleware.has_access(authorization):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-    registration_service.deregister_user(did)
+    registration_service.deregister_client(did)
     # TODO: blacklist token
 
 
 @registration_router.post("/refresh_access")
 async def refresh_access(refresh_token: str, ca_middleware: CredentialAuthenticationMiddleware = Depends(
-        get_credential_authentication_middleware
+        get_ca_middleware
     ),):
     access_token = await ca_middleware.refresh_access(refresh_token)
     return {"access_token": access_token, "access_token_type": "bearer"}

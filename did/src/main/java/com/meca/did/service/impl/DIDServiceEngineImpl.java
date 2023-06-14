@@ -241,30 +241,28 @@ public class DIDServiceEngineImpl implements DIDServiceEngine {
 
     private List<TransactionReceipt> getTransactionReceipts(Integer blockNumber)
             throws IOException, DataFormatException, DIDBaseException {
-        TransactionReceipt blockTransactionReceipt = null;
         List<TransactionReceipt> blockTransactionReceipts = new LinkedList<>();
-        EthBlock ethGetBlockByNumber = null;
-        //TODO maybe fix this code
         try {
-            List<EthBlock.TransactionResult> txs = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(BigInteger.valueOf(blockNumber)), true).send().getBlock().getTransactions();
+            EthBlock ethBlock = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(BigInteger.valueOf(blockNumber)), true).send();
+            List<EthBlock.TransactionResult> txs = ethBlock.getBlock().getTransactions();
 
             for (EthBlock.TransactionResult tx : txs) {
                 EthBlock.TransactionObject transaction = (EthBlock.TransactionObject) tx.get();
-                blockTransactionReceipt = web3j.ethGetTransactionReceipt(transaction.getHash()).send().getTransactionReceipt().get();
+                String transactionHash = transaction.getHash();
+                TransactionReceipt blockTransactionReceipt = web3j.ethGetTransactionReceipt(transaction.getHash()).send().getTransactionReceipt().get();
                 logger.info(String.valueOf(blockTransactionReceipt));
                 blockTransactionReceipts.add(blockTransactionReceipt);
+
+                if (blockTransactionReceipt == null) {
+                    logger.info("[getTransactionReceipts] get block {} err: {} is null", blockNumber, transactionHash);
+                    throw new DIDBaseException("a transactionReceipt is null.");
+                }
             }
 
         } catch (Exception e) {
             logger.error("[getTransactionReceipts] get block {} err: {}", blockNumber, e);
         }
-        if (blockTransactionReceipts == null) {
-            logger.info("[getTransactionReceipts] get block {} err: is null", blockNumber);
-            throw new DIDBaseException("the transactionReceipts is null.");
-        }
         return blockTransactionReceipts;
-
-//                .getBlockTransactionReceipts().getTransactionReceipts();
     }
 
     private ResolveEventLogResult resolveSingleEventLog(

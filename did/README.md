@@ -109,15 +109,15 @@ curl --header "Content-Type: application/json" \
 8. (Optional) You can view Swagger API specification by go to the following URL(s)
 
 ```
-# You can view the Swagger API specification at <ip:port>/swagger-ui.html
+# You can view the Swagger API specification at <ip:port>/swagger-ui
 
 # For example, to view the Swagger API specification for the DID service running on localhost on port 80
 
-http://localhost:80/swagger-ui.html
+http://localhost:80/swagger-ui
 
 # To view the Swagger API specification for the issuer service running on localhost on port 8080
 
-http://localhost:8080/swagger-ui.html
+http://localhost:8080/swagger-ui
 ```
 
 8. (Optional) Build Docker container for deployment (SBIP Server)
@@ -130,11 +130,11 @@ http://localhost:8080/swagger-ui.html
 # Run docker build commands in the did directory. Build 2 docker files, DockerFile2 for did service and DockerFile3 for issuer
 
 cd did
-docker build -f DockerFile2 -t didService .
-docker build -f DockerFile3 -t didIssuer .
+docker build -f DockerFile2 -t verifier .
+docker build -f DockerFile3 -t issuer .
 
-docker run -d -p 9006:9006 didService
-docker run -d -p 9007:9007 didIssuer
+docker run -d -p 8080:8080 verifier
+docker run -d -p 9090:9090 issuer
 
 ```
 
@@ -151,6 +151,13 @@ docker run -d -p 9007:9007 didIssuer
 5. To issue a credential, you can invoke `/api/v1/credential/create` with the credential you want to issue in the request body under `claimData` filed, the `cptId` you obtained from the previous step, and the `issuer` DID. The entire object under `result` field in the actual credential that you can use.
 
 6. To verify a credential, invoke `/api/v1/credential/verify` with the entire credential you want to verify under `credential` field in the request body. The returned response will be `true` if the credential is valid or `false` if it is invalid.
+
+7. A verifiable presentation is signed by the holder of the credential, thus it should be created and signed on the client side, typically in Javascript. Sign the json body of the presentation without the proof section. You may use the `crypto-js` and `secp256k1` libraries in Javascript to sign it like so:
+
+```
+const hash = Buffer.from(CryptoJS.SHA3(message, { outputLength: 256 }).toString(CryptoJS.enc.Hex), 'hex');
+const signature = secp256k1.ecdsaSign(hash, hexToUtf8(privateKey));
+```
 
 ## Important files and folders
 

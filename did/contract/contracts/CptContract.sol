@@ -1,7 +1,5 @@
 pragma solidity >=0.4.22 <0.9.0;
 
-import "./DIDContract.sol";
-
 contract CptContract {
 
     uint constant public AUTHORITY_ISSUER_START_ID = 1000;
@@ -41,8 +39,6 @@ contract CptContract {
 
     // Default CPT version
     int constant private CPT_DEFAULT_VERSION = 1;
-
-    DIDContract private didContract;
 
     // Reserved for contract owner check
     address private internalRoleControllerAddress;
@@ -115,11 +111,6 @@ contract CptContract {
     private
     returns (bool)
     {
-        if (!didContract.identityExists(publisher)) {
-            emit UpdateCptRetLog(CPT_PUBLISHER_NOT_EXIST, 0, 0);
-            return false;
-        }
-
         if (isCptExist(cptId)) {
             int[8] memory cptIntArray = getCptIntArray(cptId);
             int cptVersion = cptIntArray[0] + 1;

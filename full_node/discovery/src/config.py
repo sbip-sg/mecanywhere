@@ -23,3 +23,15 @@ class Config:
 
     def get_verify_vc_url(self) -> str:
         return self.configuration["did_verify_credential"]
+    
+    def get_redis_host(self) -> str:
+        return self.configuration["redis"]["host"]
+    
+    def get_redis_port(self) -> int:
+        return self.configuration["redis"]["port"]
+    
+    def get_access_token_key(self) -> str:
+        return self.configuration["secrets"]["access_token_key"]
+    
+    def get_refresh_token_key(self) -> str:
+        return self.configuration["secrets"]["refresh_token_key"]

@@ -9,6 +9,8 @@ import org.web3j.abi.Utils;
 import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Bytes32;
 import org.web3j.abi.datatypes.generated.Int256;
+import org.web3j.abi.datatypes.generated.StaticArray32;
+import org.web3j.abi.datatypes.generated.StaticArray8;
 import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.crypto.Credentials;
@@ -105,15 +107,12 @@ public class CptContract extends Contract {
         final Function function = new Function(
                 FUNC_REGISTERCPT,
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(publisher),
-                        new org.web3j.abi.datatypes.generated.StaticArray8<org.web3j.abi.datatypes.generated.Int256>(
-                                org.web3j.abi.Utils.typeMap(intArray, org.web3j.abi.datatypes.generated.Int256.class)),
-                        new org.web3j.abi.datatypes.generated.StaticArray8<org.web3j.abi.datatypes.generated.Bytes32>(
-                                org.web3j.abi.Utils.typeMap(bytes32Array, org.web3j.abi.datatypes.generated.Bytes32.class)),
-                        new org.web3j.abi.datatypes.generated.StaticArray32<>(
-                                Utils.typeMap(jsonSchemaArray, Bytes32.class)),
-                        new org.web3j.abi.datatypes.generated.Uint8(v),
-                        new org.web3j.abi.datatypes.generated.Bytes32(r),
-                        new org.web3j.abi.datatypes.generated.Bytes32(s)),
+                        new StaticArray8<>(Int256.class, org.web3j.abi.Utils.typeMap(intArray, Int256.class)),
+                        new StaticArray8<>(Bytes32.class,org.web3j.abi.Utils.typeMap(bytes32Array, Bytes32.class)),
+                        new StaticArray32<>(Bytes32.class, Utils.typeMap(jsonSchemaArray, Bytes32.class)),
+                        new Uint8(v),
+                        new Bytes32(r),
+                        new Bytes32(s)),
                 Collections.<TypeReference<?>>emptyList());
         logger.info(function.toString());
         return executeRemoteCallTransaction(function);

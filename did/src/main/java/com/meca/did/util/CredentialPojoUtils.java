@@ -5,6 +5,7 @@ import com.meca.did.constant.ErrorCode;
 import com.meca.did.constant.ParamKeyConstant;
 import com.meca.did.protocol.base.CredentialPojo;
 import com.meca.did.protocol.base.DIDAuthentication;
+import com.meca.did.protocol.base.Proof;
 import com.meca.did.protocol.request.CreateCredentialPojoArgs;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -111,53 +112,34 @@ public class CredentialPojoUtils {
         if (CollectionUtils.isEmpty(args.getType())) {
             return ErrorCode.CREDENTIAL_TYPE_IS_NULL;
         }
-        Map<String, Object> proof = args.getProof();
+        Proof proof = args.getProof();
         return isCredentialProofValid(proof);
     }
 
-    private static ErrorCode isCredentialProofValid(Map<String, Object> proof) {
+    private static ErrorCode isCredentialProofValid(Proof proof) {
         if (proof == null) {
             return ErrorCode.ILLEGAL_INPUT;
         }
 
-        String type = null;
-        if (proof.get(ParamKeyConstant.PROOF_TYPE) == null) {
+        String type = proof.getType();
+        if (type == null || !isCredentialProofTypeValid(type)) {
             return ErrorCode.CREDENTIAL_SIGNATURE_TYPE_ILLEGAL;
-        } else {
-            type = String.valueOf(proof.get(ParamKeyConstant.PROOF_TYPE));
-            if (!isCredentialProofTypeValid(type)) {
-                return ErrorCode.CREDENTIAL_SIGNATURE_TYPE_ILLEGAL;
-            }
         }
         // Created is not obligatory
-        if (proof.get(ParamKeyConstant.PROOF_CREATED) == null) {
+        Long created = proof.getCreated();
+        if (created == null || created.longValue() <= 0) {
             return ErrorCode.CREDENTIAL_ISSUANCE_DATE_ILLEGAL;
-        } else {
-            Long created = Long.valueOf(String.valueOf(proof.get(ParamKeyConstant.PROOF_CREATED)));
-            if (created.longValue() <= 0) {
-                return ErrorCode.CREDENTIAL_ISSUANCE_DATE_ILLEGAL;
-            }
         }
         // Creator is not obligatory either
-        if (proof.get(ParamKeyConstant.PROOF_CREATOR) == null) {
+        String creator = proof.getCreator();
+        if (creator == null || StringUtils.isEmpty(creator)) {
             return ErrorCode.CREDENTIAL_ISSUER_INVALID;
-        } else {
-            String creator = String.valueOf(proof.get(ParamKeyConstant.PROOF_CREATOR));
-            //if (!StringUtils.isEmpty(creator) && !WeIdUtils.isWeIdValid(creator)) {
-            if (StringUtils.isEmpty(creator)) {
-                return ErrorCode.CREDENTIAL_ISSUER_INVALID;
-            }
         }
         // If the Proof type is ECDSA or other signature based scheme, check signature
         if (type.equalsIgnoreCase(CredentialConstant.CredentialProofType.ECDSA.getTypeName())) {
-            if (proof.get(ParamKeyConstant.PROOF_SIGNATURE) == null) {
+            String signature = proof.getSignatureValue();
+            if (signature == null || StringUtils.isEmpty(signature) || !DataToolUtils.isValidBase64String(signature)) {
                 return ErrorCode.CREDENTIAL_SIGNATURE_BROKEN;
-            } else {
-                String signature = String.valueOf(proof.get(ParamKeyConstant.PROOF_SIGNATURE));
-                if (StringUtils.isEmpty(signature)
-                        || !DataToolUtils.isValidBase64String(signature)) {
-                    return ErrorCode.CREDENTIAL_SIGNATURE_BROKEN;
-                }
             }
         }
         return ErrorCode.SUCCESS;

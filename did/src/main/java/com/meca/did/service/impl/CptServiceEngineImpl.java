@@ -98,34 +98,34 @@ public class CptServiceEngineImpl implements CptServiceEngine {
                 return new ResponseData<>(null, ErrorCode.CPT_NOT_EXISTS);
             }
 
-            if (DIDConstant.EMPTY_ADDRESS.equals(valueList.getValue1())) {
+            if (DIDConstant.EMPTY_ADDRESS.equals(valueList.component1())) {
                 logger.error("Query cpt id : {} does not exist.", cptId);
                 return new ResponseData<>(null, ErrorCode.CPT_NOT_EXISTS);
             }
             Cpt cpt = new Cpt();
             cpt.setCptId(cptId);
             cpt.setCptPublisher(
-                    DIDUtils.convertAddressToDID(valueList.getValue1())
+                    DIDUtils.convertAddressToDID(valueList.component1())
             );
 
-            List<BigInteger> longArray = valueList.getValue2();
+            List<BigInteger> longArray = valueList.component2();
 
             cpt.setCptVersion(longArray.get(0).intValue());
             cpt.setCreated(longArray.get(1).longValue());
             cpt.setUpdated(longArray.get(2).longValue());
 
-            List<byte[]> jsonSchemaArray = valueList.getValue4();
+            List<byte[]> jsonSchemaArray = valueList.component4();
 
             String jsonSchema = DataToolUtils.byte32ListToString(
                     jsonSchemaArray, DIDConstant.JSON_SCHEMA_ARRAY_LENGTH);
 
-            Map<String, Object> jsonSchemaMap = DataToolUtils
+            Map<String, Object> jsonSchemaMap = (HashMap<String, Object>) DataToolUtils
                     .deserialize(jsonSchema.trim(), HashMap.class);
             cpt.setCptJsonSchema(jsonSchemaMap);
 
-            int v = valueList.getValue5().intValue();
-            byte[] r = valueList.getValue6();
-            byte[] s = valueList.getValue7();
+            int v = valueList.component5().intValue();
+            byte[] r = valueList.component6();
+            byte[] s = valueList.component7();
             Sign.SignatureData signatureData = DataToolUtils
                     .rawSignatureDeserialization(v, r, s);
             String cptSignature =

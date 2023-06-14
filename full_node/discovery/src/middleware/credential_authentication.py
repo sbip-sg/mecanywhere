@@ -1,4 +1,5 @@
 from enum import Enum
+import json
 from fastapi import status, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
@@ -6,14 +7,11 @@ from jose.exceptions import JOSEError
 from datetime import datetime, timedelta
 from config import Config
 from aiohttp import ClientSession
-from models.did import DIDModel
 from models.credential import CredentialModel
-from starlette.middleware.base import BaseHTTPMiddleware
+import redis
 
 
 ALGORITHM = "HS256"
-ACCESS_SECRET_KEY = "secret"
-REFRESH_SECRET_KEY = "secretsecret"
 ACCESS_TOKEN_DEFAULT_EXPIRE_MINUTES = 15
 REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES = 60 * 24  # 1 day
 
@@ -29,23 +27,42 @@ class TokenType(Enum):
 # does not override dispatch to allow docs to render.
 # Credential refers to HTTP Authorization header with Bearer token.
 # VC refers to Verifiable Credential.
-class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, config: Config, session: ClientSession):
-        super().__init__(app)
+class CredentialAuthenticationMiddleware:
+    def __init__(self, config: Config, session: ClientSession, redis: redis.Redis):
         self.config = config
         self.session = session
+        self.redis = redis
 
     async def _verify_vc(self, did: str, vc: dict):
+        json_vc = json.dumps(vc)
+        verifiedDID = self.redis.get(json_vc)
+        if verifiedDID is not None:
+            return verifiedDID == did
+
         async with self.session.post(
             self.config.get_verify_vc_url(), json=vc
         ) as result:
             result_status = result.status
             result_json = await result.json()
-            is_verified = "result" in result_json and result_json["result"]
-            return (
+            is_result_true = "result" in result_json and result_json["result"]
+            is_verified = (
                 result_status == status.HTTP_200_OK
-                and is_verified
+                and is_result_true
                 and did == vc["credential"]["claim"]["DID"]
+            )
+            if is_verified:
+                self.redis.set(json_vc, did)
+                self.redis.expire(
+                    json_vc, timedelta(minutes=REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES)
+                )
+            return is_verified
+
+    def check_expiry(self, expiry: float):
+        if datetime.fromtimestamp(expiry) < datetime.utcnow():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token expired.",
+                headers={"WWW-Authenticate": "Bearer"},
             )
 
     # Returns true if the token is valid and the vc is verified
@@ -63,17 +80,15 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
         try:
             payload = jwt.decode(
                 token,
-                key=ACCESS_SECRET_KEY,
+                key=self.config.get_access_token_key(),
                 algorithms=[ALGORITHM],
             )
-            if datetime.fromtimestamp(payload["exp"]) < datetime.utcnow():
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Token expired.",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
+
+            self.check_expiry(payload["exp"])
+
             vc = {"credential": payload["credential"]}
-            return await self._verify_vc(payload["did"], vc)
+            did = payload["did"]
+            return await self._verify_vc(did, vc)
 
         except JOSEError as e:  # catches any exception
             raise HTTPException(
@@ -84,14 +99,18 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
 
     # Creates a token with the given subject and expiration time
     def _create_token(
-        did: str, vc: dict, type: TokenType, expires_delta: timedelta | None = None
+        self,
+        did: str,
+        vc: dict,
+        type: TokenType,
+        expires_delta: timedelta | None = None,
     ):
         if type == TokenType.ACCESS:
             default_expires = ACCESS_TOKEN_DEFAULT_EXPIRE_MINUTES
-            typed_secret_key = ACCESS_SECRET_KEY
+            typed_secret_key = self.config.get_access_token_key()
         else:
             default_expires = REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES
-            typed_secret_key = REFRESH_SECRET_KEY
+            typed_secret_key = self.config.get_refresh_token_key()
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
         else:
@@ -111,12 +130,8 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
     ):
         if await self._verify_vc(did, vc):
             return (
-                CredentialAuthenticationMiddleware._create_token(
-                    did, vc, TokenType.ACCESS, access_expires_delta
-                ),
-                CredentialAuthenticationMiddleware._create_token(
-                    did, vc, TokenType.REFRESH, refresh_expires_delta
-                ),
+                self._create_token(did, vc, TokenType.ACCESS, access_expires_delta),
+                self._create_token(did, vc, TokenType.REFRESH, refresh_expires_delta),
             )
         else:
             raise HTTPException(
@@ -128,20 +143,14 @@ class CredentialAuthenticationMiddleware(BaseHTTPMiddleware):
         try:
             payload = jwt.decode(
                 refresh_token,
-                key=REFRESH_SECRET_KEY,
+                key=self.config.get_refresh_token_key(),
                 algorithms=[ALGORITHM],
             )
-            if datetime.fromtimestamp(payload["exp"]) < datetime.utcnow():
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Token expired.",
-                    headers={"WWW-Authenticate": "Bearer"},
-                )
+            self.check_expiry(payload["exp"])
             vc = {"credential": payload["credential"]}
-            if await self._verify_vc(payload["did"], vc):
-                return CredentialAuthenticationMiddleware._create_token(
-                    payload["did"], vc, TokenType.ACCESS
-                )
+            did = payload["did"]
+            if await self._verify_vc(did, vc):
+                return self._create_token(did, vc, TokenType.ACCESS)
             else:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,

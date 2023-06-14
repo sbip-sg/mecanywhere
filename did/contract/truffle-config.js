@@ -42,39 +42,48 @@ module.exports = {
         // tab if you use this network and you must also set the `host`, `port` and `network_id`
         // options below to some value.
         //
-        ropsten: {
-            provider: function () {
-                return new HDWalletProvider(
-                    process.env.MNEMONIC,
-                    `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
-                )
-            },
-            gas: 5500000,           // Gas sent with each transaction (default: ~6700000)
-            gasPrice: 100000000000,
-            confirmations:2,
-            timeoutBlocks:200,
-            skipDryRun:true,
-            network_id: 3
-        },
-        rinkeby: {
-            provider: function () {
-                return new HDWalletProvider(
-                    process.env.MNEMONIC,
-                    `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
-                )
-            },
-            // gas: 29999888,           // Gas sent with each transaction (default: ~6700000)
-            // // gasPrice: 100000000000,
-            confirmations:2,
-            timeoutBlocks:200,
-            skipDryRun:true,
-            network_id: 4
-        },
+        // ropsten: {
+        //     provider: function () {
+        //         return new HDWalletProvider(
+        //             process.env.MNEMONIC,
+        //             `https://ropsten.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
+        //         )
+        //     },
+        //     gas: 5500000,           // Gas sent with each transaction (default: ~6700000)
+        //     gasPrice: 100000000000,
+        //     confirmations:2,
+        //     timeoutBlocks:200,
+        //     skipDryRun:true,
+        //     network_id: 3
+        // },
+        // rinkeby: {
+        //     provider: function () {
+        //         return new HDWalletProvider(
+        //             process.env.MNEMONIC,
+        //             `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
+        //         )
+        //     },
+        //     // gas: 29999888,           // Gas sent with each transaction (default: ~6700000)
+        //     // // gasPrice: 100000000000,
+        //     confirmations:2,
+        //     timeoutBlocks:200,
+        //     skipDryRun:true,
+        //     network_id: 4
+        // },
         development: {
             host: "127.0.0.1",     // Localhost (default: none)
             port: 8545,            // Standard Ethereum port (default: none)
             network_id: "*",       // Any network (default: none)
         },
+        sepolia: {
+            provider: function () {
+                return new HDWalletProvider(
+                    process.env.MNEMONIC,
+                    `https://sepolia.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
+                )
+            },
+            network_id: "11155111",
+        }
         // solc: {
         //     optimizer: {
         //         enabled: true,
