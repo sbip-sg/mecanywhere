@@ -1,0 +1,13 @@
+{
+    "contract": {
+        "contract_address": "",
+        "abi_path": "",
+        "url": ""
+    },
+    "wallet_address": "0x67c9badc4765ff6bf78130d559315854379f8a00",
+    "verify_did_url": "",
+    "redis": {
+        "host": "localhost",
+        "port": 6379
+    }
+}

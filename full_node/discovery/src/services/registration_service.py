@@ -1,5 +1,5 @@
 from contract import DiscoveryContract
-from common import get_current_timestamp
+from utils import get_current_timestamp
 
 
 class RegistrationService(object):

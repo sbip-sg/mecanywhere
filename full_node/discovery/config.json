@@ -8,9 +8,5 @@
     "redis": {
         "host": "localhost",
         "port": 6379
-    },
-    "secrets": {
-        "access_token_key": "secret",
-        "refresh_token_key": "secretsecret"
     }
 }
