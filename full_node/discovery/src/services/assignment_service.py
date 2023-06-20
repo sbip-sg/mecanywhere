@@ -7,7 +7,6 @@ class AssignmentService(object):
         self.contract = contract
 
     def assign(self, did: str) -> str:
-        print("pydid", did)
         return self.contract.get_user_queue(get_current_timestamp())
 
     def remove(self) -> None:
