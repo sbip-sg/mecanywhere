@@ -104,7 +104,6 @@ async def deregister_client(
     registration_service.deregister_client(did)
     # TODO: blacklist token
 
-
 @registration_router.post("/refresh_access")
 async def refresh_access(
     refresh_token: str,

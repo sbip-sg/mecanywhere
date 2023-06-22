@@ -10,12 +10,8 @@ async def create_challenge(
     login_service: LoginService = Depends(get_login_service)
 ):
     data = await request.json()
-    print("data", data)
-    email = data['email']
-    password = data['password']
-    did = data['did']
-    challenge = login_service.create_challenge(email, password, did)
-    print("achallenge", challenge)
+    # did = data['did']
+    challenge = login_service.create_challenge()
     return challenge
 
 @login_router.post("/verify_response/")
@@ -27,12 +23,8 @@ async def verify_response(
     message = data['message']
     publicKey = data['publicKey']
     signature = data['signature']
-    # print("signedChallenge", signedChallenge)
-    # print(message)
     is_authenticated = login_service.verify_response(message, signature, publicKey)
-    print("is_authenticated", is_authenticated)
     return is_authenticated
-
 
 # @login_router.post("/verify_response/")
 # async def verify_response(

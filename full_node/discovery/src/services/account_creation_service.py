@@ -1,30 +1,18 @@
 
-from sqlalchemy.exc import IntegrityError
 import requests
 import json
-from .database import get_session, users
 
 class AccountCreationService:
     def __init__(self):
-        self.session = get_session()
+        pass
 
-    def create_user(self, email: str, password: str, public_key: str, public_key_wallet: str):
-        print(email)
-        print(password)
-        print(public_key)
-        print(public_key_wallet)
+    def create_user(self, public_key: str):
         try:
             did = self.create_did(public_key)
-            print(did)
             if did:
                 credential = self.create_credential(did)
                 if credential:
-                    new_user = users.insert().values(email=email, password=password, did=did, public_key_wallet=public_key_wallet)
-                    self.session.execute(new_user)
-                    self.session.commit()
-                    print("User created successfully.", new_user)
                     user_data = {
-                        "email": email,
                         "did": did,
                         "credential": credential,
                     }
@@ -33,13 +21,9 @@ class AccountCreationService:
                     raise Exception("Failed to create credential from public key")
             else:
                 raise Exception("Failed to create DID from public key")
-        except IntegrityError:
-            self.session.rollback()
-            raise Exception("Error: User already exists.")
         except Exception as e:
-            self.session.rollback()
             raise Exception(f"Error: Failed to create user. {str(e)}")
-
+   
     def create_did(self, public_key: str) -> str:
         try:
             payload = {
@@ -48,9 +32,7 @@ class AccountCreationService:
             response = requests.post("http://localhost:8080/api/v1/did/create", json=payload)
             if response.status_code == 200:
                 data = json.loads(response.content.decode('utf-8'))
-                print(data)
                 did = data['result']['did']
-                print(did)
                 return did
             else:
                 return None
@@ -73,7 +55,7 @@ class AccountCreationService:
                     "age": 29
                 },
                 "cptId": 2000000,
-                "issuer": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8"
+                "issuer": "did:bdsv:0x52c328ef8b382b1d71cc262b868d803a137ab8d8"
             }
             response = requests.post("http://localhost:8080/api/v1/credential/create", json=payload)
             if response.status_code == 200:

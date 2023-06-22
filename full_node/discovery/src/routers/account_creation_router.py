@@ -10,9 +10,6 @@ async def create_user(
     account_creation_service: AccountCreationService = Depends(get_account_creation_service)
 ):
     data = await request.json()
-    email = data['email']
-    password = data['password']
     public_key = data['publicKey']
-    public_key_wallet = data['publicKeyWallet']
-    user_data = account_creation_service.create_user(email, password, public_key, public_key_wallet)
+    user_data = account_creation_service.create_user(public_key)
     return user_data
