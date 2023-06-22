@@ -12,4 +12,4 @@ REM Start python application in a separate console
 start "discovery" cmd.exe /k "cd discovery && venv\Scripts\activate && pip install -r requirements.txt && cd src && uvicorn main:app --port 7000 --reload"
 
 REM Start python application in a separate console
-start "payment" cmd.exe /k "cd payment && venv\Scripts\activate && pip install -r requirements.txt && uvicorn main:app --port 7001 --reload"
+start "transaction" cmd.exe /k "cd transaction && venv\Scripts\activate && pip install -r requirements.txt && uvicorn main:app --port 7001 --reload"
