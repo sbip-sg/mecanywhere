@@ -5,7 +5,7 @@ from web3 import Web3
 import json
 
 
-# Shared contract with payment service
+# Shared contract with transaction service
 class PaymentContract:
     _contract_instance = None
 
@@ -48,25 +48,25 @@ class PaymentContract:
         except ValueError as e:
             raise Exception(e)
 
-    # function not used in this service
-    # # amount is in ether
-    # def withdraw(self, did: str, address: str, amount: int):
-    #     wei_amount = self.w3.to_wei(Decimal(amount), "ether")
-    #     unbuilt_function = self.contract.functions.withdraw(did, address, wei_amount)
-    #     self.call_function(unbuilt_function, {"gas": 300000})
+    # amount is in ether
+    def withdraw(self, did: str, address: str, amount: int):
+        wei_amount = self.w3.to_wei(Decimal(amount), "ether")
+        unbuilt_function = self.contract.functions.withdraw(did, address, wei_amount)
+        self.call_function(unbuilt_function, {"gas": 300000})
 
     def get_balance(self, did: str) -> int:
         balance = self.contract.functions.getBalance(did).call()
         return self.w3.from_wei(balance, "ether")
 
-    # amount is in ether
-    def increase_balance(self, did: str, amount: int):
-        wei_amount = self.w3.to_wei(Decimal(amount), "ether")
-        unbuilt_function = self.contract.functions.increaseBalance(did, wei_amount)
-        self.call_function(unbuilt_function, {"gas": 300000})
+    # functions not used in this service
+    # # amount is in ether
+    # def increase_balance(self, did: str, amount: int):
+    #     wei_amount = self.w3.to_wei(Decimal(amount), "ether")
+    #     unbuilt_function = self.contract.functions.increaseBalance(did, wei_amount)
+    #     self.call_function(unbuilt_function, {"gas": 300000})
 
-    # amount is in ether
-    def decrease_balance(self, did: str, amount: int):
-        wei_amount = self.w3.to_wei(Decimal(amount), "ether")
-        unbuilt_function = self.contract.functions.decreaseBalance(did, wei_amount)
-        self.call_function(unbuilt_function, {"gas": 300000})
+    # # amount is in ether
+    # def decrease_balance(self, did: str, amount: int):
+    #     wei_amount = self.w3.to_wei(Decimal(amount), "ether")
+    #     unbuilt_function = self.contract.functions.decreaseBalance(did, wei_amount)
+    #     self.call_function(unbuilt_function, {"gas": 300000})

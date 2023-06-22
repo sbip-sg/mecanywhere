@@ -4,11 +4,10 @@ import aiohttp
 import redis
 from contract import PaymentContract
 from config import Config
-from common.middleware.credential_authentication import (
+from middleware.credential_authentication import (
     CredentialAuthenticationMiddleware,
 )
 from contract import PaymentContract
-from services.task_service import TaskService
 
 
 def get_config() -> Config:
@@ -60,9 +59,3 @@ async def has_ca_access(
 def get_contract_instance(config: Config = Depends(get_config)) -> PaymentContract:
     return PaymentContract(config)
 
-
-def get_task_service(
-    config: Config = Depends(get_config),
-    contract: PaymentContract = Depends(get_contract_instance),
-) -> TaskService:
-    return TaskService(config, contract)

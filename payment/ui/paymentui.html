@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Metamask Transaction</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+</head>
+<body>
+  <h1>Metamask Transaction</h1>
+
+  <!-- <label for="register">Register an account:</label></br>
+  <i>DID will be the account identifier. The primary wallet address you have now 
+    will be used for payments and is associated with this account.</i></br>
+  <input type="text" id="did" placeholder="Enter DID"></br>
+  <input type="text" id="address" placeholder="Enter wallet address used for paying MECA"></br>
+  <button onclick="registerAddress()">Register DID with address</button></br>
+  
+  <label for="change">Change wallet address registered to your account:</label></br>
+  <input type="text" id="changedid" placeholder="Enter DID"></br>
+  <input type="text" id="changeoldaddress" placeholder="Enter old wallet address"></br>
+  <input type="text" id="changenewaddress" placeholder="Enter new wallet address"></br>
+  <button onclick="changeAddress()">Change address of DID</button></br> -->
+
+  <i>DID will be used to identify your account and associated balance.</i></br>
+  <label>DID: </label>
+  <input type="text" id="did" placeholder="Enter DID"></br>
+
+  <label for="amount">Payment Amount (Ether):</label>
+  <input type="text" id="amount" placeholder="Enter payment amount">
+  <button onclick="pay()">Send Payment</button></br>
+  <i>Payment is sent using the primary wallet address you have now. 
+    This amount will be sent to your DID account associated with this wallet account.</i></br>
+
+  <h3>Your balance: </h3>
+  <label id="balance"></label>
+  <button onclick="getBalance()">Get balance</button></br>
+
+  <label for="withdraw">Withdrawing Amount (Ether):</label>
+  <input type="text" id="withdrawdid" placeholder="Enter DID"></br>
+  <input type="text" id="withdrawwallet" placeholder="Enter wallet address">
+  <input type="text" id="withdraw" placeholder="Enter amount to withdraw">
+  <button onclick="withdraw()">Withdraw</button></br>
+  <i>The amount will be reflected in the primary wallet address you have now after a few minutes lol.</i></br>
+
+  <script>
+    // async function registerAddress(){};
+    // async function changeAddress(){};
+    async function pay(){};
+    async function getBalance(){};
+    async function withdraw(){};
+
+    async function getContractAddress() {
+      const response = await fetch('../config.json');
+      const data = await response.json();
+      return data['contract']['contract_address']
+    }
+
+    async function loadContractAbi() {
+      const response = await fetch('PaymentContractV2.json');
+      const data = await response.json();
+      return data;
+    }
+    
+    async function init() {
+      const contractAddress = await getContractAddress();
+      const contractAbi = await loadContractAbi();
+      
+      if (typeof window.ethereum !== 'undefined') {
+        const web3 = new Web3(window.ethereum);
+        ethereum.request({ method: 'eth_requestAccounts' });
+        const contract = new web3.eth.Contract(contractAbi, contractAddress);
+        console.log(contract)
+        
+        // registerAddress = async () => {
+        //   const accounts = await web3.eth.getAccounts();
+        //   const did = document.getElementById('did').value;
+        //   const address = document.getElementById('address').value;
+        //   try {
+        //     await contract.methods.registerAddress(did, address).send({ 
+        //       from: accounts[0]
+        //     });
+        //     console.log('Transaction executed.');
+        //   } catch (error) {
+        //     console.error('Transaction failed:', error);
+        //   }
+        // }
+        
+        // changeAddress = async () => {
+        //   const accounts = await web3.eth.getAccounts();
+        //   const did = document.getElementById('changedid').value;
+        //   const oldAddress = document.getElementById('changeoldaddress').value;
+        //   const newAddress = document.getElementById('changenewaddress').value;
+        //   try {
+        //     await contract.methods.changeAddress(did, oldAddress, newAddress).send({ 
+        //       from: accounts[0]
+        //     });
+        //     console.log('Transaction executed.');
+        //   } catch (error) {
+        //     console.error('Transaction failed:', error);
+        //   }
+        // }
+
+        pay = async () => {
+          const accounts = await web3.eth.getAccounts();
+          const did = document.getElementById('did').value;
+          const paymentAmount = document.getElementById('amount').value;
+          const paymentWei = web3.utils.toWei(paymentAmount, 'ether');
+          try {
+            await contract.methods.pay(did).send({ 
+              from: accounts[0],
+              value: paymentWei 
+            });
+            console.log('Transaction executed.');
+          } catch (error) {
+            console.error('Transaction failed:', error);
+          }
+        }
+        
+        const paymentReceivedEvent = contract.events.PaymentReceived();
+        // Event listener
+        paymentReceivedEvent.on('data', event => {
+            console.log('Payment received:', event.returnValues);
+          }).on('error', error => {
+            console.error('Error listening to event:', error);
+          });
+
+        getBalance = async () => {
+          const accounts = await web3.eth.getAccounts();
+          const did = document.getElementById('did').value;
+          const balance = await contract.methods.getBalance(did).call({ from: accounts[0] });
+          const balanceInEther = web3.utils.fromWei(balance, 'ether');
+          document.getElementById('balance').innerHTML = balanceInEther;
+        }
+
+        withdraw = async () => {
+          const accounts = await web3.eth.getAccounts();
+          const did = document.getElementById('withdrawdid').value;
+          const withdrawWallet = document.getElementById('withdrawwallet').value;
+          const withdrawAmount = document.getElementById('withdraw').value;
+          const withdrawWei = web3.utils.toWei(withdrawAmount, 'ether');
+          try {
+            await contract.methods.withdraw(did, withdrawWallet, withdrawWei).send({ 
+              from: accounts[0]
+            });
+            console.log('Transaction executed.');
+          } catch (error) {
+            console.error('Transaction failed:', error);
+            console.log('Sike. This function should be routed to our server ' + 
+            'which uses the owning account to transfer to the user.')
+          }
+        }
+
+      } else {
+        console.log('Metamask not found');
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

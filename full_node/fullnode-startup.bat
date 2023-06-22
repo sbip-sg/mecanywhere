@@ -9,8 +9,7 @@ REM Start redis docker container
 docker start redis
 
 REM Start python application in a separate console
-cd discovery
+start "discovery" cmd.exe /k "cd discovery && venv\Scripts\activate && pip install -r requirements.txt && cd src && uvicorn main:app --port 7000 --reload"
 
-REM Install pip dependencies
-venv\Scripts\activate && pip install -r requirements.txt && cd src && uvicorn main:app --port 7000 --workers 1 --reload
-
+REM Start python application in a separate console
+start "payment" cmd.exe /k "cd payment && venv\Scripts\activate && pip install -r requirements.txt && uvicorn main:app --port 7001 --reload"

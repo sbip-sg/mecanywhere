@@ -2,29 +2,40 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract PaymentContract {
-    // Records for payments that are due to our wallet
-    struct DueRecord {
-        uint256 nonce;
-        string did;
-        address source;
-        uint256 amount;
-    }
-
-    mapping(uint256 => DueRecord) private nonceToDueRecord;
-
-    function getDue(uint256 nonce) public view returns (DueRecord memory) {
-        return nonceToDueRecord[nonce];
-    }
-    
-    function setDue(uint256 nonce, string memory did, address source, uint256 amount) public {
-        nonceToDueRecord[nonce] = DueRecord(nonce, did, source, amount);
-    }
-
-    function removeDue(uint256 nonce) public {
-        delete nonceToDueRecord[nonce];
-    }
-
+    address private owner;
     mapping(string => uint256) private didToBalance;
+
+    event PaymentReceived(string indexed did, uint256 amount);
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You're not the smart contract owner!");
+        _;
+    }
+
+    function pay(string memory fromDid) external payable {
+        if (msg.value <= 0) {
+            revert("Value must be positive.");
+        }
+        
+        emit PaymentReceived(fromDid, msg.value);
+        increaseBalance(fromDid, msg.value);
+    }
+
+    function withdraw(string memory toDid, address payable to, uint256 amount) public payable onlyOwner {
+        if (didToBalance[toDid] < amount) {
+            revert("Insufficient balance.");
+        }
+
+        decreaseBalance(toDid, amount);
+        (bool sent, bytes memory data) = to.call{value: amount}("");
+        if (!sent) {
+            revert("Failed to send Ether");
+        }
+    }
 
     function getBalance(string memory did) public view returns (uint256) {
         return didToBalance[did];
