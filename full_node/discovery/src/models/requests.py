@@ -1,4 +1,4 @@
-from models.credential import CredentialModel
+from common.models.credential import CredentialModel
 from models.did import DIDModel
 
 

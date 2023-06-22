@@ -3,8 +3,9 @@ import redis
 from aiohttp import ClientSession
 from config import Config
 from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from contract import DiscoveryContract, EthDiscoveryContract
-from middleware.credential_authentication import CredentialAuthenticationMiddleware
+from common.middleware.credential_authentication import CredentialAuthenticationMiddleware
 from services.assignment_service import AssignmentService
 from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
@@ -35,6 +36,20 @@ def get_ca_middleware(
     redis: redis.Redis = Depends(get_redis_client),
 ) -> CredentialAuthenticationMiddleware:
     return CredentialAuthenticationMiddleware(config, session, redis)
+
+
+def get_did_from_token(
+    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+) -> str:
+    return ca_middleware.get_did_from_token(authorization)
+
+
+async def has_ca_access(
+    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+) -> bool:
+    await ca_middleware.has_access(authorization)
 
 
 def get_discovery_contract(config: Config = Depends(get_config)) -> DiscoveryContract:

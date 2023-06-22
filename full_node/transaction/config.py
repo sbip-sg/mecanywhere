@@ -12,26 +12,26 @@ class Config:
             except:
                 pass
 
+    def get_access_token_key(self) -> str:
+        return self.configuration["secrets"]["access_token_key"]
+
+    def get_refresh_token_key(self) -> str:
+        return self.configuration["secrets"]["refresh_token_key"]
+
     def get_contract_address(self) -> str:
         return self.configuration["contract"]["contract_address"]
 
     def get_abi_path(self) -> str:
         return self.configuration["contract"]["abi_path"]
 
-    def get_contract_url(self) -> str:
+    def get_blockchain_provider_url(self) -> str:
         return self.configuration["contract"]["url"]
-
-    def get_verify_vc_url(self) -> str:
-        return self.configuration["did_verify_credential"]
+    
+    def get_verify_did_url(self) -> str:
+        return self.configuration["verify_did_url"]
 
     def get_redis_host(self) -> str:
         return self.configuration["redis"]["host"]
-
-    def get_redis_port(self) -> int:
+    
+    def get_redis_port(self) -> str:
         return self.configuration["redis"]["port"]
-
-    def get_access_token_key(self) -> str:
-        return self.configuration["secrets"]["access_token_key"]
-
-    def get_refresh_token_key(self) -> str:
-        return self.configuration["secrets"]["refresh_token_key"]

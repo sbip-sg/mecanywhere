@@ -5,7 +5,7 @@ docker start ganache
 
 REM Install contract dependencies
 set confirmContract=Y
-set /p confirmContract=Do you need to install contract dependencies? (Y/N): (%confirmContract%)
+set /p confirmContract=Do you need to install contract node dependencies? (Y/N): (%confirmContract%)
 if /i "%confirmContract%"=="Y" (
     echo ===========================================================================================
     echo Installing contract dependencies...
@@ -32,7 +32,7 @@ if /i "%confirmTruffle%"=="Y" (
     cd ..\..
 
     cd full_node\contract
-    call truffle migrate --network development
+    call truffle migrate --network sepolia
     cd ..\..
 )
 
@@ -40,5 +40,6 @@ if /i "%confirmTruffle%"=="Y" (
 cd did
 call did-local-startup.bat
 cd ..
-start "issuer" cmd.exe /k "cd authentication && auth-startup.bat"
+start "PO" cmd.exe /k "cd authentication && auth-startup.bat"
 start "fullnode" cmd.exe /k "cd full_node && fullnode-startup.bat"
+start "payment" cmd.exe /k "cd payment && payment-startup.bat"

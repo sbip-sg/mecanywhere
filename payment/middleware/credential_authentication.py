@@ -1,5 +1,6 @@
-from enum import Enum
 import json
+import redis
+from enum import Enum
 from fastapi import status, HTTPException, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
@@ -8,7 +9,6 @@ from datetime import datetime, timedelta
 from config import Config
 from aiohttp import ClientSession
 from models.credential import CredentialModel
-import redis
 
 
 ALGORITHM = "HS256"
@@ -23,8 +23,7 @@ class TokenType(Enum):
     REFRESH = 2
 
 
-# Custom middleware authenticating credentials in authorization header,
-# does not override dispatch to allow docs to render.
+# Custom middleware authenticating credentials in authorization header
 # Credential refers to HTTP Authorization header with Bearer token.
 # VC refers to Verifiable Credential.
 class CredentialAuthenticationMiddleware:
@@ -57,7 +56,7 @@ class CredentialAuthenticationMiddleware:
                 )
             return is_verified
 
-    def check_expiry(self, expiry: float):
+    def _check_expiry(self, expiry: float):
         if datetime.fromtimestamp(expiry) < datetime.utcnow():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -65,7 +64,7 @@ class CredentialAuthenticationMiddleware:
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-    # Returns true if the token is valid and the vc is verified
+    # Checks if the token is valid and the vc is verified, throws exception otherwise
     async def has_access(
         self, authorization: HTTPAuthorizationCredentials = Depends(security)
     ):
@@ -84,11 +83,12 @@ class CredentialAuthenticationMiddleware:
                 algorithms=[ALGORITHM],
             )
 
-            self.check_expiry(payload["exp"])
+            self._check_expiry(payload["exp"])
 
             vc = {"credential": payload["credential"]}
             did = payload["did"]
-            return await self._verify_vc(did, vc)
+            if not await self._verify_vc(did, vc):
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
         except JOSEError as e:  # catches any exception
             raise HTTPException(
@@ -146,7 +146,7 @@ class CredentialAuthenticationMiddleware:
                 key=self.config.get_refresh_token_key(),
                 algorithms=[ALGORITHM],
             )
-            self.check_expiry(payload["exp"])
+            self._check_expiry(payload["exp"])
             vc = {"credential": payload["credential"]}
             did = payload["did"]
             if await self._verify_vc(did, vc):
@@ -163,3 +163,29 @@ class CredentialAuthenticationMiddleware:
                 detail=str(e),
                 headers={"WWW-Authenticate": "Bearer"},
             )
+
+    # Returns the did from the token's did field
+    # Does not guarantee that the did is valid unless the token has been authorized by has_access
+    def get_did_from_token(
+        self, authorization: HTTPAuthorizationCredentials = Depends(security)
+    ):
+        token = authorization.credentials
+        payload = jwt.decode(
+            token,
+            key=self.config.get_access_token_key(),
+            algorithms=[ALGORITHM],
+        )
+        return payload["did"]
+
+    # Returns the po's did of the vc from the token's vc field
+    # Does not guarantee that the did is valid unless the token has been authorized by has_access
+    def get_po_did_from_token(
+        self, authorization: HTTPAuthorizationCredentials = Depends(security)
+    ):
+        token = authorization.credentials
+        payload = jwt.decode(
+            token,
+            key=self.config.get_access_token_key(),
+            algorithms=[ALGORITHM],
+        )
+        return payload["credential"]["issuer"]
