@@ -1,6 +1,6 @@
 from fastapi import Depends
 from config import Config
-from payment.contract import PaymentContract
+from contract import PaymentContract
 
 
 class TaskService:
