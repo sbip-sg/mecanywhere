@@ -564,7 +564,7 @@ public class DataToolUtils {
      */
     public static String getRandomSalt() {
 
-        String length = PropertyUtils.getProperty("salt.length", DEFAULT_SALT_LENGTH);
+        String length = DEFAULT_SALT_LENGTH;
         int saltLength = Integer.valueOf(length);
         String salt = RandomStringUtils.random(saltLength, true, true);
         return salt;

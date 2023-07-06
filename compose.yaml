@@ -1,0 +1,101 @@
+services:
+  # nginx:
+  #   image:
+  #     nginx:latest
+  #   ports:
+  #     - "81:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf
+  #   depends_on:
+  #     - did-issuer
+  #     - did-verifier
+  #     - payment
+
+  redis:
+    image:
+      redis:latest
+    ports:
+      - "6379:6379"
+  
+  did-verifier:
+    build:
+      context: ./did
+      dockerfile: DockerFile2
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./did:/did
+  
+  did-issuer:
+    build:
+      context: ./did
+      dockerfile: DockerFile3
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./did:/did
+    depends_on:
+      - did-verifier
+    secrets:
+      - 52c328ef8b382b1d71cc262b868d803a137ab8d8
+
+  authentication:
+    build: 
+      context: ./authentication
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./authentication:/authentication
+    depends_on:
+      - did-verifier
+
+  rabbitmq:
+    image:
+      rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  fn-discovery:
+    build:
+      context: ./full_node
+      dockerfile: Dockerfile.discovery
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./full_node/discovery:/discovery
+    depends_on:
+      - did-verifier
+      - redis
+      - rabbitmq
+
+  fn-transaction:
+    build:
+      context: ./full_node
+      dockerfile: Dockerfile.transaction
+    ports:
+      - "7001:7001"
+    volumes:
+      - ./full_node/transaction:/transaction
+    depends_on:
+      - did-verifier
+      - redis
+  
+  payment:
+    build:
+      context: ./payment
+    ports:
+      - "7002:7002"
+    volumes:
+      - ./payment:/payment
+    depends_on:
+      - did-verifier
+
+secrets:
+  access_token_key:
+    file: ./keys/access_token_key.txt
+  52c328ef8b382b1d71cc262b868d803a137ab8d8:
+    file: ./keys/0x52c328ef8b382b1d71cc262b868d803a137ab8d8
+  wallet_private_key:
+    file: ./keys/wallet_private_key.txt
+

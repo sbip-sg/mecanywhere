@@ -46,11 +46,7 @@ public class ContractConfig {
 
     @Bean
     public Web3j web3j() {
-        if (this.isDevelopment) {
-            return Web3j.build(new HttpService(url));
-        } else {
-            return Web3j.build(new HttpService(url + PropertyUtils.getProperty("INFURA_PROJECT_ID")));
-        }
+        return Web3j.build(new HttpService(url));
     }
 
     @Bean

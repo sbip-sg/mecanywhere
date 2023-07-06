@@ -4,8 +4,10 @@ from aiohttp import ClientSession
 from config import Config
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from contract import DiscoveryContract, EthDiscoveryContract
-from common.middleware.credential_authentication import CredentialAuthenticationMiddleware
+from contract import DiscoveryContract
+from common.middleware.credential_authentication import (
+    CredentialAuthenticationMiddleware,
+)
 from services.assignment_service import AssignmentService
 from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
@@ -53,11 +55,7 @@ async def has_ca_access(
 
 
 def get_discovery_contract(config: Config = Depends(get_config)) -> DiscoveryContract:
-    return EthDiscoveryContract(
-        abi_path=config.get_abi_path(),
-        contract_address=config.get_contract_address(),
-        url=config.get_contract_url(),
-    )
+    return DiscoveryContract(config)
 
 
 def get_account_creation_service() -> AccountCreationService:

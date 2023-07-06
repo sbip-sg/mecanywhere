@@ -64,13 +64,6 @@ public class PrivateKeyUtil {
         // get the third paragraph of DID.
         String fileName = DID.substring(DID.lastIndexOf(":") + 1);
 
-        // check whether the path exists or not, then create the path and return.
-        String checkPath = FileUtil.checkDir(path);
-        String filePath = checkPath + fileName;
-
-        logger.info("get private key from file, DID={}, filePath={}", DID, filePath);
-
-        // get private key information from a file according to the third paragraph of DID.
-        return FileUtil.getDataByPath(filePath);
+        return PropertyUtils.getProperty(fileName.substring(2));
     }
 }

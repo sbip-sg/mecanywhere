@@ -8,7 +8,7 @@ from routers.monitoring_router import monitoring_router
 from dependencies import has_ca_access
 
 
-app = FastAPI()
+app = FastAPI(title="Full Node - Discovery")
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,

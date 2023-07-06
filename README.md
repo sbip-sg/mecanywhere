@@ -18,6 +18,9 @@ Services:
     - Hosted by MECA to provide payment service for POs
     - API Documentation: http://localhost:7002/docs
 
+Architecture:
+https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&node-id=0%3A1&t=IANJCjD1wgNtEChu-1
+
 ## Quick Start
 Run `startup.bat` to start all the services. Sorray theres no docker version yet.
 

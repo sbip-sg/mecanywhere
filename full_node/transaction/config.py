@@ -27,6 +27,12 @@ class Config:
     def get_blockchain_provider_url(self) -> str:
         return self.configuration["contract"]["url"]
     
+    def get_wallet_address(self) -> str:
+        return self.configuration["wallet"]["address"]
+    
+    def get_wallet_private_key(self) -> str:
+        return self.configuration["wallet"]["private_key"]
+    
     def get_verify_did_url(self) -> str:
         return self.configuration["verify_did_url"]
 

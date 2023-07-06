@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY discovery discovery
+COPY config.json config.json
+COPY contract/build contract/build
+COPY common discovery/src/common
+
+WORKDIR /app/discovery
+
+# use --no-cache-dir in production
+RUN echo "STARTING DISCOVERY SERVICE..." && \
+    pip install -r requirements.txt
+
+WORKDIR /app/discovery/src
+
+CMD ["uvicorn", "main:app", "--port", "7000", \
+    "--host", "0.0.0.0", \
+    "--reload", \
+    # if using reverse proxy, use this
+    # "--root-path", "/discovery/src", \
+    "--forwarded-allow-ips", "*"]
+
+EXPOSE 7000
