@@ -1,9 +1,24 @@
 import json
+import os
+
+from pydantic import BaseSettings
 
 
 class Config:
+    class SecretSettings(BaseSettings):
+        wallet_address: str = None
+        wallet_private_key: str = None
+        access_token_key: str = None
+        refresh_token_key: str = None
+
+        class Config:
+            env_file = ".env"
+
     def __init__(self, *paths: str) -> None:
         self.configuration = {}
+        self.secrets = Config.SecretSettings()
+
+        # Populate configuration from json files
         for path in paths:
             try:
                 with open(path, "r") as f:
@@ -11,6 +26,17 @@ class Config:
                     self.configuration.update(config)
             except:
                 pass
+
+        # Populate configuration from docker secrets
+        if not os.environ.get("docker_testnet"):
+            pass
+        for dirpath, dirnames, files in os.walk("/run/secrets"):
+            for file_name in files:
+                try:
+                    secret = open(os.path.join(dirpath, file_name), "r").read().strip()
+                    setattr(self.secrets, file_name, secret)
+                except:
+                    pass
 
     def get_contract_address(self) -> str:
         return self.configuration["contract"]["contract_address"]
@@ -22,10 +48,10 @@ class Config:
         return self.configuration["contract"]["url"]
     
     def get_wallet_address(self) -> str:
-        return self.configuration["wallet"]["address"]
+        return self.secrets.wallet_address
     
     def get_wallet_private_key(self) -> str:
-        return self.configuration["wallet"]["private_key"]
+        return self.secrets.wallet_private_key
 
     def get_verify_vc_url(self) -> str:
         return self.configuration["did_verify_credential"]
@@ -37,7 +63,7 @@ class Config:
         return self.configuration["redis"]["port"]
 
     def get_access_token_key(self) -> str:
-        return self.configuration["secrets"]["access_token_key"]
+        return self.secrets.access_token_key
 
     def get_refresh_token_key(self) -> str:
-        return self.configuration["secrets"]["refresh_token_key"]
+        return self.secrets.refresh_token_key

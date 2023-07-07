@@ -23,7 +23,7 @@ services:
       dockerfile: DockerFile2
     ports:
       - "8080:8080"
-    volumes:
+    volumes: # volume mounts ignore dockerignore
       - ./did:/did
     secrets:
       - wallet_private_key
@@ -34,7 +34,7 @@ services:
       dockerfile: DockerFile3
     ports:
       - "9090:9090"
-    volumes:
+    volumes: # volume mounts ignore dockerignore
       - ./did:/did
     depends_on:
       - did-verifier
@@ -47,10 +47,17 @@ services:
       context: ./authentication
     ports:
       - "8000:8000"
-    volumes:
+    volumes: # volume mounts ignore dockerignore
       - ./authentication:/authentication
     depends_on:
       - did-verifier
+    environment:
+      - docker_testnet=true
+    secrets:
+      - wallet_private_key
+      - wallet_address
+      - access_token_key
+      - refresh_token_key
 
   rabbitmq:
     image:
@@ -65,12 +72,19 @@ services:
       dockerfile: Dockerfile.discovery
     ports:
       - "7000:7000"
-    volumes:
+    volumes: # volume mounts ignore dockerignore
       - ./full_node/discovery:/discovery
     depends_on:
       - did-verifier
       - redis
       - rabbitmq
+    environment:
+      - docker_testnet=true
+    secrets:
+      - wallet_private_key
+      - wallet_address
+      - access_token_key
+      - refresh_token_key
 
   fn-transaction:
     build:
@@ -78,27 +92,45 @@ services:
       dockerfile: Dockerfile.transaction
     ports:
       - "7001:7001"
-    volumes:
+    volumes: # volume mounts ignore dockerignore
       - ./full_node/transaction:/transaction
     depends_on:
       - did-verifier
       - redis
+    environment:
+      - docker_testnet=true
+    secrets:
+      - wallet_private_key
+      - wallet_address
+      - access_token_key
+      - refresh_token_key
   
   payment:
     build:
       context: ./payment
     ports:
       - "7002:7002"
-    volumes:
-      - ./payment:/payment
+    volumes: # volume mounts ignore dockerignore
+      - ./payment:/app
     depends_on:
       - did-verifier
+    environment:
+      - docker_testnet=true
+    secrets:
+      - wallet_private_key
+      - wallet_address
+      - access_token_key
+      - refresh_token_key
 
 secrets:
   access_token_key:
     file: ./keys/access_token_key.txt
+  refresh_token_key:
+    file: ./keys/refresh_token_key.txt
   52c328ef8b382b1d71cc262b868d803a137ab8d8:
     file: ./keys/0x52c328ef8b382b1d71cc262b868d803a137ab8d8
+  wallet_address:
+    file: ./keys/wallet_address.txt
   wallet_private_key:
     file: ./keys/wallet_private_key.txt
 

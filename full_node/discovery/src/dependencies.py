@@ -1,3 +1,4 @@
+from functools import lru_cache
 import aiohttp
 import redis
 from aiohttp import ClientSession
@@ -15,6 +16,7 @@ from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
 
 
+@lru_cache()
 def get_config() -> Config:
     return Config("../config.json", "../../config.json")
 

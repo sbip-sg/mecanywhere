@@ -1,3 +1,4 @@
+from functools import lru_cache
 from fastapi import Depends
 import aiohttp
 from config import Config
@@ -11,6 +12,7 @@ async def get_client_session():
         yield session
 
 
+@lru_cache()
 def get_config():
     return Config("config.json")
 
