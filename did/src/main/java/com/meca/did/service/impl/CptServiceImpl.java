@@ -138,14 +138,12 @@ public class CptServiceImpl implements CptService {
         if (dIDPrivateKey == null
                 || StringUtils.isEmpty(dIDPrivateKey.getPrivateKey())) {
             logger.error(
-                    "Input cpt publisher private key : {} is in valid.",
+                    "Input cpt publisher private key : {} is invalid.",
                     dIDPrivateKey
             );
             return ErrorCode.DID_PRIVATEKEY_INVALID;
         }
 
-        logger.info(dIDPrivateKey.toString());
-        logger.info(dID);
         if (!DIDUtils.validatePrivateKeyDIDMatches(dIDPrivateKey, dID)) {
             return ErrorCode.DID_PRIVATEKEY_DOES_NOT_MATCH;
         }

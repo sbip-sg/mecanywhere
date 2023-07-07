@@ -38,6 +38,8 @@ public class IssuerController {
 
     private final CredentialPojoService credentialPojoService;
 
+    private final PrivateKeyUtil privateKeyUtil;
+
     /**
      * institutional publication of Credential.
      *
@@ -63,11 +65,10 @@ public class IssuerController {
             String claimData = DataToolUtils.mapToCompactJson(createCredentialRequest.getClaimData());
 
             // get the private key from the file according to DID.
-            String privateKey = PrivateKeyUtil.getPrivateKeyByDID(PrivateKeyUtil.KEY_DIR, issuer);
+            String privateKey = privateKeyUtil.getPrivateKeyByDID(issuer);
             logger.info(
-                    "param,issuer:{},privateKey:{},claimData:{}",
+                    "param,issuer:{},claimData:{}",
                     issuer,
-                    privateKey,
                     claimData
             );
 

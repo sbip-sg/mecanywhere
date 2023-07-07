@@ -25,6 +25,8 @@ services:
       - "8080:8080"
     volumes:
       - ./did:/did
+    secrets:
+      - wallet_private_key
   
   did-issuer:
     build:
@@ -37,6 +39,7 @@ services:
     depends_on:
       - did-verifier
     secrets:
+      - wallet_private_key
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
 
   authentication:
