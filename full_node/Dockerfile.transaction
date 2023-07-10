@@ -2,16 +2,18 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+COPY transaction/requirements.txt transaction/requirements.txt
+
+# use --no-cache-dir in production
+RUN echo "STARTING TRANSACTION SERVICE..." && \
+    pip install -r transaction/requirements.txt
+
 COPY transaction transaction
 COPY config.json config.json
 COPY contract/build contract/build
 COPY common transaction/common
 
 WORKDIR /app/transaction
-
-# use --no-cache-dir in production
-RUN echo "STARTING TRANSACTION SERVICE..." && \
-    pip install -r requirements.txt
 
 CMD ["uvicorn", "main:app", "--port", "7001", \
     "--host", "0.0.0.0", \

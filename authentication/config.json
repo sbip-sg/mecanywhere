@@ -1,8 +1,19 @@
 {
-    "db_url": "sqlite:///./example.db",
-    "issuer_url": "http://did-issuer:9090",
-    "create_credential_route": "/api/v1/credential/create",
-    "create_schema_route": "/api/v1/cpt/register",
-    "issuer_did": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
-    "cpt_id": 2000000
+    "environment": "docker_testnet",
+    "development": {
+        "db_url": "sqlite:///./example.db",
+        "issuer_url": "http://localhost:9090",
+        "create_credential_route": "/api/v1/credential/create",
+        "create_schema_route": "/api/v1/cpt/register",
+        "issuer_did": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
+        "cpt_id": 2000000
+    },
+    "docker_testnet": {
+        "db_url": "sqlite:///./example.db",
+        "issuer_url": "http://did-issuer:9090",
+        "create_credential_route": "/api/v1/credential/create",
+        "create_schema_route": "/api/v1/cpt/register",
+        "issuer_did": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
+        "cpt_id": 2000000
+    }
 }

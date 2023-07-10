@@ -2,16 +2,16 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+COPY discovery/requirements.txt discovery/requirements.txt
+
+# use --no-cache-dir in production
+RUN echo "STARTING DISCOVERY SERVICE..." && \
+    pip install -r discovery/requirements.txt
+
 COPY discovery discovery
 COPY config.json config.json
 COPY contract/build contract/build
 COPY common discovery/src/common
-
-WORKDIR /app/discovery
-
-# use --no-cache-dir in production
-RUN echo "STARTING DISCOVERY SERVICE..." && \
-    pip install -r requirements.txt
 
 WORKDIR /app/discovery/src
 

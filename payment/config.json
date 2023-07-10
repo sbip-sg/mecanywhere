@@ -1,12 +1,27 @@
 {
-    "contract": {
-        "contract_address": "0x00A2D67F79e8652ce878685Ac1B7E0b5e9A475C9",
-        "abi_path": "build/contracts/PaymentContract.json",
-        "url": "https://sepolia.infura.io/v3/85f42a4ab71e4e5b836e01c68d7cf116"
+    "environment": "docker_testnet",
+    "development": {
+        "contract": {
+            "contract_address": "0x3bED5D943cD42EA344E05cc8A1Aa577aA0d11828",
+            "abi_path": "build/contracts/PaymentContract.json",
+            "url": "http://localhost:8545/"
+        },
+        "verify_did_url": "http://localhost:8080/api/v1/credential/verify",
+        "redis": {
+            "host": "localhost",
+            "port": 6379
+        }
     },
-    "verify_did_url": "http://did-verifier:8080/api/v1/credential/verify",
-    "redis": {
-        "host": "redis",
-        "port": 6379
+    "docker_testnet": {
+        "contract": {
+            "contract_address": "0x00A2D67F79e8652ce878685Ac1B7E0b5e9A475C9",
+            "abi_path": "build/contracts/PaymentContract.json",
+            "url": "https://sepolia.infura.io/v3/85f42a4ab71e4e5b836e01c68d7cf116"
+        },
+        "verify_did_url": "http://did-verifier:8080/api/v1/credential/verify",
+        "redis": {
+            "host": "redis",
+            "port": 6379
+        }
     }
 }

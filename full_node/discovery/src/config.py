@@ -17,19 +17,23 @@ class Config:
     def __init__(self, *paths: str) -> None:
         self.configuration = {}
         self.secrets = Config.SecretSettings()
+        _environment = ""
 
         # Populate configuration from json files
         for path in paths:
             try:
                 with open(path, "r") as f:
                     config = json.load(f)
+                    if config["environment"]:
+                        _environment = config["environment"]
+                        config = config[_environment]
                     self.configuration.update(config)
             except:
                 pass
 
         # Populate configuration from docker secrets
-        if not os.environ.get("docker_testnet"):
-            pass
+        if _environment != "docker_testnet":
+            return
         for dirpath, dirnames, files in os.walk("/run/secrets"):
             for file_name in files:
                 try:
@@ -46,10 +50,10 @@ class Config:
 
     def get_blockchain_provider_url(self) -> str:
         return self.configuration["contract"]["url"]
-    
+
     def get_wallet_address(self) -> str:
         return self.secrets.wallet_address
-    
+
     def get_wallet_private_key(self) -> str:
         return self.secrets.wallet_private_key
 

@@ -20,22 +20,18 @@ services:
   did-verifier:
     build:
       context: ./did
-      dockerfile: DockerFile2
+      dockerfile: Dockerfile.verifier
     ports:
       - "8080:8080"
-    volumes: # volume mounts ignore dockerignore
-      - ./did:/did
     secrets:
       - wallet_private_key
   
   did-issuer:
     build:
       context: ./did
-      dockerfile: DockerFile3
+      dockerfile: Dockerfile.issuer
     ports:
       - "9090:9090"
-    volumes: # volume mounts ignore dockerignore
-      - ./did:/did
     depends_on:
       - did-verifier
     secrets:
@@ -48,16 +44,9 @@ services:
     ports:
       - "8000:8000"
     volumes: # volume mounts ignore dockerignore
-      - ./authentication:/authentication
+      - ./authentication:/app
     depends_on:
       - did-verifier
-    environment:
-      - docker_testnet=true
-    secrets:
-      - wallet_private_key
-      - wallet_address
-      - access_token_key
-      - refresh_token_key
 
   rabbitmq:
     image:
@@ -73,13 +62,12 @@ services:
     ports:
       - "7000:7000"
     volumes: # volume mounts ignore dockerignore
-      - ./full_node/discovery:/discovery
+      - ./full_node/discovery:/app/discovery
+      - ./full_node/common:/app/discovery/src/common
     depends_on:
       - did-verifier
       - redis
       - rabbitmq
-    environment:
-      - docker_testnet=true
     secrets:
       - wallet_private_key
       - wallet_address
@@ -93,12 +81,11 @@ services:
     ports:
       - "7001:7001"
     volumes: # volume mounts ignore dockerignore
-      - ./full_node/transaction:/transaction
+      - ./full_node/transaction:/app/transaction
+      - ./full_node/common:/app/transaction/common
     depends_on:
       - did-verifier
       - redis
-    environment:
-      - docker_testnet=true
     secrets:
       - wallet_private_key
       - wallet_address
@@ -114,8 +101,6 @@ services:
       - ./payment:/app
     depends_on:
       - did-verifier
-    environment:
-      - docker_testnet=true
     secrets:
       - wallet_private_key
       - wallet_address

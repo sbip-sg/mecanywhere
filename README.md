@@ -18,11 +18,39 @@ Services:
     - Hosted by MECA to provide payment service for POs
     - API Documentation: http://localhost:7002/docs
 
+Smart contracts:
+1. `did/contract/contracts/DIDContract.sol`, `did/contract/contracts/CptContract.sol`: used by verifier and issuer services
+2. `full_node/contract/contracts/PaymentContract.sol`: used by payment and transaction services
+3. `full_node/contract/contracts/DiscoveryContract.sol`: used by discovery service
+
 Architecture:
 https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&node-id=0%3A1&t=IANJCjD1wgNtEChu-1
 
-## Quick Start
-Run `startup.bat` to start all the services. Sorray theres no docker version yet.
+# Configuration
+
+### Secret keys
+- For local development:
+    - Secret keys can be loaded in `.env` in each service folder. Follow the `.env.example` file for the required variables. 
+- For docker testnet:
+    - Secret keys are loaded by creating a `keys` folder in this base directory where `compose.yaml` is. Each file contains the secret key and the file name is the name of the secret. Required variables are shown in `compose.yaml`. 
+        - For python services, you have to add your variables in the settings class in `config.py` too.
+
+### Changing environments
+- For local development:
+    - `"environment": "development"` in `config.json` for python services. 
+    - For java services, exclude `testnet` when activating the profile.
+- For docker testnet:
+    - `"environment": "docker-testnet"` in `config.json` for python services. 
+    - For java services, include `testnet` when activating the profile. (default in dockerfile)
+
+### Note
+- Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
+
+# Quick Start
+Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
+> **Note:** Hot reload is enabled for the python services but not the java services. 
+
+OR run `startup.bat` to start all the services on windows. Run any startup script in each service folder to start the service individually on windows.
 
 # Manual Start
 
@@ -40,7 +68,7 @@ Run `startup.bat` to start all the services. Sorray theres no docker version yet
 Install python and its relevant packages
 ```
 python3 -m venv venv
-source venv/bin/activate
+venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -48,7 +76,7 @@ pip install -r requirements.txt
 
 Run `auth-startup.bat` or run the python service
 ```
-source venv/bin/activate
+venv/bin/activate
 uvicorn main:app --port 8000 --reload
 ```
 
@@ -98,7 +126,7 @@ cd full_node/contract
 npm install
 cd ../discovery
 python3 -m venv venv
-source venv/bin/activate
+venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -112,7 +140,7 @@ Either run the `fullnode-startup.bat` file or follow the instructions below
 cd /contract
 truffle migrate --network development
 cd ../discovery
-source venv/bin/activate
+venv/bin/activate
 cd src
 uvicorn main:app --port 7000 --reload
 ```
