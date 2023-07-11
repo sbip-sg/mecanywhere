@@ -31,16 +31,17 @@ class Config:
             except:
                 pass
 
-        # Populate configuration from docker secrets
-        if _environment != "docker_testnet":
-            return
-        for dirpath, dirnames, files in os.walk("/run/secrets"):
-            for file_name in files:
-                try:
-                    secret = open(os.path.join(dirpath, file_name), "r").read().strip()
-                    setattr(self.secrets, file_name, secret)
-                except:
-                    pass
+        # Try overwriting from docker secrets
+        try:
+            for dirpath, dirnames, files in os.walk("/run/secrets"):
+                for file_name in files:
+                    try:
+                        secret = open(os.path.join(dirpath, file_name), "r").read().strip()
+                        setattr(self.secrets, file_name, secret)
+                    except:
+                        pass
+        except:
+            pass
 
     def get_contract_address(self) -> str:
         return self.configuration["contract"]["contract_address"]

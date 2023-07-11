@@ -28,22 +28,29 @@ https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagr
 
 # Configuration
 
-### Secret keys
-- For local development:
-    - Secret keys can be loaded in `.env` in each service folder. Follow the `.env.example` file for the required variables. 
+Options: manual, docker local (recommended), docker testnet
+
+### Changing environments
+- For manual:
+    - `"environment": "development"` in `config.json` for python services.
+    - For java services, just use the `verifier` or `issuer` profiles when activating the profile.
+- For docker local:
+    - `"environment": "docker-testnet"` in `config.json` for python services. 
+    - For java services, include `docker-local` when activating the profile. (default in dockerfile)
 - For docker testnet:
+    - `"environment": "docker-testnet"` in `config.json` for python services. 
+    - For java services, include `docker-testnet` when activating the profile.
+    - You may comment out the ganache service in `compose.yaml` since it is not used.
+
+### Secret keys
+- For manual:
+    - Secret keys can be loaded in `.env` in each service folder. Follow the `.env.example` file for the required variables. 
+- For docker local/testnet:
     - Secret keys are loaded by creating a `keys` folder in this base directory where `compose.yaml` is. Each file contains the secret key and the file name is the name of the secret. Required variables are shown in `compose.yaml`. 
         - For python services, you have to add your variables in the settings class in `config.py` too.
 
-### Changing environments
-- For local development:
-    - `"environment": "development"` in `config.json` for python services. 
-    - For java services, exclude `testnet` when activating the profile.
-- For docker testnet:
-    - `"environment": "docker-testnet"` in `config.json` for python services. 
-    - For java services, include `testnet` when activating the profile. (default in dockerfile)
-
-### Note
+### Contracts
+- For all configurations, you still have to truffle migrate the contracts to local ganache or sepolia testnet because I'm not able automate it on docker. The default testnet contracts have been migrated to sepolia.
 - Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
 
 # Quick Start
