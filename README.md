@@ -50,7 +50,7 @@ Options: manual, docker local (recommended), docker testnet
         - For python services, you have to add your variables in the settings class in `config.py` too.
 
 ### Contracts
-- For all configurations, you still have to truffle migrate the contracts to local ganache or sepolia testnet because I'm not able automate it on docker. The default testnet contracts have been migrated to sepolia.
+- For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker. The default testnet contracts have been migrated to sepolia.
 - Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
 - For docker local:
     - `truffle migrate --network development`
@@ -59,10 +59,12 @@ Options: manual, docker local (recommended), docker testnet
     - `truffle migrate --network sepolia`
 
 # Quick Start
-Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
+1. Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
 > **Note:** Hot reload is enabled for the python services but not the java services. 
 
 OR run `startup.bat` to start all the services on windows. Run any startup script in each service folder to start the service individually on windows.
+
+2. Migrate the contracts onto your chosen blockchain.
 
 # Manual Start
 
