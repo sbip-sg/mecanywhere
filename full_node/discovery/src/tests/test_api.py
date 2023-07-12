@@ -24,7 +24,7 @@ def test_create_user():
     response = test_app.post("/create_account/", json={'publicKey': public_key_decimal})
     did = response.json()['did']
     assert response.status_code == 200
-    assert did[0:11] == 'did:bdsv:0x'
+    assert did[0:11] == 'did:meca:0x'
     assert len(did) == 51
 
 def test_create_challenge():
