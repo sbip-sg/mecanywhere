@@ -16,14 +16,18 @@ class IssuerService:
             "issuer": self.config.get_issuer_did(),
         }
 
-        return await self._post_request(self.config.get_create_credential_url(), request_payload)
+        return await self._post_request(
+            self.config.get_create_credential_url(), request_payload
+        )
 
     async def create_schema(self, schema):
         request_payload = {
             "claim": {**schema.dict()},
-            "publisher": self.config.get_issuer_did()
+            "publisher": self.config.get_issuer_did(),
         }
-        return await self._post_request(self.config.get_create_schema_url(), request_payload)
+        return await self._post_request(
+            self.config.get_create_schema_url(), request_payload
+        )
 
     async def _post_request(self, url, payload):
         async with self.session.post(url, json=payload) as result:

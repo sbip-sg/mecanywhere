@@ -2,7 +2,7 @@
     "environment": "docker_local",
     "development": {
         "contract": {
-            "contract_address": "0x3bED5D943cD42EA344E05cc8A1Aa577aA0d11828",
+            "contract_address": "0xe3ed4fd891fEf89Cb5ED7f609fEDEB87ddcC864c",
             "abi_path": "build/contracts/PaymentContract.json",
             "url": "http://localhost:8545/"
         },
@@ -14,9 +14,9 @@
     },
     "docker_local": {
         "contract": {
-            "contract_address": "0x3bED5D943cD42EA344E05cc8A1Aa577aA0d11828",
+            "contract_address": "0xe3ed4fd891fEf89Cb5ED7f609fEDEB87ddcC864c",
             "abi_path": "build/contracts/PaymentContract.json",
-            "url": "http://localhost:8545/"
+            "url": "http://ganache:8545/"
         },
         "verify_did_url": "http://did-verifier:8080/api/v1/credential/verify",
         "redis": {

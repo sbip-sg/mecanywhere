@@ -2,7 +2,7 @@
     "environment": "docker_local",
     "development": {
         "contract": {
-            "contract_address": "0xD5045993BCF1D4B8D287bE9efB62eB70904f96c1",
+            "contract_address": "0x69565A95FaC461605CE764714A5b92695C02dd7F",
             "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
             "url": "http://localhost:8545/"
         },
@@ -14,11 +14,11 @@
     },
     "docker_local": {
         "contract": {
-            "contract_address": "0xD5045993BCF1D4B8D287bE9efB62eB70904f96c1",
+            "contract_address": "0x69565A95FaC461605CE764714A5b92695C02dd7F",
             "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
-            "url": "http://localhost:8545/"
+            "url": "http://ganache:8545/"
         },
-        "verify_did_url": "http://did-verifier:8080/api/v1/credential/verify",
+        "did_verify_credential": "http://did-verifier:8080/api/v1/credential/verify",
         "redis": {
             "host": "redis",
             "port": 6379

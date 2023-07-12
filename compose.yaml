@@ -16,7 +16,7 @@ services:
       trufflesuite/ganache-cli:latest
     ports:
       - "8545:8545"
-    command: ganache-cli --host 0.0.0.0 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
+    command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
       
   redis:
     image:
@@ -30,8 +30,8 @@ services:
       dockerfile: Dockerfile.verifier
     ports:
       - "8080:8080"
-    depends_on:
-      - ganache
+    volumes:
+      - ./did/src:/app/src
     secrets:
       - wallet_private_key
   
@@ -41,9 +41,10 @@ services:
       dockerfile: Dockerfile.issuer
     ports:
       - "9090:9090"
+    volumes:
+      - ./did/src:/app/src
     depends_on:
       - did-verifier
-      - ganache
     secrets:
       - wallet_private_key
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
@@ -78,7 +79,6 @@ services:
       - did-verifier
       - redis
       - rabbitmq
-      - ganache
     secrets:
       - wallet_private_key
       - wallet_address
@@ -97,7 +97,6 @@ services:
     depends_on:
       - did-verifier
       - redis
-      - ganache
     secrets:
       - wallet_private_key
       - wallet_address
@@ -113,7 +112,6 @@ services:
       - ./payment:/app
     depends_on:
       - did-verifier
-      - ganache
     secrets:
       - wallet_private_key
       - wallet_address

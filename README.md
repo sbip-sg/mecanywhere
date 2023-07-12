@@ -52,6 +52,11 @@ Options: manual, docker local (recommended), docker testnet
 ### Contracts
 - For all configurations, you still have to truffle migrate the contracts to local ganache or sepolia testnet because I'm not able automate it on docker. The default testnet contracts have been migrated to sepolia.
 - Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
+- For docker local:
+    - `truffle migrate --network development`
+    - Migrate the DID contracts first, then the full node contracts to correspond to the default config addresses.
+- For docker testnet:
+    - `truffle migrate --network sepolia`
 
 # Quick Start
 Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
