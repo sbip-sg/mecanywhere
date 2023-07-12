@@ -60,8 +60,8 @@ def get_discovery_contract(config: Config = Depends(get_config)) -> DiscoveryCon
     return DiscoveryContract(config)
 
 
-def get_account_creation_service() -> AccountCreationService:
-    return AccountCreationService()
+def get_account_creation_service(config: Config = Depends(get_config)) -> AccountCreationService:
+    return AccountCreationService(config)
 
 
 def get_login_service() -> LoginService:

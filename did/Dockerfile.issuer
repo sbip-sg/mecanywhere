@@ -3,6 +3,9 @@ FROM eclipse-temurin:11-jdk-alpine as build
 WORKDIR /app
 
 COPY mvnw .
+
+RUN sed -i 's/\r$//' mvnw
+
 COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
