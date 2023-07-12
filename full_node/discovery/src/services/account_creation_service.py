@@ -9,8 +9,10 @@ class AccountCreationService:
     def create_user(self, public_key: str):
         try:
             did = self.create_did(public_key)
+            print("did", did)
             if did:
                 credential = self.create_credential(did)
+                print("credential", credential)
                 if credential:
                     user_data = {
                         "did": did,
@@ -55,9 +57,9 @@ class AccountCreationService:
                     "age": 29
                 },
                 "cptId": 2000000,
-                "issuer": "did:bdsv:0x52c328ef8b382b1d71cc262b868d803a137ab8d8"
+                "issuer": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8"
             }
-            response = requests.post("http://localhost:8080/api/v1/credential/create", json=payload)
+            response = requests.post("http://localhost:9090/api/v1/credential/create", json=payload)
             if response.status_code == 200:
                 data = json.loads(response.content.decode('utf-8'))
                 return data

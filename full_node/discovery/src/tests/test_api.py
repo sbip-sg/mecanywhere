@@ -24,7 +24,7 @@ def test_create_user():
     response = test_app.post("/create_account/", json={'publicKey': public_key_decimal})
     did = response.json()['did']
     assert response.status_code == 200
-    assert did[0:11] == 'did:bdsv:0x'
+    assert did[0:11] == 'did:meca:0x'
     assert len(did) == 51
 
 def test_create_challenge():
@@ -44,6 +44,7 @@ def test_register_client():
     response = test_app.post("/registration/register_client/", json=credentials)
     data = response.json()
     pytest.tokens = data
+    print("data", data)
     assert len(data['access_token']) == 2087
     assert len(data['refresh_token']) == 2087
     assert data['access_token_type'] == "bearer"
