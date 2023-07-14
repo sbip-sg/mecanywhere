@@ -11,47 +11,47 @@
     "credentials": {
         "did": "did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f",
         "credential": {
-            "credential": {
-                "context": "https://www.w3.org/2018/credentials/v1",
-                "id": "234508ed-fc5b-4ea4-88ac-f04bc657f470",
-                "cptId": 2000000,
-                "issuer": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
-                "issuanceDate": 1680058078,
-                "expirationDate": 4833658078,
-                "claim": {
-                    "gender": "M",
-                    "name": "Chai",
-                    "DID": "did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f",
-                    "age": 29
-                    },
-                "proof": {
-                    "creator": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
-                    "salt": {
-                            "gender": "ZZijO",
-                            "name": "6fLwp",
-                            "DID": "cXQ86",
-                            "age": "FjOSj"
-                        },
-                        "created": 1680058078,
-                        "type": "Secp256k1",
-                        "signatureValue": "zNDJ6NiFvu0yoFYBx7V3ZZVPaBPEMvqBieHbdhUFb8t3YWzRvje5dm8LM8p+OJ85Gq26u+yITTCkGwQlzUVKZxs="
-                    },
-                    "type": [
-                    "VerifiableCredential",
-                    "original"
-                ],
-                "signature": "zNDJ6NiFvu0yoFYBx7V3ZZVPaBPEMvqBieHbdhUFb8t3YWzRvje5dm8LM8p+OJ85Gq26u+yITTCkGwQlzUVKZxs=",
-                "hash": "0x066d5c0edf9808c11ce4a45f5679b9cba9dacbbc99800f362063887d8ac83ca6",
-                "signatureThumbprint": "{\"claim\":{\"DID\":\"did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f\",\"age\":29,\"gender\":\"M\",\"name\":\"Chai\"},\"context\":\"https://www.w3.org/2018/credentials/v1\",\"cptId\":2000000,\"expirationDate\":4833658078,\"id\":\"234508ed-fc5b-4ea4-88ac-f04bc657f470\",\"issuanceDate\":1680058078,\"issuer\":\"did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8\",\"type\":[\"VerifiableCredential\",\"original\"]}",
-                "salt": {
-                    "gender": "ZZijO",
-                    "name": "6fLwp",
-                    "DID": "cXQ86",
-                    "age": "FjOSj"
-                },
-                "credentialType": "ORIGINAL",
-                "proofType": "Secp256k1"
-            }
+          "credential": {
+          "context": "https://www.w3.org/2018/credentials/v1",
+          "id": "278d3952-50c1-436f-b6af-1d7467517dc5",
+          "cptId": 2000000,
+          "issuer": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
+          "issuanceDate": 1688536557,
+          "expirationDate": 4842136557,
+          "claim": {
+            "gender": "M",
+            "name": "Chai",
+            "DID": "did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f",
+            "age": 29
+          },
+          "proof": {
+            "type": "Secp256k1",
+            "created": 1688536557,
+            "creator": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
+            "salt": {
+              "gender": "yFs3h",
+              "name": "UJHmy",
+              "DID": "dXhsM",
+              "age": "7y30b"
+            },
+            "signatureValue": "T/0bKojcizkWYik7EcKId94f566Jzb0oajrDvoOKKO4+NTRNxcqErsYl/qlBRRlENc6tgkCHsgpcORoppLeObBs="
+          },
+          "type": [
+            "VerifiableCredential",
+            "original"
+          ],
+          "signature": "T/0bKojcizkWYik7EcKId94f566Jzb0oajrDvoOKKO4+NTRNxcqErsYl/qlBRRlENc6tgkCHsgpcORoppLeObBs=",
+          "hash": "0xf594768d7db20263af2c76b2db5c7d6fe4395f2888451b4f175bdbaeadf07919",
+          "signatureThumbprint": "{\"claim\":{\"DID\":\"did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f\",\"age\":29,\"gender\":\"M\",\"name\":\"Chai\"},\"context\":\"https://www.w3.org/2018/credentials/v1\",\"cptId\":2000000,\"expirationDate\":4842136557,\"id\":\"278d3952-50c1-436f-b6af-1d7467517dc5\",\"issuanceDate\":1688536557,\"issuer\":\"did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8\",\"type\":[\"VerifiableCredential\",\"original\"]}",
+          "salt": {
+            "gender": "yFs3h",
+            "name": "UJHmy",
+            "DID": "dXhsM",
+            "age": "7y30b"
+          },
+          "credentialType": "ORIGINAL",
+          "proofType": "Secp256k1"
         }
-    }
+        }
+      }
 }

@@ -44,6 +44,7 @@ def test_register_client():
     response = test_app.post("/registration/register_client/", json=credentials)
     data = response.json()
     pytest.tokens = data
+    print("data", data)
     assert len(data['access_token']) == 2087
     assert len(data['refresh_token']) == 2087
     assert data['access_token_type'] == "bearer"
