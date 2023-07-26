@@ -62,7 +62,7 @@ Options: manual, docker local (recommended), docker testnet
 1. Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
 > **Note:** Hot reload is enabled for the python services but not the java services. 
 
-OR run `startup.bat` to start all the services on windows. Run any startup script in each service folder to start the service individually on windows.
+- OR run `startup.bat` to start all the services on windows. Run any startup script in each service folder to start the service individually on windows.
 
 2. Migrate the contracts onto your chosen blockchain.
 - For development, the simplest way would be to run `truffle migrate` in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
