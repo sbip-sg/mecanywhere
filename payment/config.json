@@ -1,21 +1,39 @@
 {
-    "contract": {
-        "contract_address": "0xE24F8f5b84F2c90BAF938130b2B21C8e9CcA82CC",
-        "abi_path": "build/contracts/PaymentContract.json",
-        "url": "https://sepolia.infura.io/v3/85f42a4ab71e4e5b836e01c68d7cf116"
+    "environment": "docker_local",
+    "development": {
+        "contract": {
+            "contract_address": "0xe3ed4fd891fEf89Cb5ED7f609fEDEB87ddcC864c",
+            "abi_path": "build/contracts/PaymentContract.json",
+            "url": "http://localhost:8545/"
+        },
+        "verify_did_url": "http://localhost:8080/api/v1/credential/verify",
+        "redis": {
+            "host": "localhost",
+            "port": 6379
+        }
     },
-    "wallet": {
-        "address": "0x67c9badC4765ff6bF78130D559315854379f8a00",
-        "private_key": "",
-        "_comment": "DO NOT COMMIT THIS ^"
+    "docker_local": {
+        "contract": {
+            "contract_address": "0xe3ed4fd891fEf89Cb5ED7f609fEDEB87ddcC864c",
+            "abi_path": "build/contracts/PaymentContract.json",
+            "url": "http://ganache:8545/"
+        },
+        "verify_did_url": "http://did-verifier:8080/api/v1/credential/verify",
+        "redis": {
+            "host": "redis",
+            "port": 6379
+        }
     },
-    "verify_did_url": "http://localhost:8080/api/v1/credential/verify",
-    "redis": {
-        "host": "localhost",
-        "port": 6379
-    },
-    "secrets": {
-        "access_token_key": "secret",
-        "refresh_token_key": "secretsecret"
+    "docker_testnet": {
+        "contract": {
+            "contract_address": "0x00A2D67F79e8652ce878685Ac1B7E0b5e9A475C9",
+            "abi_path": "build/contracts/PaymentContract.json",
+            "url": "https://sepolia.infura.io/v3/85f42a4ab71e4e5b836e01c68d7cf116"
+        },
+        "verify_did_url": "http://did-verifier:8080/api/v1/credential/verify",
+        "redis": {
+            "host": "redis",
+            "port": 6379
+        }
     }
 }

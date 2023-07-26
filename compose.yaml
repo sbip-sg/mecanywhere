@@ -1,0 +1,132 @@
+services:
+  # nginx:
+  #   image:
+  #     nginx:latest
+  #   ports:
+  #     - "81:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf
+  #   depends_on:
+  #     - did-issuer
+  #     - did-verifier
+  #     - payment
+
+  ganache:
+    image:
+      trufflesuite/ganache-cli:latest
+    ports:
+      - "8545:8545"
+    command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
+      
+  redis:
+    image:
+      redis:latest
+    ports:
+      - "6379:6379"
+  
+  did-verifier:
+    build:
+      context: ./did
+      dockerfile: Dockerfile.verifier
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./did/src:/app/src
+    secrets:
+      - wallet_private_key
+  
+  did-issuer:
+    build:
+      context: ./did
+      dockerfile: Dockerfile.issuer
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./did/src:/app/src
+    depends_on:
+      - did-verifier
+    secrets:
+      - wallet_private_key
+      - 52c328ef8b382b1d71cc262b868d803a137ab8d8
+
+  authentication:
+    build: 
+      context: ./authentication
+    ports:
+      - "8000:8000"
+    volumes: # volume mounts ignore dockerignore
+      - ./authentication:/app
+    depends_on:
+      - did-verifier
+
+  rabbitmq:
+    image:
+      rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  fn-discovery:
+    build:
+      context: ./full_node
+      dockerfile: Dockerfile.discovery
+    ports:
+      - "7000:7000"
+    volumes: # volume mounts ignore dockerignore
+      - ./full_node/discovery:/app/discovery
+      - ./full_node/common:/app/discovery/src/common
+    depends_on:
+      - did-verifier
+      - redis
+      - rabbitmq
+    secrets:
+      - wallet_private_key
+      - wallet_address
+      - access_token_key
+      - refresh_token_key
+
+  fn-transaction:
+    build:
+      context: ./full_node
+      dockerfile: Dockerfile.transaction
+    ports:
+      - "7001:7001"
+    volumes: # volume mounts ignore dockerignore
+      - ./full_node/transaction:/app/transaction
+      - ./full_node/common:/app/transaction/common
+    depends_on:
+      - did-verifier
+      - redis
+    secrets:
+      - wallet_private_key
+      - wallet_address
+      - access_token_key
+      - refresh_token_key
+  
+  payment:
+    build:
+      context: ./payment
+    ports:
+      - "7002:7002"
+    volumes: # volume mounts ignore dockerignore
+      - ./payment:/app
+    depends_on:
+      - did-verifier
+    secrets:
+      - wallet_private_key
+      - wallet_address
+      - access_token_key
+      - refresh_token_key
+
+secrets:
+  access_token_key:
+    file: ./keys/access_token_key.txt
+  refresh_token_key:
+    file: ./keys/refresh_token_key.txt
+  52c328ef8b382b1d71cc262b868d803a137ab8d8:
+    file: ./keys/0x52c328ef8b382b1d71cc262b868d803a137ab8d8
+  wallet_address:
+    file: ./keys/wallet_address.txt
+  wallet_private_key:
+    file: ./keys/wallet_private_key.txt
+

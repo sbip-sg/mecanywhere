@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 class ClaimData(BaseModel):
     did: str = Field(..., example="did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8")
     name: str = Field(None, example="John Doe")
-    gender: str = Field(None, example="1.0")
+    gender: str = Field(None, example="M")
     age: int = Field(None, example=42)
 
 
@@ -14,7 +14,7 @@ class NameSchema(BaseModel):
 
 
 class GenderSchema(BaseModel):
-    enum: list = Field(..., example=["1.0", "2.0"])
+    enum: list = Field(..., example=["M", "F"])
     type: str = Field(..., example="string")
     description: str = Field(..., example="the gender of the certificate owner")
 

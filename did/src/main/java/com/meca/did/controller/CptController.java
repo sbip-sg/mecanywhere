@@ -33,6 +33,8 @@ public class CptController {
 
     private final CptService cptService;
 
+    private final PrivateKeyUtil privateKeyUtil;
+
     /**
      * institutional publication of CPT.
      * claim is a JSON object
@@ -55,8 +57,8 @@ public class CptController {
 
             // get the private key from the file according to weId.
             String privateKey
-                    = PrivateKeyUtil.getPrivateKeyByDID(PrivateKeyUtil.KEY_DIR, publisher);
-            logger.info("param,publisher:{},privateKey:{},claim:{}", publisher, privateKey, claim);
+                    = privateKeyUtil.getPrivateKeyByDID(publisher);
+            logger.info("param,publisher:{},claim:{}", publisher, claim);
 
             // converting claim in JSON format to map.
             Map<String, Object> claimMap = new HashMap<String, Object>();

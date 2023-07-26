@@ -1,9 +1,9 @@
 package com.meca.did.contract;
 
-import com.meca.did.util.PropertyUtils;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +13,17 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.StaticGasProvider;
 
+import com.meca.did.util.PropertyUtils;
+
 import java.math.BigInteger;
 
 @Data
 @Configuration
 public class ContractConfig {
     private static final Logger logger = LoggerFactory.getLogger(ContractConfig.class);
+
+    @Autowired
+    private PropertyUtils propertyUtils;
 
     @Value("${did.is.development}")
     private Boolean isDevelopment;
@@ -44,18 +49,20 @@ public class ContractConfig {
     @Value("${did.gas.limit}")
     private Long gasLimit;
 
+    @Value("${wallet.private.key:}")
+    private String walletPrivateKey;
+
     @Bean
     public Web3j web3j() {
-        if (this.isDevelopment) {
-            return Web3j.build(new HttpService(url));
-        } else {
-            return Web3j.build(new HttpService(url + PropertyUtils.getProperty("INFURA_PROJECT_ID")));
-        }
+        return Web3j.build(new HttpService(url));
     }
 
     @Bean
     public Credentials credentials() {
-        return Credentials.create(PropertyUtils.getProperty("WALLET_PRIVATE_KEY"));
+        if (isDevelopment) {
+            walletPrivateKey = propertyUtils.getProperty("WALLET_PRIVATE_KEY");
+        }
+        return Credentials.create(walletPrivateKey);
     }
 
     @Bean

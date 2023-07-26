@@ -100,38 +100,34 @@ curl --header "Content-Type: application/json" \
   http://<did-service-ip:port>/api/v1/did/create
 ```
 
-7. Create 'keys' directory in the did folder. Make sure to copy the issuer's example private key in the `keys` directory, otherwise you will not be able to issue credentials.
-
-```
- cp 0xfd340b5a30de452ae4a14dd1b92a7006868a29c8.example keys/0xfd340b5a30de452ae4a14dd1b92a7006868a29c8
-```
+7. Add the private key for the issuer to the .env file. This will be used to sign the credential. The format is `<did>:<private-key>`.
 
 8. (Optional) You can view Swagger API specification by go to the following URL(s)
 
 ```
 # You can view the Swagger API specification at <ip:port>/swagger-ui
 
-# For example, to view the Swagger API specification for the DID service running on localhost on port 80
+# For example, to view the Swagger API specification for the DID service running on localhost on port 8080
 
-http://localhost:80/swagger-ui
+http://localhost:8080/swagger-ui/
 
-# To view the Swagger API specification for the issuer service running on localhost on port 8080
+# To view the Swagger API specification for the issuer service running on localhost on port 9090
 
-http://localhost:8080/swagger-ui
+http://localhost:9090/swagger-ui/
 ```
 
 8. (Optional) Build Docker container for deployment (SBIP Server)
 
 ```
-# Under the current settings, port 9006 is reserved for the did service and 9007 for the issuer service. 
+# Under the current settings, port 8080 is reserved for the did service and 9090 for the issuer service. 
 
 # Make sure did-0.0.1-SNAPSHOT.jar is build and in the target folder
 
-# Run docker build commands in the did directory. Build 2 docker files, DockerFile2 for did service and DockerFile3 for issuer
+# Run docker build commands in the did directory. Build 2 docker files, Dockerfile.verifier for did service and Dockerfile.issuer for issuer
 
 cd did
-docker build -f DockerFile2 -t verifier .
-docker build -f DockerFile3 -t issuer .
+docker build -f Dockerfile.verifier -t verifier .
+docker build -f Dockerfile.issuer -t issuer .
 
 docker run -d -p 8080:8080 verifier
 docker run -d -p 9090:9090 issuer

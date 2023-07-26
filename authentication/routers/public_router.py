@@ -32,7 +32,6 @@ async def create_vc(
         )
 
     result = await issuer_service.create_vc(claim_data)
-    print(result)
     return result
 
 

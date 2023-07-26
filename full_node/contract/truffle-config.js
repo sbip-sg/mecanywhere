@@ -72,6 +72,11 @@ module.exports = {
             port: 8545,            // Standard Ethereum port (default: none)
             network_id: "*",       // Any network (default: none)
         },
+        // docker_ganache: {
+        //     host: "ganache",
+        //     port: 8545,
+        //     network_id: "*",
+        // },
         sepolia: {
             provider: function () {
                 return new HDWalletProvider(

@@ -1,3 +1,4 @@
+from functools import lru_cache
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 import aiohttp
@@ -11,6 +12,7 @@ from contract import PaymentContract
 from services.task_service import TaskService
 
 
+@lru_cache()
 def get_config() -> Config:
     return Config("../config.json", "config.json")
 

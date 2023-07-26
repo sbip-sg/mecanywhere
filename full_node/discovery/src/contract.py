@@ -1,75 +1,64 @@
 from typing import Self, List, Tuple
 from web3 import Web3
 import json
-from abc import ABC, abstractmethod
+
+from config import Config
 
 
-class DiscoveryContract(ABC):
-    @abstractmethod
-    def set_user(self, did: str, timestamp: int, latency: int) -> None:
-        pass
-
-    @abstractmethod
-    def get_user_queue(self, current_timestamp: int) -> str:
-        pass
-
-    @abstractmethod
-    def get_all_did_to_timestamps(self) -> List[Tuple[str, int]]:
-        pass
-
-    @abstractmethod
-    def remove_user(self, did: str) -> None:
-        pass
-
-    @abstractmethod
-    def remove_users(self, dids: List[str]) -> None:
-        pass
-
-
-class EthDiscoveryContract(DiscoveryContract):
+class DiscoveryContract:
     _contract_instance = None
 
-    def __init__(self, abi_path, contract_address, url) -> None:
-        self.w3 = Web3(Web3.HTTPProvider(url))
-        self.tx_params = {
-            "from": self.w3.eth.accounts[0],
-            "gasPrice": self.w3.to_wei("50", "gwei"),
-        }
-        with open(abi_path) as abi_definition:
+    def __init__(self, config: Config) -> None:
+        self.config = config
+        self.w3 = Web3(Web3.HTTPProvider(config.get_blockchain_provider_url()))
+        with open(config.get_abi_path()) as abi_definition:
             self.abi = json.load(abi_definition)["abi"]
+        self.contract = self.w3.eth.contract(
+            address=config.get_contract_address(), abi=self.abi
+        )
 
-        self.contract = self.w3.eth.contract(address=contract_address, abi=self.abi)
-
-    def __new__(cls, abi_path, contract_address, url) -> Self:
+    def __new__(cls, config) -> Self:
         if cls._contract_instance is None:
             cls._contract_instance = super().__new__(cls)
         return cls._contract_instance
 
-    # record user in the contract
-    def set_user(self, did: str, timestamp: int, latency: int) -> None:
+    def call_function(self, unbuilt_function, add_params):
         try:
-            self.tx_params["gas"] = 400000
-            # Sending the transaction to the network
-            tx_hash = self.contract.functions.setUser(did, timestamp, latency).transact(
-                self.tx_params
+            caller = self.config.get_wallet_address()
+            built_function = unbuilt_function.build_transaction(
+                {
+                    "from": caller,
+                    "gasPrice": self.w3.to_wei("50", "gwei"),
+                    **add_params,
+                    "nonce": self.w3.eth.get_transaction_count(caller),
+                    "chainId": self.w3.eth.chain_id,
+                }
             )
-
-            # Waiting for the transaction to be mined
+            signed_tx = self.w3.eth.account.sign_transaction(
+                built_function, self.config.get_wallet_private_key()
+            )
+            tx_hash = self.w3.eth.send_raw_transaction(signed_tx.rawTransaction)
             tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
+            if tx_receipt["status"] != 1:
+                raise Exception(
+                    "Transaction failed. Check etherscan for "
+                    + tx_receipt.transactionHash.hex()
+                )
         except ValueError as e:
-            print(e)
+            raise Exception(e)
+
+    # record user in the contract
+    def set_user(self, did: str, timestamp: int, latency: int):
+        unbuilt_function = self.contract.functions.setUser(did, timestamp, latency)
+        self.call_function(unbuilt_function, {"gas": 600000})
 
     # get arbitrary user's queue name from the contract
     def get_user_queue(self, current_timestamp: int) -> str:
-        try:
-            self.tx_params["gas"] = 300000
-            tx_hash = self.contract.functions.lazyRemoveExpiredUsers(
-                current_timestamp
-            ).transact(self.tx_params)
-            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
-            return self.contract.functions.getFirstUserQueue().call()
-        except ValueError as e:
-            print(e)
+        lazy_remove_expired_users = self.contract.functions.lazyRemoveExpiredUsers(
+            current_timestamp
+        )
+        self.call_function(lazy_remove_expired_users, {"gas": 300000})
+        return self.contract.functions.getFirstUserQueue().call()
 
     # get all dids and timestamps from the contract
     def get_all_did_to_timestamps(self) -> List[Tuple[str, int]]:
@@ -86,18 +75,10 @@ class EthDiscoveryContract(DiscoveryContract):
 
     # remove user from the contract
     def remove_user(self, did: str) -> None:
-        try:
-            self.tx_params["gas"] = 300000
-            tx_hash = self.contract.functions.removeUser(did).transact(self.tx_params)
-            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
-        except ValueError as e:
-            print(e)
+        unbuilt_function = self.contract.functions.removeUser(did)
+        self.call_function(unbuilt_function, {"gas": 300000})
 
     # remove users from the contract
     def remove_users(self, dids: List[str]) -> None:
-        try:
-            self.tx_params["gas"] = 300000
-            tx_hash = self.contract.functions.removeUsers(dids).transact(self.tx_params)
-            tx_receipt = self.w3.eth.wait_for_transaction_receipt(tx_hash)
-        except ValueError as e:
-            print(e)
+        unbuilt_function = self.contract.functions.removeUsers(dids)
+        self.call_function(unbuilt_function, {"gas": 300000})

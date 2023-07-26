@@ -18,8 +18,53 @@ Services:
     - Hosted by MECA to provide payment service for POs
     - API Documentation: http://localhost:7002/docs
 
-## Quick Start
-Run `startup.bat` to start all the services. Sorray theres no docker version yet.
+Smart contracts:
+1. `did/contract/contracts/DIDContract.sol`, `did/contract/contracts/CptContract.sol`: used by verifier and issuer services
+2. `full_node/contract/contracts/PaymentContract.sol`: used by payment and transaction services
+3. `full_node/contract/contracts/DiscoveryContract.sol`: used by discovery service
+
+Architecture:
+https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&node-id=0%3A1&t=IANJCjD1wgNtEChu-1
+
+# Configuration
+
+Options: manual, docker local (recommended), docker testnet
+
+### Changing environments
+- For manual:
+    - `"environment": "development"` in `config.json` for python services.
+    - For java services, just use the `verifier` or `issuer` profiles when activating the profile.
+- For docker local:
+    - `"environment": "docker-testnet"` in `config.json` for python services. 
+    - For java services, include `docker-local` when activating the profile. (default in dockerfile)
+- For docker testnet:
+    - `"environment": "docker-testnet"` in `config.json` for python services. 
+    - For java services, include `docker-testnet` when activating the profile.
+    - You may comment out the ganache service in `compose.yaml` since it is not used.
+
+### Secret keys
+- For manual:
+    - Secret keys can be loaded in `.env` in each service folder. Follow the `.env.example` file for the required variables. 
+- For docker local/testnet:
+    - Secret keys are loaded by creating a `keys` folder in this base directory where `compose.yaml` is. Each file contains the secret key and the file name is the name of the secret. Required variables are shown in `compose.yaml`. 
+        - For python services, you have to add your variables in the settings class in `config.py` too.
+
+### Contracts
+- For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker. The default testnet contracts have been migrated to sepolia.
+- Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
+- For docker local:
+    - `truffle migrate --network development`
+    - Migrate the DID contracts first, then the full node contracts to correspond to the default config addresses.
+- For docker testnet:
+    - `truffle migrate --network sepolia`
+
+# Quick Start
+1. Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
+> **Note:** Hot reload is enabled for the python services but not the java services. 
+
+OR run `startup.bat` to start all the services on windows. Run any startup script in each service folder to start the service individually on windows.
+
+2. Migrate the contracts onto your chosen blockchain.
 
 # Manual Start
 
@@ -37,7 +82,7 @@ Run `startup.bat` to start all the services. Sorray theres no docker version yet
 Install python and its relevant packages
 ```
 python3 -m venv venv
-source venv/bin/activate
+venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -45,7 +90,7 @@ pip install -r requirements.txt
 
 Run `auth-startup.bat` or run the python service
 ```
-source venv/bin/activate
+venv/bin/activate
 uvicorn main:app --port 8000 --reload
 ```
 
@@ -95,8 +140,8 @@ cd full_node/contract
 npm install
 cd ../discovery
 python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+venv/bin/activate
+pip install -r requirements-local.txt
 ```
 
 ### Usage
@@ -109,7 +154,7 @@ Either run the `fullnode-startup.bat` file or follow the instructions below
 cd /contract
 truffle migrate --network development
 cd ../discovery
-source venv/bin/activate
+venv/bin/activate
 cd src
 uvicorn main:app --port 7000 --reload
 ```

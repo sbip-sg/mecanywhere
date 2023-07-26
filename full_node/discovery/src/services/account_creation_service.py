@@ -1,10 +1,11 @@
 
 import requests
 import json
+from config import Config
 
 class AccountCreationService:
-    def __init__(self):
-        pass
+    def __init__(self, config: Config):
+        self.config = config
 
     def create_user(self, public_key: str):
         try:
@@ -31,7 +32,7 @@ class AccountCreationService:
             payload = {
                 "publicKey": public_key
             }
-            response = requests.post("http://localhost:8080/api/v1/did/create", json=payload)
+            response = requests.post(self.config.get_create_did_url(), json=payload)
             if response.status_code == 200:
                 data = json.loads(response.content.decode('utf-8'))
                 did = data['result']['did']
@@ -59,7 +60,7 @@ class AccountCreationService:
                 "cptId": 2000000,
                 "issuer": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8"
             }
-            response = requests.post("http://localhost:9090/api/v1/credential/create", json=payload)
+            response = requests.post(self.config.get_create_vc_url(), json=payload)
             if response.status_code == 200:
                 data = json.loads(response.content.decode('utf-8'))
                 return data
