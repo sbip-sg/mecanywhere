@@ -10,10 +10,8 @@ class AccountCreationService:
     def create_user(self, public_key: str):
         try:
             did = self.create_did(public_key)
-            print("did", did)
             if did:
                 credential = self.create_credential(did)
-                print("credential", credential)
                 if credential:
                     user_data = {
                         "did": did,

@@ -1,5 +1,5 @@
 {
-    "environment": "docker",
+    "environment": "docker-sbip",
     "development": {
         "db_url": "sqlite:///./example.db",
         "issuer_url": "http://localhost:9090",
@@ -11,6 +11,14 @@
     "docker": {
         "db_url": "sqlite:///./example.db",
         "issuer_url": "http://did-issuer:9090",
+        "create_credential_route": "/api/v1/credential/create",
+        "create_schema_route": "/api/v1/cpt/register",
+        "issuer_did": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
+        "cpt_id": 2000000
+    },
+    "docker-sbip": {
+        "db_url": "sqlite:///./example.db",
+        "issuer_url": "http://sbip-g2.d2.comp.nus.edu.sg:11004",
         "create_credential_route": "/api/v1/credential/create",
         "create_schema_route": "/api/v1/cpt/register",
         "issuer_did": "did:meca:0x52c328ef8b382b1d71cc262b868d803a137ab8d8",
