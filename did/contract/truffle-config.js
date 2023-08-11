@@ -75,6 +75,11 @@ module.exports = {
             port: 8545,            // Standard Ethereum port (default: none)
             network_id: "*",       // Any network (default: none)
         },
+        docker_sbip: {
+            host: "sbip-g2.d2.comp.nus.edu.sg",
+            port: 11001,
+            network_id: "*",
+        },
         // docker_ganache: {
         //     host: "ganache",
         //     port: 8545,

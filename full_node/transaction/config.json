@@ -35,5 +35,17 @@
             "host": "redis",
             "port": 6379
         }
+    },
+    "docker_sbip": {
+        "contract": {
+            "contract_address": "0xe3ed4fd891fEf89Cb5ED7f609fEDEB87ddcC864c",
+            "abi_path": "../contract/build/contracts/PaymentContract.json",
+            "url": "http://sbip-g2.d2.comp.nus.edu.sg:11001/"
+        },
+        "verify_did_url": "http://sbip-g2.d2.comp.nus.edu.sg:11003/api/v1/credential/verify",
+        "redis": {
+            "host": "sbip-g2.d2.comp.nus.edu.sg",
+            "port": 11002
+        }
     }
 }
