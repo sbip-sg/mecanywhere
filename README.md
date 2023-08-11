@@ -31,6 +31,7 @@ https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagr
 Options: manual, docker local (recommended), docker testnet
 
 ### Changing environments
+See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf600b557f4410c28a29c6b0cfa2f23)
 - For manual:
     - `"environment": "development"` in `config.json` for python services.
     - For java services, just use the `verifier` or `issuer` profiles when activating the profile.
