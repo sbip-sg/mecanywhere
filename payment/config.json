@@ -1,5 +1,5 @@
 {
-    "environment": "docker_sbip",
+    "environment": "docker_local",
     "development": {
         "contract": {
             "contract_address": "0xe3ed4fd891fEf89Cb5ED7f609fEDEB87ddcC864c",

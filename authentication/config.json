@@ -1,5 +1,5 @@
 {
-    "environment": "docker-sbip",
+    "environment": "docker",
     "development": {
         "db_url": "sqlite:///./example.db",
         "issuer_url": "http://localhost:9090",
