@@ -1,5 +1,4 @@
-name: meca-sbip
-
+version: "3.7"
 services:
   meca-ganache:
     image:
@@ -7,13 +6,13 @@ services:
     ports:
       - "11001:8545"
     command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
-      
+
   meca-redis:
     image:
       redis:latest
     ports:
       - "11002:6379"
-  
+
   meca-did-verifier:
     build:
       context: ./did
@@ -22,7 +21,7 @@ services:
       - "11003:8080"
     secrets:
       - wallet_private_key
-  
+
   meca-did-issuer:
     build:
       context: ./did
@@ -36,7 +35,7 @@ services:
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
 
   meca-authentication:
-    build: 
+    build:
       context: ./authentication
     ports:
       - "11005:8000"
@@ -80,7 +79,7 @@ services:
       - wallet_address
       - access_token_key
       - refresh_token_key
-  
+
   meca-payment:
     build:
       context: ./payment
@@ -105,4 +104,3 @@ secrets:
     file: ./keys/wallet_address.txt
   wallet_private_key:
     file: ./keys/wallet_private_key.txt
-
