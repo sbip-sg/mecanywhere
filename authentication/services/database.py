@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, select
 from sqlalchemy.orm import sessionmaker
 
 from config import Config
@@ -45,3 +45,8 @@ class Database:
                 return True
         return False
     
+    def delete_user(self, did: str, username: str, password: str):
+        self.session.execute(self.users.delete().where(self.users.c.did == did))
+        self.session.commit()
+        print("User deleted successfully.")
+        

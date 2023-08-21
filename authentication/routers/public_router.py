@@ -23,7 +23,7 @@ async def create_vc(
 
     if not account_service.verify_user(account):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid user"
         )
 
     if not account.did == claim_data.did:
