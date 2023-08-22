@@ -13,12 +13,13 @@ class TaskService:
         # store where?
         # what metadata to record?
 
-        fee = self._calculate_fee(task_metadata)
+        fee = self._calculate_after_agent_fee(task_metadata)
         if task_type == "client":
             self.contract.decrease_balance(po_did, fee)
         else:
             self.contract.increase_balance(po_did, fee)
+        return fee
 
-    def _calculate_fee(self, task_metadata):
+    def _calculate_after_agent_fee(self, task_metadata):
         return 0
     
