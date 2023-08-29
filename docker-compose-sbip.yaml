@@ -14,18 +14,14 @@ services:
       - "11002:6379"
 
   meca-did-verifier:
-    build:
-      context: ./did
-      dockerfile: Dockerfile.verifier
+    image: sbipmeca/meca:did-verifier-0.0.2
     ports:
       - "11003:8080"
     secrets:
       - wallet_private_key
 
   meca-did-issuer:
-    build:
-      context: ./did
-      dockerfile: Dockerfile.issuer
+    image: sbipmeca/meca:did-issuer-0.0.2
     ports:
       - "11004:9090"
     depends_on:
@@ -35,8 +31,7 @@ services:
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
 
   meca-authentication:
-    build:
-      context: ./authentication
+    image: sbipmeca/meca:authentication-0.0.2
     ports:
       - "11005:8000"
     depends_on:
@@ -50,9 +45,7 @@ services:
       - "11007:5672"
 
   meca-fn-discovery:
-    build:
-      context: ./full_node
-      dockerfile: Dockerfile.discovery
+    image: sbipmeca/meca:fn-discovery-0.0.2
     ports:
       - "11008:7000"
     depends_on:
@@ -66,9 +59,7 @@ services:
       - refresh_token_key
 
   meca-fn-transaction:
-    build:
-      context: ./full_node
-      dockerfile: Dockerfile.transaction
+    image: sbipmeca/meca:fn-transaction-0.0.2
     ports:
       - "11009:7001"
     depends_on:
@@ -81,8 +72,7 @@ services:
       - refresh_token_key
 
   meca-payment:
-    build:
-      context: ./payment
+    image: sbipmeca/meca:payment-0.0.2
     ports:
       - "11010:7002"
     depends_on:

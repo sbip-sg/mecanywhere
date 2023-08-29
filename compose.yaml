@@ -28,6 +28,7 @@ services:
     build:
       context: ./did
       dockerfile: Dockerfile.verifier
+    image: sbipmeca/meca:did-verifier-0.0.2
     ports:
       - "8080:8080"
     volumes:
@@ -39,6 +40,7 @@ services:
     build:
       context: ./did
       dockerfile: Dockerfile.issuer
+    image: sbipmeca/meca:did-issuer-0.0.2
     ports:
       - "9090:9090"
     volumes:
@@ -52,6 +54,7 @@ services:
   authentication:
     build: 
       context: ./authentication
+    image: sbipmeca/meca:authentication-0.0.2
     ports:
       - "8000:8000"
     volumes: # volume mounts ignore dockerignore
@@ -70,6 +73,7 @@ services:
     build:
       context: ./full_node
       dockerfile: Dockerfile.discovery
+    image: sbipmeca/meca:fn-discovery-0.0.2
     ports:
       - "7000:7000"
     volumes: # volume mounts ignore dockerignore
@@ -89,6 +93,7 @@ services:
     build:
       context: ./full_node
       dockerfile: Dockerfile.transaction
+    image: sbipmeca/meca:fn-transaction-0.0.2
     ports:
       - "7001:7001"
     volumes: # volume mounts ignore dockerignore
@@ -106,6 +111,7 @@ services:
   payment:
     build:
       context: ./payment
+    image: sbipmeca/meca:payment-0.0.2
     ports:
       - "7002:7002"
     volumes: # volume mounts ignore dockerignore
