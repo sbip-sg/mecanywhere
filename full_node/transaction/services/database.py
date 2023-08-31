@@ -1,7 +1,4 @@
-import csv
-import datetime
 from sqlalchemy import (
-    DateTime,
     Float,
     create_engine,
     Column,
@@ -24,34 +21,19 @@ class Database:
             self.metadata,
             Column("id", String(255), primary_key=True),
             Column("did", String(255), nullable=False),
-            Column("resource_consumed", Float, nullable=False),
+            Column("resource_consumed", Integer, nullable=False),
             Column("session_start_datetime", Integer, nullable=False),
             Column("session_end_datetime", Integer, nullable=False),
             Column("task", String(255), nullable=False),
             Column("duration", Integer, nullable=False),
             Column("price", Float, nullable=False),
+            Column("po_did", String(255), nullable=False),
+            Column("network_reliability", Integer, nullable=False),
             extend_existing=True,
         )
         Session = sessionmaker(bind=engine)
         self.session = Session()
         self.metadata.create_all(engine)
-        # with open('data.csv', 'r') as f:
-        #     csv_reader = csv.reader(f)
-        #     next(csv_reader, None)
-        #     for row in csv_reader:
-        #         self.session.execute(
-        #             self.transactions.insert().values(
-        #                 id=str(row[0]),
-        #                 did=str(row[1]),
-        #                 resource_consumed=float(row[2]),
-        #                 session_start_datetime=int(row[3]),
-        #                 session_end_datetime=int(row[4]),
-        #                 task=str(row[5]),
-        #                 duration=int(row[6]),
-        #                 price=float(0)
-        #             )
-        #         )
-        #     self.session.commit()
 
     def create_database(self):
         self.metadata.create_all()
@@ -61,20 +43,39 @@ class Database:
 
     def rollback(self):
         self.session.rollback()
-
-    def get_all_from_did(self, did: str):
-        return self.session.query(self.transactions).filter_by(did=did).all()
     
-    def add(self, session_id: str, did: str, resource_consumed: float, session_start_datetime: int, session_end_datetime: int, task: str, duration: int, price: float):
-        new_transaction = self.transactions.insert().values(
-                id=session_id,
-                did=did,
-                resource_consumed=resource_consumed,
-                session_start_datetime=session_start_datetime,
-                session_end_datetime=session_end_datetime,
-                task=task,
-                duration=duration,
-                price=price
-            )
-        self.session.execute(new_transaction)
+    def commit(self):
         self.session.commit()
+
+    def filter_by_did(self, did: str):
+        return self.session.query(self.transactions).filter_by(did=did).all()
+
+    def filter_by_po_did(self, did: str):
+        return self.session.query(self.transactions).filter_by(po_did=did).all()
+
+    def add_without_commit(
+        self,
+        session_id: str,
+        did: str,
+        resource_consumed: float,
+        session_start_datetime: int,
+        session_end_datetime: int,
+        task: str,
+        duration: int,
+        price: float,
+        po_did: str,
+        network_reliability: int,
+    ):
+        new_transaction = self.transactions.insert().values(
+            id=session_id,
+            did=did,
+            resource_consumed=resource_consumed,
+            session_start_datetime=session_start_datetime,
+            session_end_datetime=session_end_datetime,
+            task=task,
+            duration=duration,
+            price=price,
+            po_did=po_did,
+            network_reliability=network_reliability,
+        )
+        self.session.execute(new_transaction)
