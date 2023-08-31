@@ -72,3 +72,6 @@ class Config:
 
     def get_redis_port(self) -> str:
         return self.configuration["redis"]["port"]
+
+    def get_db_url(self) -> str:
+        return self.configuration["db_url"]

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class CreateUserResponse(BaseModel):
+class UserResponse(BaseModel):
     username: str
     did: str
 

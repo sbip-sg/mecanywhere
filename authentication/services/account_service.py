@@ -38,3 +38,15 @@ class AccountService:
                 status.HTTP_500_INTERNAL_SERVER_ERROR,
                 f"Error: Failed to verify user. {str(e)}",
             )
+
+    def delete_user(self, account: AccountModel):
+        try:
+            self.db.delete_user(account.did, account.username, account.password)
+            user_data = {"username": account.username, "did": account.did}
+            return user_data
+        except Exception as e:
+            self.db.rollback()
+            raise HTTPException(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                f"Error: Failed to delete user. {str(e)}",
+            )

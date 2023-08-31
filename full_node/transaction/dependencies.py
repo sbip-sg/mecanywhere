@@ -9,6 +9,8 @@ from common.middleware.credential_authentication import (
     CredentialAuthenticationMiddleware,
 )
 from contract import PaymentContract
+from services.database import Database
+from services.history_service import HistoryService
 from services.task_service import TaskService
 
 
@@ -63,8 +65,18 @@ def get_contract_instance(config: Config = Depends(get_config)) -> PaymentContra
     return PaymentContract(config)
 
 
+def get_database(config: Config = Depends(get_config)) -> Database:
+    return Database(config)
+
+
 def get_task_service(
     config: Config = Depends(get_config),
     contract: PaymentContract = Depends(get_contract_instance),
 ) -> TaskService:
     return TaskService(config, contract)
+
+
+def get_history_service(
+    database: Database = Depends(get_database),
+) -> HistoryService:
+    return HistoryService(database)

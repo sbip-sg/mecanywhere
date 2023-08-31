@@ -10,7 +10,8 @@
         "redis": {
             "host": "localhost",
             "port": 6379
-        }
+        },
+        "db_url": "sqlite:///./example.db"
     },
     "docker_local": {
         "contract": {
@@ -22,7 +23,8 @@
         "redis": {
             "host": "redis",
             "port": 6379
-        }
+        },
+        "db_url": "sqlite:///./example.db"
     },
     "docker_testnet": {
         "contract": {
@@ -34,7 +36,8 @@
         "redis": {
             "host": "redis",
             "port": 6379
-        }
+        },
+        "db_url": "sqlite:///./example.db"
     },
     "docker_sbip": {
         "contract": {
@@ -46,6 +49,7 @@
         "redis": {
             "host": "sbip-g2.d2.comp.nus.edu.sg",
             "port": 11002
-        }
+        },
+        "db_url": "sqlite:///./example.db"
     }
 }
