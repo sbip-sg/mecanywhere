@@ -47,21 +47,5 @@
             "host": "redis",
             "port": 6379
         }
-    },
-    "docker_sbip": {
-        "contract": {
-            "contract_address": "0x69565A95FaC461605CE764714A5b92695C02dd7F",
-            "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
-            "url": "http://sbip-g2.d2.comp.nus.edu.sg:11001/"
-        },
-        "did": {
-            "verify_credential": "http://sbip-g2.d2.comp.nus.edu.sg:11003/api/v1/credential/verify",
-            "create_did": "http://sbip-g2.d2.comp.nus.edu.sg:11003/api/v1/did/create",
-            "create_credential": "http://sbip-g2.d2.comp.nus.edu.sg:11004/api/v1/credential/create"
-        },
-        "redis": {
-            "host": "sbip-g2.d2.comp.nus.edu.sg",
-            "port": 11002
-        }
     }
 }

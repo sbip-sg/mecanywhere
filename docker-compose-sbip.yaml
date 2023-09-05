@@ -1,19 +1,19 @@
 version: "3.7"
 services:
-  meca-ganache:
+  ganache:
     image:
       trufflesuite/ganache-cli:latest
     ports:
       - "11001:8545"
     command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
 
-  meca-redis:
+  redis:
     image:
       redis:latest
     ports:
       - "11002:6379"
 
-  meca-did-verifier:
+  did-verifier:
     build:
       context: ./did
       dockerfile: Dockerfile.verifier
@@ -22,71 +22,71 @@ services:
     secrets:
       - wallet_private_key
 
-  meca-did-issuer:
+  did-issuer:
     build:
       context: ./did
       dockerfile: Dockerfile.issuer
     ports:
       - "11004:9090"
     depends_on:
-      - meca-did-verifier
+      - did-verifier
     secrets:
       - wallet_private_key
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
 
-  meca-authentication:
+  authentication:
     build:
       context: ./authentication
     ports:
       - "11005:8000"
     depends_on:
-      - meca-did-verifier
+      - did-verifier
 
-  meca-rabbitmq:
+  rabbitmq:
     image:
       rabbitmq:3-management
     ports:
       - "11006:15672"
       - "11007:5672"
 
-  meca-fn-discovery:
+  fn-discovery:
     build:
       context: ./full_node
       dockerfile: Dockerfile.discovery
     ports:
       - "11008:7000"
     depends_on:
-      - meca-did-verifier
-      - meca-redis
-      - meca-rabbitmq
+      - did-verifier
+      - redis
+      - rabbitmq
     secrets:
       - wallet_private_key
       - wallet_address
       - access_token_key
       - refresh_token_key
 
-  meca-fn-transaction:
+  fn-transaction:
     build:
       context: ./full_node
       dockerfile: Dockerfile.transaction
     ports:
       - "11009:7001"
     depends_on:
-      - meca-did-verifier
-      - meca-redis
+      - did-verifier
+      - redis
     secrets:
       - wallet_private_key
       - wallet_address
       - access_token_key
       - refresh_token_key
 
-  meca-payment:
+  payment:
     build:
       context: ./payment
     ports:
       - "11010:7002"
     depends_on:
-      - meca-did-verifier
+      - did-verifier
     secrets:
       - wallet_private_key
       - wallet_address
