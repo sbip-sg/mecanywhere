@@ -1,0 +1,83 @@
+import pika
+from config import Config
+from services.shared_data_handler import SharedDataHandler
+import models.schema_pb2 as schema
+
+
+class ResultRelayer:
+    _class_instance = None
+    result_queue = "result_queue"
+
+    def __init__(self, config: Config):
+        self.config = config
+        self.connection = None
+        self.channel = None
+        self.shared_data = SharedDataHandler()
+
+    def __new__(cls, config):
+        if cls._class_instance is None:
+            cls._class_instance = super(ResultRelayer, cls).__new__(cls)
+        return cls._class_instance
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.channel is not None:
+            print("Stopping consuming")
+            self.channel.basic_cancel()
+            self.channel.stop_consuming()
+            print("Stopped consuming")
+        if self.connection is not None:
+            print("Closing connection")
+            self.connection.close()
+            print("Connection closed")
+
+    def start_relayer(self):
+        self.connection = pika.BlockingConnection(
+            pika.URLParameters(self.config.get_mq_url())
+        )
+        self.channel = self.connection.channel()
+        self.channel.queue_declare(
+            queue=ResultRelayer.result_queue,
+            durable=True,
+            arguments={"x-expires": 1000 * 60 * 30},
+        )
+        self.channel.basic_consume(
+            queue=ResultRelayer.result_queue,
+            on_message_callback=self.callback,
+            auto_ack=True,
+        )
+        print("Result relayer started consuming")
+        self.channel.start_consuming()
+
+    def callback(self, ch, method, properties, body):
+        # Tests if the message is a TaskResult
+        try:
+            task = schema.TaskResult()
+            task.ParseFromString(body)
+            print(task, "received")
+        except Exception as e:
+            print(e, "error parsing received task")
+            return
+
+        correlation_id = properties.correlation_id
+        origin_did = self.shared_data.get_origin_did(correlation_id)
+        
+        # drops the message when the origin_did is not found
+        if origin_did is None:
+            return
+
+        self.shared_data.remove_origin_did(correlation_id)
+        self.channel.queue_declare(
+            queue=origin_did, durable=True, arguments={"x-expires": 1000 * 60 * 30}
+        )
+        self.channel.basic_publish(
+            exchange="",
+            routing_key=origin_did,
+            properties=pika.BasicProperties(
+                correlation_id=correlation_id,
+                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
+            ),
+            body=body,
+        )

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message Task {
+  string id = 1;
+  string containerRef = 2;
+  string content = 3;
+}
+
+message TaskResult {
+  string content = 2;
+}

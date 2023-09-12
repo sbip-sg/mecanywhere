@@ -9,11 +9,12 @@ from contract import DiscoveryContract
 from common.middleware.credential_authentication import (
     CredentialAuthenticationMiddleware,
 )
-from services.assignment_service import AssignmentService
+from services.offloading_service import OffloadingService
 from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
+from services.task_publisher import TaskPublisher
 
 
 @lru_cache()
@@ -27,7 +28,7 @@ async def get_session() -> ClientSession:
 
 
 def get_redis_client(config: Config = Depends(get_config)) -> redis.Redis:
-    return redis.Redis(
+    yield redis.Redis(
         host=config.get_redis_host(),
         port=config.get_redis_port(),
         decode_responses=True,
@@ -60,7 +61,9 @@ def get_discovery_contract(config: Config = Depends(get_config)) -> DiscoveryCon
     return DiscoveryContract(config)
 
 
-def get_account_creation_service(config: Config = Depends(get_config)) -> AccountCreationService:
+def get_account_creation_service(
+    config: Config = Depends(get_config),
+) -> AccountCreationService:
     return AccountCreationService(config)
 
 
@@ -68,10 +71,15 @@ def get_login_service() -> LoginService:
     return LoginService()
 
 
-def get_assignment_service(
+def get_task_publisher(config: Config = Depends(get_config)) -> TaskPublisher:
+    return TaskPublisher(config)
+
+
+def get_offloading_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
-) -> AssignmentService:
-    return AssignmentService(contract)
+    publisher: TaskPublisher = Depends(get_task_publisher),
+) -> OffloadingService:
+    return OffloadingService(contract, publisher)
 
 
 def get_registration_service(
