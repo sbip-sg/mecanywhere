@@ -28,11 +28,13 @@ class OffloadingService:
         origin_did = offload_request.did
         self.shared_data.save_origin_did(correlation_id, origin_did)
 
+        task_id = offload_request.task_id
         message = offload_request.content
         container_ref = offload_request.container_reference
+        resource = offload_request.resource
 
         try:
-            self.publisher.publish(correlation_id, message, container_ref, host_name=queue)
+            self.publisher.publish(correlation_id, task_id, message, container_ref, resource, host_name=queue)
         except Exception as e:
             return e
         

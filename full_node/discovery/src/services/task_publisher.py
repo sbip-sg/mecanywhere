@@ -26,11 +26,12 @@ class TaskPublisher:
         self.channel = self.connection.channel()
         print("Task publisher started")
 
-    def publish(self, correlation_id, message, container_ref, host_name):
+    def publish(self, correlation_id, task_id, message, container_ref, resource, host_name):
         task = schema.Task()
-        task.id = correlation_id
+        task.id = task_id
         task.containerRef = container_ref
         task.content = message
+        task.resource.update(resource)
 
         self.channel.queue_declare(
             queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
