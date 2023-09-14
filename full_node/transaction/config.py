@@ -64,8 +64,8 @@ class Config:
     def get_wallet_private_key(self) -> str:
         return self.secrets.wallet_private_key
 
-    def get_verify_did_url(self) -> str:
-        return self.configuration["verify_did_url"]
+    def get_verify_vc_url(self) -> str:
+        return self.configuration["verify_vc_url"]
 
     def get_redis_host(self) -> str:
         return self.configuration["redis"]["host"]
