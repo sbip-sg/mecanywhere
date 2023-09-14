@@ -28,7 +28,7 @@ https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagr
 
 # Configuration
 
-Options: manual, docker local (recommended), docker testnet
+Options: manual, docker local / sbip server (recommended), docker testnet
 
 ### Changing environments
 See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf600b557f4410c28a29c6b0cfa2f23)
@@ -36,11 +36,11 @@ See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf6
     - `"environment": "development"` in `config.json` for python services.
     - For java services, just use the `verifier` or `issuer` profiles when activating the profile.
 - For docker local:
-    - `"environment": "docker-testnet"` in `config.json` for python services. 
-    - For java services, include `docker-local` when activating the profile. (default in dockerfile)
+    - `"environment": "docker_local"` in `config.json` for python services. 
+    - For java services, include `docker_local` when activating the profile. (default in dockerfile)
 - For docker testnet:
-    - `"environment": "docker-testnet"` in `config.json` for python services. 
-    - For java services, include `docker-testnet` when activating the profile.
+    - `"environment": "docker_testnet"` in `config.json` for python services. 
+    - For java services, include `docker_testnet` when activating the profile.
     - You may comment out the ganache service in `compose.yaml` since it is not used.
 
 ### Secret keys
@@ -58,6 +58,9 @@ See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf6
     - Migrate the DID contracts first, then the full node contracts to correspond to the default config addresses.
 - For docker testnet:
     - `truffle migrate --network sepolia`
+
+### Development
+In sbip servers, run `docker-compose -f docker-compose-sbip.yaml up -d --no-deps --build {service name}` to rebuild a specific service.
 
 # Quick Start
 1. Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
