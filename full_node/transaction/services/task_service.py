@@ -8,7 +8,7 @@ class TaskService:
         self.config = config
         self.contract = contract
 
-    def process_task(self, task_type, po_did, task_id, task_metadata):
+    def process_task(self, task_type, po_did, task_metadata):
         # TODO: record task and match with other party
         # store where?
         # what metadata to record?
