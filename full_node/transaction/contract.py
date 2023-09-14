@@ -61,12 +61,16 @@ class PaymentContract:
 
     # amount is in ether
     def increase_balance(self, did: str, amount: int):
+        if amount <= 0:
+            return
         wei_amount = self.w3.to_wei(Decimal(amount), "ether")
         unbuilt_function = self.contract.functions.increaseBalance(did, wei_amount)
         self.call_function(unbuilt_function, {"gas": 300000})
 
     # amount is in ether
     def decrease_balance(self, did: str, amount: int):
+        if amount <= 0:
+            return
         wei_amount = self.w3.to_wei(Decimal(amount), "ether")
         unbuilt_function = self.contract.functions.decreaseBalance(did, wei_amount)
         self.call_function(unbuilt_function, {"gas": 300000})
