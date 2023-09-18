@@ -32,9 +32,10 @@ class OffloadingService:
         message = offload_request.content
         container_ref = offload_request.container_reference
         resource = offload_request.resource
+        runtime = offload_request.runtime
 
         try:
-            self.publisher.publish(correlation_id, task_id, message, container_ref, resource, host_name=queue)
+            self.publisher.publish(correlation_id, task_id, message, container_ref, resource, runtime, host_name=queue)
         except Exception as e:
             return e
         
