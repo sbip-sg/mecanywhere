@@ -1,7 +1,7 @@
 import pika
 from config import Config
 import models.schema_pb2 as schema
-from services.result_relayer import ResultRelayer
+from services.result_queue import ResultQueue
 
 
 class TaskPublisher:
@@ -26,12 +26,15 @@ class TaskPublisher:
         self.channel = self.connection.channel()
         print("Task publisher started")
 
-    def publish(self, correlation_id, task_id, message, container_ref, resource, host_name):
+    def publish(self, correlation_id, task_id, message, container_ref, resource, runtime, host_name):
         task = schema.Task()
         task.id = task_id
         task.containerRef = container_ref
         task.content = message
-        task.resource.update(resource)
+        if resource is not None:
+            task.resource.update(resource)
+        if runtime is not None:
+            task.runtime = runtime
 
         self.channel.queue_declare(
             queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
@@ -41,7 +44,7 @@ class TaskPublisher:
             routing_key=host_name,
             properties=pika.BasicProperties(
                 correlation_id=correlation_id,
-                reply_to=ResultRelayer.result_queue,
+                reply_to=ResultQueue.result_queue,
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
             ),
             body=task.SerializeToString(),

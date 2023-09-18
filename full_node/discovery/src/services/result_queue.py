@@ -4,7 +4,7 @@ from services.shared_data_handler import SharedDataHandler
 import models.schema_pb2 as schema
 
 
-class ResultRelayer:
+class ResultQueue:
     _class_instance = None
     result_queue = "result_queue"
 
@@ -16,16 +16,28 @@ class ResultRelayer:
 
     def __new__(cls, config):
         if cls._class_instance is None:
-            cls._class_instance = super(ResultRelayer, cls).__new__(cls)
+            cls._class_instance = super(ResultQueue, cls).__new__(cls)
         return cls._class_instance
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        # if self.channel is not None:
+        #     print("Stopping consuming")
+        #     # self.channel.basic_cancel(consumer_tag=ResultQueue.result_queue)
+        #     self.channel.stop_consuming()
+        #     print("Stopped consuming")
+        # if self.connection is not None:
+        #     print("Closing connection")
+        #     self.connection.close()
+        #     print("Connection closed")
+        pass
+    
+    def stop(self):
         if self.channel is not None:
             print("Stopping consuming")
-            self.channel.basic_cancel()
+            self.channel.basic_cancel(consumer_tag=ResultQueue.result_queue)
             self.channel.stop_consuming()
             print("Stopped consuming")
         if self.connection is not None:
@@ -33,18 +45,18 @@ class ResultRelayer:
             self.connection.close()
             print("Connection closed")
 
-    def start_relayer(self):
+    def start_consumer(self):
         self.connection = pika.BlockingConnection(
             pika.URLParameters(self.config.get_mq_url())
         )
         self.channel = self.connection.channel()
         self.channel.queue_declare(
-            queue=ResultRelayer.result_queue,
+            queue=ResultQueue.result_queue,
             durable=True,
             arguments={"x-expires": 1000 * 60 * 30},
         )
         self.channel.basic_consume(
-            queue=ResultRelayer.result_queue,
+            queue=ResultQueue.result_queue,
             on_message_callback=self.callback,
             auto_ack=True,
         )
@@ -58,7 +70,7 @@ class ResultRelayer:
             task.ParseFromString(body)
             print(task, "received")
         except Exception as e:
-            print(e, "error parsing received task")
+            print(e, "error parsing received result")
             return
 
         correlation_id = properties.correlation_id
@@ -69,15 +81,15 @@ class ResultRelayer:
             return
 
         self.shared_data.remove_origin_did(correlation_id)
-        self.channel.queue_declare(
-            queue=origin_did, durable=True, arguments={"x-expires": 1000 * 60 * 30}
-        )
-        self.channel.basic_publish(
-            exchange="",
-            routing_key=origin_did,
-            properties=pika.BasicProperties(
-                correlation_id=correlation_id,
-                delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
-            ),
-            body=body,
-        )
+        # self.channel.queue_declare(
+        #     queue=origin_did, durable=True, arguments={"x-expires": 1000 * 60 * 30}
+        # )
+        # self.channel.basic_publish(
+        #     exchange="",
+        #     routing_key=origin_did,
+        #     properties=pika.BasicProperties(
+        #         correlation_id=correlation_id,
+        #         delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
+        #     ),
+        #     body=body,
+        # )
