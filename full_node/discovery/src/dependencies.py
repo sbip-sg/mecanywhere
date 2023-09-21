@@ -14,7 +14,7 @@ from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
-from services.task_publisher import TaskPublisher
+from services.task_publisher import RPCTaskPublisher, BasicTaskPublisher
 
 
 @lru_cache()
@@ -28,7 +28,7 @@ async def get_session() -> ClientSession:
 
 
 def get_redis_client(config: Config = Depends(get_config)) -> redis.Redis:
-    yield redis.Redis(
+    return redis.Redis(
         host=config.get_redis_host(),
         port=config.get_redis_port(),
         decode_responses=True,
@@ -71,15 +71,23 @@ def get_login_service() -> LoginService:
     return LoginService()
 
 
-def get_task_publisher(config: Config = Depends(get_config)) -> TaskPublisher:
-    return TaskPublisher(config)
+def get_rpc_task_publisher(config: Config = Depends(get_config)) -> RPCTaskPublisher:
+    return RPCTaskPublisher(config)
+
+
+def get_basic_task_publisher(
+    config: Config = Depends(get_config),
+) -> BasicTaskPublisher:
+    return BasicTaskPublisher(config)
 
 
 def get_offloading_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
-    publisher: TaskPublisher = Depends(get_task_publisher),
+    rpc_publisher: RPCTaskPublisher = Depends(get_rpc_task_publisher),
+    basic_publisher: BasicTaskPublisher = Depends(get_basic_task_publisher),
+    cache: redis.Redis = Depends(get_redis_client),
 ) -> OffloadingService:
-    return OffloadingService(contract, publisher)
+    return OffloadingService(contract, rpc_publisher, basic_publisher, cache)
 
 
 def get_registration_service(

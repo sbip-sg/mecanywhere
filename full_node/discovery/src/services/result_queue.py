@@ -1,39 +1,28 @@
+from datetime import timedelta
 import pika
 from config import Config
+from exceptions.http_exceptions import BadRequestException
 from services.shared_data_handler import SharedDataHandler
 import models.schema_pb2 as schema
+import redis
 
 
 class ResultQueue:
     _class_instance = None
     result_queue = "result_queue"
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, cache: redis.Redis):
         self.config = config
         self.connection = None
         self.channel = None
+        self.cache = cache
         self.shared_data = SharedDataHandler()
 
-    def __new__(cls, config):
+    def __new__(cls, config, cache):
         if cls._class_instance is None:
             cls._class_instance = super(ResultQueue, cls).__new__(cls)
         return cls._class_instance
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        # if self.channel is not None:
-        #     print("Stopping consuming")
-        #     # self.channel.basic_cancel(consumer_tag=ResultQueue.result_queue)
-        #     self.channel.stop_consuming()
-        #     print("Stopped consuming")
-        # if self.connection is not None:
-        #     print("Closing connection")
-        #     self.connection.close()
-        #     print("Connection closed")
-        pass
-    
     def stop(self):
         if self.channel is not None:
             print("Stopping consuming")
@@ -70,26 +59,19 @@ class ResultQueue:
             task.ParseFromString(body)
             print(task, "received")
         except Exception as e:
-            print(e, "error parsing received result")
-            return
+            raise BadRequestException("Error parsing received result")
 
         correlation_id = properties.correlation_id
         origin_did = self.shared_data.get_origin_did(correlation_id)
-        
+
         # drops the message when the origin_did is not found
         if origin_did is None:
             return
 
         self.shared_data.remove_origin_did(correlation_id)
-        # self.channel.queue_declare(
-        #     queue=origin_did, durable=True, arguments={"x-expires": 1000 * 60 * 30}
-        # )
-        # self.channel.basic_publish(
-        #     exchange="",
-        #     routing_key=origin_did,
-        #     properties=pika.BasicProperties(
-        #         correlation_id=correlation_id,
-        #         delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
-        #     ),
-        #     body=body,
-        # )
+
+        task_dict = {"id": task.id, "content": task.content}
+
+        # TODO: handle error
+        self.cache.hset(correlation_id, mapping=task_dict)
+        self.cache.expire(correlation_id, timedelta(minutes=60 * 30))
