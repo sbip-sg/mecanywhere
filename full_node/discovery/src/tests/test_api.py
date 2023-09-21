@@ -46,8 +46,8 @@ def test_register_client():
     pytest.tokens = data
     assert len(data['access_token']) == 2087
     assert len(data['refresh_token']) == 2087
-    assert data['access_token_type'] == "bearer"
-    assert data['refresh_token_type'] == "bearer"
+    assert data['access_token_type'] == "Bearer"
+    assert data['refresh_token_type'] == "Bearer"
     # need add expiration tests
     
 def test_register_host():
@@ -55,8 +55,8 @@ def test_register_host():
     data = response.json()
     assert len(data['access_token']) == 2087
     assert len(data['refresh_token']) == 2087
-    assert data['access_token_type'] == "bearer"
-    assert data['refresh_token_type'] == "bearer"
+    assert data['access_token_type'] == "Bearer"
+    assert data['refresh_token_type'] == "Bearer"
     # need add expiration tests
 
 def test_deregister_client():
@@ -101,7 +101,7 @@ def test_refresh_access():
     response = test_app.post("/registration/refresh_access/?refresh_token={}".format(refresh_token))    
     data = response.json()
     assert len(data['access_token']) == 2087
-    assert data['access_token_type'] == "bearer"
+    assert data['access_token_type'] == "Bearer"
 
 def test_heartbeat():
     access_token = pytest.tokens["access_token"]
