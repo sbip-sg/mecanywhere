@@ -1,5 +1,6 @@
 from sqlalchemy import (
     Float,
+    UniqueConstraint,
     create_engine,
     Column,
     Integer,
@@ -19,7 +20,8 @@ class Database:
         self.transactions = Table(
             "transactions",
             self.metadata,
-            Column("id", String(255), primary_key=True),
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("session_id", String(255), nullable=False),
             Column("did", String(255), nullable=False),
             Column("resource_consumed", Integer, nullable=False),
             Column("session_start_datetime", Integer, nullable=False),
@@ -29,6 +31,7 @@ class Database:
             Column("price", Float, nullable=False),
             Column("po_did", String(255), nullable=False),
             Column("network_reliability", Integer, nullable=False),
+            UniqueConstraint("session_id", "did", name="unique_session_id_did"),
             extend_existing=True,
         )
         Session = sessionmaker(bind=engine)
@@ -43,7 +46,7 @@ class Database:
 
     def rollback(self):
         self.session.rollback()
-    
+
     def commit(self):
         self.session.commit()
 
@@ -67,7 +70,7 @@ class Database:
         network_reliability: int,
     ):
         new_transaction = self.transactions.insert().values(
-            id=session_id,
+            session_id=session_id,
             did=did,
             resource_consumed=resource_consumed,
             session_start_datetime=session_start_datetime,

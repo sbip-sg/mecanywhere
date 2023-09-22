@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+from models.task_metadata_input import TaskMetadataInput
 
 class RecordTaskRequest(BaseModel):
     task_type: str = Field(
@@ -14,8 +15,4 @@ class RecordTaskRequest(BaseModel):
         ...,
         example="did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f",
     )
-    task_id: str = Field(
-        ...,
-        example="0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f",
-    )
-    task_metadata: dict
+    task_metadata: TaskMetadataInput
