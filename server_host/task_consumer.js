@@ -3,7 +3,7 @@ const protobuf = require('protobufjs');
 const { struct } = require('pb-util');
 const { postTaskExecution } = require('./executor_api');
 
-const MQ_URL = process.env.MQ_URL || 'amqp://localhost:5672';
+const MQ_URL = process.env.MQ_URL || 'amqp://rabbitmq:5672';
 
 const Task = protobuf.loadSync('schema.proto').lookupType('Task');
 
