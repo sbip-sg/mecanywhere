@@ -28,6 +28,7 @@ class OffloadingService:
     def assign_host_to_client(self, did: str) -> str:
         host = self.contract.get_user_queue(get_current_timestamp())
         if host == "" and self.server_host_name is not None:
+            print("Using server-host.")
             host = self.server_host_name
         return host
 
