@@ -10,6 +10,7 @@ class Config:
         wallet_private_key: str = None
         access_token_key: str = None
         refresh_token_key: str = None
+        server_host_name: str = None
 
         class Config:
             env_file = ".env"
@@ -81,3 +82,6 @@ class Config:
     
     def get_mq_url(self) -> str:
         return self.configuration["mq"]["url"]
+    
+    def get_server_host_name(self) -> bool:
+        return self.secrets.server_host_name
