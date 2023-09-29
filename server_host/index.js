@@ -14,7 +14,12 @@ process.on('exit', () => {
 
 process.on('SIGINT', () => {
   console.log("Ctrl+C...")
-  process.exit(2);
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log("SIGTERM...")
+  process.exit(0);
 });
 
 consumer.startConsumer();
