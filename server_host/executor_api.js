@@ -1,5 +1,5 @@
 const TASK_EXECUTOR_URL =
-  process.env.TASK_EXECUTOR_URL || 'http://localhost:2591';
+  process.env.TASK_EXECUTOR_URL || 'http://task-executor:2591';
 
 async function postTaskExecution(containerRef, input, resource, runtime) {
   const requestOptions = {

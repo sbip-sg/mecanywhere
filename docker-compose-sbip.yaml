@@ -112,6 +112,8 @@ services:
       task-executor:
         condition: service_started
     restart: on-failure
+    secrets:
+      - server_host_name
 
   task-executor:
     build:
