@@ -17,11 +17,15 @@ result_queue = None
 queue_thread = None
 
 
-def start_consuming(config: Config, cache: redis.Redis) -> None:
+def start_consuming(config: Config) -> None:
     global result_queue
-    result_queue = ResultQueue(config, cache)
-    print("Starting relayer")
-    result_queue.start_consumer()
+    cache = get_redis_client(config)
+    try:
+        result_queue = ResultQueue(config, cache)
+        print("Starting relayer")
+        result_queue.start_consumer()
+    except Exception as e:
+        raise SystemExit(e)
     print("Relayer stopped")
 
 
@@ -29,10 +33,9 @@ async def start_up():
     global result_queue, queue_thread
 
     config = get_config()
-    redis_client = get_redis_client(config)
 
     queue_thread = threading.Thread(
-        target=start_consuming, args=([config, redis_client])
+        target=start_consuming, args=([config])
     )
     queue_thread.start()
 
