@@ -78,3 +78,6 @@ class Config:
 
     def get_refresh_token_key(self) -> str:
         return self.secrets.refresh_token_key
+    
+    def get_mq_url(self) -> str:
+        return self.configuration["mq"]["url"]

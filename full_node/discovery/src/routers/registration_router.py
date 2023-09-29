@@ -41,9 +41,9 @@ async def register_host(
     registration_service.register_host(did)
     return {
         "access_token": access_token,
-        "access_token_type": "bearer",
+        "access_token_type": "Bearer",
         "refresh_token": refresh_token,
-        "refresh_token_type": "bearer",
+        "refresh_token_type": "Bearer",
     }
 
 
@@ -81,9 +81,9 @@ async def register_client(
     registration_service.register_client(did)
     return {
         "access_token": access_token,
-        "access_token_type": "bearer",
+        "access_token_type": "Bearer",
         "refresh_token": refresh_token,
-        "refresh_token_type": "bearer",
+        "refresh_token_type": "Bearer",
     }
 
 
@@ -110,4 +110,4 @@ async def refresh_access(
     ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
 ):
     access_token = await ca_middleware.refresh_access(refresh_token)
-    return {"access_token": access_token, "access_token_type": "bearer"}
+    return {"access_token": access_token, "access_token_type": "Bearer"}
