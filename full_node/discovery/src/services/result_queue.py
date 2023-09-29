@@ -16,6 +16,12 @@ class ResultQueue:
         self.connection = None
         self.channel = None
         self.cache = cache
+        if self.cache is None:
+            self.cache = redis.Redis(
+                host=config.get_redis_host(),
+                port=config.get_redis_port(),
+                decode_responses=True,
+            )
         self.shared_data = SharedDataHandler()
 
     def __new__(cls, config, cache):
@@ -36,7 +42,10 @@ class ResultQueue:
 
     def start_consumer(self):
         self.connection = pika.BlockingConnection(
-            pika.URLParameters(self.config.get_mq_url())
+            pika.URLParameters(
+                self.config.get_mq_url()
+                + "?heartbeat=300&blocked_connection_timeout=300"
+            ),
         )
         self.channel = self.connection.channel()
         self.channel.queue_declare(
