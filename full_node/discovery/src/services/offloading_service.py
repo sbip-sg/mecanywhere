@@ -16,15 +16,20 @@ class OffloadingService:
         rpc_publisher: RPCTaskPublisher,
         basic_publisher: BasicTaskPublisher,
         cache: redis.Redis,
+        server_host_name: str,
     ) -> None:
         self.contract = contract
         self.rpc_publisher = rpc_publisher
         self.basic_publisher = basic_publisher
         self.cache = cache
+        self.server_host_name = server_host_name
         self.shared_data = SharedDataHandler()
 
     def assign_host_to_client(self, did: str) -> str:
-        return self.contract.get_user_queue(get_current_timestamp())
+        host = self.contract.get_user_queue(get_current_timestamp())
+        if host == "" and self.server_host_name is not None:
+            host = self.server_host_name
+        return host
 
     def remove_host_from_client(self) -> None:
         pass
