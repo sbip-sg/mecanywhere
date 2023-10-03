@@ -1,12 +1,5 @@
 version: "3.7"
 services:
-  meca-proxy:
-    build: 
-      context: ./proxy
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "11000:11000"
-
   ganache:
     image:
       trufflesuite/ganache-cli:latest
