@@ -10,11 +10,9 @@ RUN echo "STARTING PAYMENT SERVICE..." && \
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--port", "7002", \
+ENTRYPOINT ["uvicorn", "main:app", "--port", "7002", \
     "--host", "0.0.0.0", \
     "--reload", \
-    # if using reverse proxy, use this
-    # "--root-path", "/payment", \
     "--forwarded-allow-ips", "*"]
 
 EXPOSE 7002
