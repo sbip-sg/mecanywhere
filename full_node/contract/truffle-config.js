@@ -76,6 +76,7 @@ module.exports = {
             host: "sbip-g2.d2.comp.nus.edu.sg",
             port: 11001,
             network_id: "*",
+            // production: true // - set to true if you would like to force a dry run to be performed every time you migrate using this network (default: false)
         },
         // docker_ganache: {
         //     host: "ganache",
