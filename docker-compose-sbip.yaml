@@ -74,7 +74,7 @@ services:
       - access_token_key
       - refresh_token_key
       - server_host_name
-    command: --root-path /discovery/src # for reverse proxy
+    command: --root-path /fn-discovery # for reverse proxy
 
   fn-transaction:
     build:
@@ -90,7 +90,7 @@ services:
       - wallet_address
       - access_token_key
       - refresh_token_key
-    command: --root-path /transaction # for reverse proxy
+    command: --root-path /fn-transaction # for reverse proxy
 
   payment:
     build:
