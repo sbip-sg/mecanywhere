@@ -15,11 +15,9 @@ COPY common transaction/common
 
 WORKDIR /app/transaction
 
-CMD ["uvicorn", "main:app", "--port", "7001", \
+ENTRYPOINT ["uvicorn", "main:app", "--port", "7001", \
     "--host", "0.0.0.0", \
     "--reload", \
-    # if using reverse proxy, use this
-    # "--root-path", "/transaction", \
     "--forwarded-allow-ips", "*"]
 
 EXPOSE 7001

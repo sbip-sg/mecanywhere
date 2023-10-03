@@ -1,5 +1,12 @@
 version: "3.7"
 services:
+  meca-proxy:
+    build: 
+      context: ./proxy
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "11000:11000"
+
   ganache:
     image:
       trufflesuite/ganache-cli:latest
@@ -41,6 +48,7 @@ services:
       - "11005:8000"
     depends_on:
       - did-verifier
+    command: --root-path /authentication # for reverse proxy
 
   rabbitmq:
     image:
@@ -73,6 +81,7 @@ services:
       - access_token_key
       - refresh_token_key
       - server_host_name
+    command: --root-path /discovery/src # for reverse proxy
 
   fn-transaction:
     build:
@@ -88,6 +97,7 @@ services:
       - wallet_address
       - access_token_key
       - refresh_token_key
+    command: --root-path /transaction # for reverse proxy
 
   payment:
     build:
@@ -101,6 +111,7 @@ services:
       - wallet_address
       - access_token_key
       - refresh_token_key
+    command: --root-path /payment # for reverse proxy
 
   host:
     build: 
