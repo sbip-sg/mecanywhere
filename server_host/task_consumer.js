@@ -42,6 +42,7 @@ class Consumer {
 
     this.startConsumer = async function startConsumer() {
       connection = await amqp.connect(MQ_URL);
+      console.log(' [con] Connected to ', MQ_URL);
       channel = await connection.createChannel();
       await channel.assertQueue(queueName, {
         durable: true,
