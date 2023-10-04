@@ -2,8 +2,8 @@ const dotenv = require("dotenv")
 const { read } = require('./secret_reader');
 const Consumer = require('./task_consumer');
 
-const queueName = read('server_host_name') || process.env.SERVER_HOST_NAME || 'server-host';
 dotenv.config();
+const queueName = read('server_host_name') || process.env.SERVER_HOST_NAME || 'server-host';
 
 const consumer = new Consumer(queueName);
 
