@@ -5,4 +5,5 @@ services:
       context: ./proxy
       dockerfile: Dockerfile.nginx
     ports:
+      - "11000:11000"
       - "11011:11011"
