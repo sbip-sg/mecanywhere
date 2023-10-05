@@ -1,22 +1,37 @@
 # MECAnywhere Services (Development)
 
 Services: 
+- Proxy
+    - Host URL: http://sbip-g2.d2.comp.nus.edu.sg:11000
 - [PO - Authentication service](#po---authentication-service)
-    - port 8000
     - Hosted by Parent Organisation to issue VC to users of that PO
-    - API Documentation: http://localhost:8000/docs
+    - Host URL: 
+        - http://localhost:8000
+        - http://sbip-g2.d2.comp.nus.edu.sg:11000/authentication
+    - API Documentation: {host}/docs
 - [Cloud - DID & VC verification service](#cloud---did--vc-verification-service)
     - verifier port: 8080, issuer port: 9090
     - Hosted by MECA to provide DID and VC verification services
-    - API Documentation: http://localhost:8080/swagger-ui and http://localhost:9090/swagger-ui
+    - Host URL: 
+        - http://localhost:8080, http://localhost:9090
+        - http://sbip-g2.d2.comp.nus.edu.sg:11000/did-verifier, http://sbip-g2.d2.comp.nus.edu.sg:11000/did-issuer
+    - API Documentation: {host}/swagger-ui
 - [Full Node - Discovery & Transaction service](#full-node---discovery--transaction-service)
     - discovery port: 7000, transaction port: 7001
     - Hosted on the edge to provide MECA service for end users
-    - API Documentation: http://localhost:7000/docs and http://localhost:7001/docs
+    - Host URL: 
+        - http://localhost:7000, http://localhost:7001
+        - http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-discovery, http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-transaction
+    - API Documentation: {host}/docs
 - [Cloud - Payment service](#cloud---payment-service)
-    - port: 7002
     - Hosted by MECA to provide payment service for POs
-    - API Documentation: http://localhost:7002/docs
+    - Host URL: 
+        - http://localhost:7002
+        - http://sbip-g2.d2.comp.nus.edu.sg:11000/payment
+    - API Documentation: {host}/docs
+- Server-host
+    - Hosted on the edge to ensure availability of hosts
+    - No host URL
 
 Smart contracts:
 1. `did/contract/contracts/DIDContract.sol`, `did/contract/contracts/CptContract.sol`: used by verifier and issuer services
@@ -61,6 +76,7 @@ See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf6
 
 ### Development
 In sbip servers, run `docker-compose -f docker-compose-sbip.yaml up -d --no-deps --build {service name}` to rebuild a specific service.
+Use `docker-compose-proxy.yaml` to run the nginx set to proxy services in node `worker-111`.
 
 # Quick Start
 1. Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
