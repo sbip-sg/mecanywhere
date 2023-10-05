@@ -14,7 +14,7 @@ from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
-from services.task_publisher import RPCTaskPublisher, BasicTaskPublisher
+from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
 
 
 @lru_cache()

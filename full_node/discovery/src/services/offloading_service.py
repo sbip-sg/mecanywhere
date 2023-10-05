@@ -1,7 +1,7 @@
 from contract import DiscoveryContract
 from models.responses import PublishTaskResponse
-from services.shared_data_handler import SharedDataHandler
-from services.task_publisher import RPCTaskPublisher, BasicTaskPublisher
+from services.message_queue.shared_data_handler import SharedDataHandler
+from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
 from models.requests import OffloadRequest
 from utils import get_current_timestamp
 import uuid

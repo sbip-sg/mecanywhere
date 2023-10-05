@@ -2,7 +2,7 @@ from datetime import timedelta
 import pika
 from config import Config
 from exceptions.http_exceptions import BadRequestException
-from services.shared_data_handler import SharedDataHandler
+from services.message_queue.shared_data_handler import SharedDataHandler
 import models.schema_pb2 as schema
 import redis
 

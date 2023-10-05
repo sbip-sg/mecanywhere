@@ -3,7 +3,7 @@ import pika
 from config import Config
 from models.requests import OffloadRequest
 import models.schema_pb2 as schema
-from services.result_queue import ResultQueue
+from services.message_queue.result_queue import ResultQueue
 
 
 class RPCTaskPublisher:
