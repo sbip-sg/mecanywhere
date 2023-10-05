@@ -41,6 +41,7 @@ services:
       - "11005:8000"
     depends_on:
       - did-verifier
+    command: --root-path /authentication # for reverse proxy
 
   rabbitmq:
     image:
@@ -48,6 +49,11 @@ services:
     ports:
       - "11006:15672"
       - "11007:5672"
+    healthcheck:
+      test: "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"
+      interval: 5s
+      timeout: 10s
+      retries: 3
 
   fn-discovery:
     build:
@@ -56,14 +62,19 @@ services:
     ports:
       - "11008:7000"
     depends_on:
-      - did-verifier
-      - redis
-      - rabbitmq
+      did-verifier:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
     secrets:
       - wallet_private_key
       - wallet_address
       - access_token_key
       - refresh_token_key
+      - server_host_name
+    command: --root-path /fn-discovery # for reverse proxy
 
   fn-transaction:
     build:
@@ -79,6 +90,7 @@ services:
       - wallet_address
       - access_token_key
       - refresh_token_key
+    command: --root-path /fn-transaction # for reverse proxy
 
   payment:
     build:
@@ -92,6 +104,32 @@ services:
       - wallet_address
       - access_token_key
       - refresh_token_key
+    command: --root-path /payment # for reverse proxy
+
+  host:
+    build: 
+      context: ./server_host
+      dockerfile: Dockerfile.host
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      task-executor:
+        condition: service_started
+    restart: on-failure
+    secrets:
+      - server_host_name
+
+  task-executor:
+    build:
+      context: ../mec_anywhere_desktop/task_executor
+      dockerfile: docker/Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  default:
+    name: meca
+    external: true
 
 secrets:
   access_token_key:
@@ -104,3 +142,5 @@ secrets:
     file: ./keys/wallet_address.txt
   wallet_private_key:
     file: ./keys/wallet_private_key.txt
+  server_host_name:
+    file: ./keys/server_host_name.txt

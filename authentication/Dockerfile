@@ -10,11 +10,9 @@ RUN echo "STARTING PO SERVICE..." && \
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--port", "8000", \
+ENTRYPOINT ["uvicorn", "main:app", "--port", "8000", \
     "--host", "0.0.0.0", \
     "--reload", \
-    # if using reverse proxy, use this
-    # "--root-path", "/authentication", \
     "--forwarded-allow-ips", "*"]
 
 EXPOSE 8000
