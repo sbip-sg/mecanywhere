@@ -96,7 +96,9 @@ services:
     build:
       context: ./payment
     ports:
-      - "11010:7002"
+      - "11010:7002"    
+    volumes: # volume mounts ignore dockerignore
+      - ./full_node/common:/app/common
     depends_on:
       - did-verifier
     secrets:

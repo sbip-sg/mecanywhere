@@ -107,6 +107,7 @@ services:
       - "7002:7002"
     volumes: # volume mounts ignore dockerignore
       - ./payment:/app
+      - ./full_node/common:/app/common
     depends_on:
       - did-verifier
     secrets:

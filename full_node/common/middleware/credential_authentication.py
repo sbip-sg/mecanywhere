@@ -27,16 +27,24 @@ class TokenType(Enum):
 # Credential refers to HTTP Authorization header with Bearer token.
 # VC refers to Verifiable Credential.
 class CredentialAuthenticationMiddleware:
-    def __init__(self, config: Config, session: ClientSession, redis: redis.Redis):
+    def __init__(self, config: Config, session: ClientSession, redis_client: redis.Redis):
         self.config = config
         self.session = session
-        self.redis = redis
+        self.redis = redis_client
+        try:
+            self.redis.ping()
+        except redis.exceptions.ConnectionError:
+            self.redis = None
 
     async def _verify_vc(self, did: str, vc: dict):
         json_vc = json.dumps(vc)
-        verifiedDID = self.redis.get(json_vc)
-        if verifiedDID is not None:
-            return verifiedDID == did
+        if self.redis is not None:
+            try:
+                verifiedDID = self.redis.get(json_vc)
+                if verifiedDID is not None:
+                    return verifiedDID == did
+            except redis.exceptions.RedisError as e:
+                print(e)
 
         async with self.session.post(
             self.config.get_verify_vc_url(), json=vc
@@ -49,11 +57,14 @@ class CredentialAuthenticationMiddleware:
                 and is_result_true
                 and did == vc["credential"]["claim"]["DID"]
             )
-            if is_verified:
-                self.redis.set(json_vc, did)
-                self.redis.expire(
-                    json_vc, timedelta(minutes=REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES)
-                )
+            if is_verified and self.redis is not None:
+                try:
+                    self.redis.set(json_vc, did)
+                    self.redis.expire(
+                        json_vc, timedelta(minutes=REFRESH_TOKEN_DEFAULT_EXPIRE_MINUTES)
+                    )
+                except redis.exceptions.RedisError as e:
+                    print(e)
             return is_verified
 
     def _check_expiry(self, expiry: float):
@@ -189,3 +200,9 @@ class CredentialAuthenticationMiddleware:
             algorithms=[ALGORITHM],
         )
         return payload["credential"]["issuer"]
+
+    def get_token(
+        self, authorization: HTTPAuthorizationCredentials = Depends(security)
+    ):
+        token = authorization.credentials
+        return token
