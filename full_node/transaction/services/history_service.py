@@ -23,21 +23,21 @@ class HistoryService:
     def add_did_history(
         self, did: str, po_did: str, task_metadata: TaskMetadataInput, price: float
     ):
-        session_id = task_metadata.session_id
+        transaction_id = task_metadata.transaction_id
         resource_consumed = task_metadata.resource_consumed
-        session_start_datetime = task_metadata.session_start_datetime
-        session_end_datetime = task_metadata.session_end_datetime
-        task = task_metadata.task
+        transaction_start_datetime = task_metadata.transaction_start_datetime
+        transaction_end_datetime = task_metadata.transaction_end_datetime
+        task_name = task_metadata.task_name
         duration = task_metadata.duration
         network_reliability = task_metadata.network_reliability
         try:
             self.db.add_without_commit(
-                session_id,
+                transaction_id,
                 did,
                 resource_consumed,
-                session_start_datetime,
-                session_end_datetime,
-                task,
+                transaction_start_datetime,
+                transaction_end_datetime,
+                task_name,
                 duration,
                 price,
                 po_did,
@@ -72,9 +72,9 @@ class HistoryService:
                     str(uuid.uuid4()),
                     did,
                     resource_consumed=random.randint(1, 100),
-                    session_start_datetime=int(start_time.timestamp()),
-                    session_end_datetime=int(end_time.timestamp()),
-                    task=f"Task {i}",
+                    transaction_start_datetime=int(start_time.timestamp()),
+                    transaction_end_datetime=int(end_time.timestamp()),
+                    task_name=f"Task {i}",
                     duration=random.randint(1, 60),
                     price=random.uniform(10.0, 100.0),
                     po_did=po_did,
