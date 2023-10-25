@@ -38,3 +38,29 @@ async def record_task(
     history_service.add_did_history(did, po_did, task_metadata, price)
     # TODO: handle error and rollback both services
     return price
+
+
+@task_router.post(
+    "/update_task",
+    description="For users to update a task's offload or completion. "
+    + "This calculates the fee and updates the balance of the host and client.",
+)
+async def update_task(
+    request: RecordTaskRequest,
+    task_service: TaskService = Depends(get_task_service),
+    history_service: HistoryService = Depends(get_history_service),
+    token_did: str = Depends(get_did_from_token),
+    token_po_did: str = Depends(get_po_did_from_token),
+):
+    task_type = request.task_type
+    did = request.did
+    po_did = request.po_did
+    task_metadata = request.task_metadata
+
+    if did != token_did or po_did != token_po_did:
+        raise ForbiddenException("DID does not match token")
+    
+    price = task_service.process_task(task_type, po_did, task_metadata)
+    history_service.update_did_history(did, po_did, task_metadata, price)
+
+    return price

@@ -82,3 +82,31 @@ class Database:
             network_reliability=network_reliability,
         )
         self.session.execute(new_transaction)
+
+    def update_without_commit(
+        self,
+        transaction_id: str,
+        did: str,
+        resource_consumed: float,
+        transaction_start_datetime: int,
+        transaction_end_datetime: int,
+        task_name: str,
+        duration: int,
+        price: float,
+        po_did: str,
+        network_reliability: int,
+    ):
+        self.session.query(self.transactions).filter_by(
+            transaction_id=transaction_id, did=did
+        ).update(
+            {
+                "resource_consumed": resource_consumed,
+                "transaction_start_datetime": transaction_start_datetime,
+                "transaction_end_datetime": transaction_end_datetime,
+                "task_name": task_name,
+                "duration": duration,
+                "price": price,
+                "po_did": po_did,
+                "network_reliability": network_reliability,
+            }
+        )
