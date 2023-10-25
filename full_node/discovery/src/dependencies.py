@@ -15,6 +15,7 @@ from services.monitoring_service import MonitoringService
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
 from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
+from services.transaction_service import TransactionService
 
 
 @lru_cache()
@@ -48,6 +49,20 @@ def get_did_from_token(
     authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
 ) -> str:
     return ca_middleware.get_did_from_token(authorization)
+
+
+def get_po_did_from_token(
+    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+) -> str:
+    return ca_middleware.get_po_did_from_token(authorization)
+
+
+def get_token(
+    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+) -> str:
+    return ca_middleware.get_token(authorization)
 
 
 async def has_ca_access(
@@ -107,3 +122,9 @@ def get_monitoring_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
 ) -> MonitoringService:
     return MonitoringService(contract)
+
+def get_transaction_service(
+    config: Config = Depends(get_config),
+    session: ClientSession = Depends(get_session),
+) -> TransactionService:
+    return TransactionService(config, session)

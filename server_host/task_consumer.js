@@ -92,7 +92,7 @@ class Consumer {
         task.runtime
       );
 
-      return { id: task.id, content: result };
+      return { id: task.id, content: result, resourceConsumed: 0.1, transactionStartDatetime: 1, transactionEndDatetime: 2, duration: 1 };
     };
   }
 }

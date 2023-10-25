@@ -85,3 +85,6 @@ class Config:
     
     def get_server_host_name(self) -> bool:
         return self.secrets.server_host_name
+    
+    def get_transaction_service_url(self) -> str:
+        return self.configuration["transaction"]["url"]

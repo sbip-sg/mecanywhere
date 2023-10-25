@@ -1,12 +1,11 @@
 from contract import DiscoveryContract
-from models.responses import PublishTaskResponse
+from models.responses import PublishTaskResponse, TaskResultModel
 from services.message_queue.shared_data_handler import SharedDataHandler
 from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
 from models.requests import OffloadRequest
 from utils import get_current_timestamp
 import uuid
 import redis
-import models.schema_pb2 as schema
 
 
 class OffloadingService:
@@ -22,6 +21,11 @@ class OffloadingService:
         self.rpc_publisher = rpc_publisher
         self.basic_publisher = basic_publisher
         self.cache = cache
+        try:
+            self.cache.ping()
+        except redis.exceptions.ConnectionError as e:
+            print("Redis connection error: ", e)
+            self.cache = None
         self.server_host_name = server_host_name
         self.shared_data = SharedDataHandler()
 
@@ -40,11 +44,13 @@ class OffloadingService:
     ) -> PublishTaskResponse:
         queue = self.assign_host_to_client(did)
         if queue == "":
-            return {
-                "status": 0,
-                "response": "",
-                "error": "Failed to assign host to client",
-            }
+            return PublishTaskResponse(
+                status=0,
+                transaction_id="",
+                task_result=None,
+                network_reliability=0,
+                error="Failed to assign host to client",
+            )
 
         # save correlation_id and origin_did of the message to match the result in result relayer
         correlation_id = str(uuid.uuid4())
@@ -55,20 +61,33 @@ class OffloadingService:
             response = await self.rpc_publisher.publish(
                 correlation_id, offload_request, host_name=queue
             )
-            return {"status": 1, "response": response}
+            return PublishTaskResponse(
+                status=1,
+                transaction_id=correlation_id,
+                task_result=response,
+                network_reliability=0,
+            )
         except Exception as e:
-            return {"status": 0, "response": correlation_id, "error": str(e)}
+            return PublishTaskResponse(
+                status=0,
+                transaction_id=correlation_id,
+                task_result=None,
+                network_reliability=0,
+                error=str(e),
+            )
 
     async def offload(
         self, did: str, offload_request: OffloadRequest
     ) -> PublishTaskResponse:
         queue = self.assign_host_to_client(did)
         if queue == "":
-            return {
-                "status": 0,
-                "response": "",
-                "error": "Failed to assign host to client",
-            }
+            return PublishTaskResponse(
+                status=0,
+                transaction_id="",
+                task_result=None,
+                network_reliability=0,
+                error="Failed to assign host to client",
+            )
 
         # save correlation_id and origin_did of the message to match the result in result relayer
         correlation_id = str(uuid.uuid4())
@@ -79,15 +98,36 @@ class OffloadingService:
             response = await self.basic_publisher.publish(
                 correlation_id, offload_request, host_name=queue
             )
-            return {"status": 1, "response": response}
+            return PublishTaskResponse(
+                status=1,
+                transaction_id=correlation_id,
+                task_result=response,
+                network_reliability=0,
+            )
         except Exception as e:
-            return {"status": 0, "response": correlation_id, "error": str(e)}
+            return PublishTaskResponse(
+                status=0,
+                transaction_id=correlation_id,
+                task_result=None,
+                network_reliability=0,
+                error=str(e),
+            )
 
-    async def poll_result(self, corr_id_to_find: str) -> schema.TaskResult:
+    async def poll_result(self, corr_id_to_find: str) -> PublishTaskResponse:
         # look up redis
+        if self.cache is None:
+            print("Redis is not connected.")
+            return None
         result = self.cache.hgetall(corr_id_to_find)
         if len(result) == 0:
             return None
 
         self.cache.delete(corr_id_to_find)
-        return result
+        task_result_model = TaskResultModel(**result)
+        publish_task_response = PublishTaskResponse(
+            status=1,
+            transaction_id=corr_id_to_find,
+            task_result=task_result_model,
+            network_reliability=0,
+        )
+        return publish_task_response
