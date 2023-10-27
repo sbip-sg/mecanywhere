@@ -122,6 +122,8 @@ class HistoryService:
                     duration=random.randint(1, 60),
                     price=random.uniform(10.0, 100.0),
                     po_did=po_did,
+                    host_did=str(uuid.uuid4()),
+                    host_po_did=str(uuid.uuid4()),
                     network_reliability=random.randint(1, 10),
                 )
             self.db.commit()
