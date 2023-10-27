@@ -29,10 +29,7 @@ class OffloadingService:
         except redis.exceptions.ConnectionError as e:
             print("Redis connection error: ", e)
             self.cache = None
-        print(server_host_name)
         if server_host_name != "":
-            print(server_host_did)
-            print(server_host_po_did)
             self.server_host = User(
                 did=server_host_did,
                 po_did=server_host_po_did,

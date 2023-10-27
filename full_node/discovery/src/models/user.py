@@ -9,7 +9,7 @@ class User(BaseModel):
     latency: int = Field(None)
     queue: str = Field(None)
 
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         fields = [
             "did",
             "po_did",

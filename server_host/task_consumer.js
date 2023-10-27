@@ -71,7 +71,7 @@ class Consumer {
     this.close = function close() {
       if (channel != null) {
         channel.close();
-        channel == null;
+        channel = null;
       }
       if (connection != null) {
         connection.close();
@@ -82,7 +82,7 @@ class Consumer {
     };
 
     this.handleMsgContent = async function handleMsgContent(content) {
-      transactionStartDatetime = new Date().getTime();
+      const transactionStartDatetime = new Date().getTime();
 
       const task = parseTaskFromProto(content);
       let result = '';
@@ -93,8 +93,8 @@ class Consumer {
         task.runtime
       );
       
-      transactionEndDatetime = new Date().getTime();
-      duration = transactionEndDatetime - transactionStartDatetime;
+      const transactionEndDatetime = new Date().getTime();
+      const duration = transactionEndDatetime - transactionStartDatetime;
       return { id: task.id, content: result, resourceConsumed: 0.1, transactionStartDatetime, transactionEndDatetime, duration };
     };
   }
