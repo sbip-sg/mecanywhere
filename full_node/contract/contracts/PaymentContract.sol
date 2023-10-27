@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract PaymentContract {
     address private owner;
-    mapping(string => uint256) private didToBalance;
+    mapping(string => int256) private didToBalance;
 
     event PaymentReceived(string indexed did, uint256 amount);
 
@@ -26,7 +26,7 @@ contract PaymentContract {
     }
 
     function withdraw(string memory toDid, address payable to, uint256 amount) public payable onlyOwner {
-        if (didToBalance[toDid] < amount) {
+        if (didToBalance[toDid] < int(amount)) {
             revert("Insufficient balance.");
         }
 
@@ -37,15 +37,15 @@ contract PaymentContract {
         }
     }
 
-    function getBalance(string memory did) public view returns (uint256) {
+    function getBalance(string memory did) public view returns (int256) {
         return didToBalance[did];
     }
     
     function increaseBalance(string memory did, uint256 amount) public {
-        didToBalance[did] += amount;
+        didToBalance[did] += int(amount);
     }
 
     function decreaseBalance(string memory did, uint256 amount) public {
-        didToBalance[did] -= amount;
+        didToBalance[did] -= int(amount);
     }
 }

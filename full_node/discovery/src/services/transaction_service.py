@@ -10,9 +10,10 @@ class TransactionService:
     async def record_task(
         self,
         token: str,
-        task_type: str,
-        did: str,
-        po_did: str,
+        client_did: str,
+        client_po_did: str,
+        host_did: str,
+        host_po_did: str,
         transaction_id: str,
         resource_consumed: float,
         transaction_start_datetime: int,
@@ -31,9 +32,10 @@ class TransactionService:
             "network_reliability": network_reliability,
         }
         request = {
-            "task_type": task_type,
-            "did": did,
-            "po_did": po_did,
+            "client_did": client_did,
+            "client_po_did": client_po_did,
+            "host_did": host_did,
+            "host_po_did": host_po_did,
             "task_metadata": task_metadata,
         }
         return await self.post_transaction(
@@ -43,9 +45,10 @@ class TransactionService:
     async def update_task(
         self,
         token: str,
-        task_type: str,
-        did: str,
-        po_did: str,
+        client_did: str,
+        client_po_did: str,
+        host_did: str,
+        host_po_did: str,
         transaction_id: str,
         resource_consumed: float,
         transaction_start_datetime: int,
@@ -64,9 +67,10 @@ class TransactionService:
             "network_reliability": network_reliability,
         }
         request = {
-            "task_type": task_type,
-            "did": did,
-            "po_did": po_did,
+            "client_did": client_did,
+            "client_po_did": client_po_did,
+            "host_did": host_did,
+            "host_po_did": host_po_did,
             "task_metadata": task_metadata,
         }
         return await self.post_transaction(

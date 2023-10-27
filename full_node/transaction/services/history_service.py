@@ -1,6 +1,7 @@
 import uuid
 from fastapi import HTTPException, status
-from models.task_metadata_input import TaskMetadataInput
+from models.transaction import Transaction
+from models.requests import RecordTaskRequest
 from services.database import Database
 import random
 import datetime
@@ -12,6 +13,7 @@ class HistoryService:
 
     def get_did_history(self, did: str):
         try:
+            print("Getting history", did)
             return self.db.filter_by_did(did)
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
@@ -20,31 +22,43 @@ class HistoryService:
                 status.HTTP_500_INTERNAL_SERVER_ERROR,
                 f"Error: Failed to get history. {str(e)}",
             )
+        
+    def get_transaction(self, did: str, transaction_id: str) -> Transaction:
+        try:
+            print("Getting transaction", transaction_id, did)
+            entry = self.db.get_transaction(transaction_id, did)
+            if entry is None:
+                return None
+            return Transaction(*entry)
+        except Exception as e:
+            print(f"Error: Failed to get history. {str(e)}")
+            self.db.rollback()
+            raise HTTPException(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                f"Error: Failed to get history. {str(e)}",
+            )
 
     def add_did_history(
-        self, did: str, po_did: str, task_metadata: TaskMetadataInput, price: float
+        self, request: RecordTaskRequest, price: float
     ):
-        transaction_id = task_metadata.transaction_id
-        resource_consumed = task_metadata.resource_consumed
-        transaction_start_datetime = task_metadata.transaction_start_datetime
-        transaction_end_datetime = task_metadata.transaction_end_datetime
-        task_name = task_metadata.task_name
-        duration = task_metadata.duration
-        network_reliability = task_metadata.network_reliability
+        task_metadata = request.task_metadata
         try:
             self.db.add_without_commit(
-                transaction_id,
-                did,
-                resource_consumed,
-                transaction_start_datetime,
-                transaction_end_datetime,
-                task_name,
-                duration,
+                task_metadata.transaction_id,
+                request.client_did,
+                task_metadata.resource_consumed,
+                task_metadata.transaction_start_datetime,
+                task_metadata.transaction_end_datetime,
+                task_metadata.task_name,
+                task_metadata.duration,
                 price,
-                po_did,
-                network_reliability,
+                request.client_po_did,
+                request.host_did,
+                request.host_po_did,
+                task_metadata.network_reliability,
             )
             self.db.commit()
+            print("Added history", task_metadata.transaction_id, request.client_did)
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
@@ -54,29 +68,24 @@ class HistoryService:
             )
         
     def update_did_history(
-        self, did: str, po_did: str, task_metadata: TaskMetadataInput, price: float
+        self, request: RecordTaskRequest, price: float
     ):
-        transaction_id = task_metadata.transaction_id
-        resource_consumed = task_metadata.resource_consumed
-        transaction_start_datetime = task_metadata.transaction_start_datetime
-        transaction_end_datetime = task_metadata.transaction_end_datetime
-        task_name = task_metadata.task_name
-        duration = task_metadata.duration
-        network_reliability = task_metadata.network_reliability
+        task_metadata = request.task_metadata
         try:
             self.db.update_without_commit(
-                transaction_id,
-                did,
-                resource_consumed,
-                transaction_start_datetime,
-                transaction_end_datetime,
-                task_name,
-                duration,
+                task_metadata.transaction_id,
+                request.client_did,
+                task_metadata.resource_consumed,
+                task_metadata.transaction_start_datetime,
+                task_metadata.transaction_end_datetime,
+                task_metadata.task_name,
+                task_metadata.duration,
                 price,
-                po_did,
-                network_reliability,
+                request.client_po_did,
+                task_metadata.network_reliability,
             )
             self.db.commit()
+            print("Updated history", task_metadata.transaction_id, request.client_did)
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
@@ -89,7 +98,7 @@ class HistoryService:
         try:
             return self.db.filter_by_po_did(did)
         except Exception as e:
-            print(f"Error: Failed to add history. {str(e)}")
+            print(f"Error: Failed to get history. {str(e)}")
             self.db.rollback()
             raise HTTPException(
                 status.HTTP_500_INTERNAL_SERVER_ERROR,

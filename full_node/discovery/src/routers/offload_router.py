@@ -97,8 +97,8 @@ async def poll_result(
 async def record_response(
     transaction_service: TransactionService,
     token: str,
-    did: str,
-    po_did: str,
+    client_did: str,
+    client_po_did: str,
     response: PublishTaskResponse,
     is_update: bool = False,
 ):
@@ -108,14 +108,17 @@ async def record_response(
         status=response.status,
         response=task_result.content,
     )
+    host_did = response.host_did
+    host_po_did = response.host_po_did
     try:
         print("recording task in transaction service")
         record_func = transaction_service.update_task if is_update else transaction_service.record_task
         await record_func(
             token,
-            "client",
-            did,
-            po_did,
+            client_did,
+            client_po_did,
+            host_did,
+            host_po_did,
             response.transaction_id,
             task_result.resource_consumed,
             task_result.transaction_start_datetime,

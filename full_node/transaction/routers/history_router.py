@@ -3,7 +3,7 @@ from dependencies import get_did_from_token, get_history_service, get_po_did_fro
 from typing import List
 from exceptions.http_exceptions import ForbiddenException
 from models.did import DIDModel
-from models.responses import DidRecord
+from models.responses import DidRecord, PoDidRecord
 from services.history_service import HistoryService
 
 history_router = APIRouter(
@@ -24,7 +24,7 @@ async def find_did_history(
     return history_service.get_did_history(did)
 
 
-@history_router.post("/find_po_history", response_model=List[DidRecord])
+@history_router.post("/find_po_history", response_model=List[PoDidRecord])
 async def find_po_history(
     didModel: DIDModel,
     history_service: HistoryService = Depends(get_history_service),

@@ -82,8 +82,9 @@ class Consumer {
     };
 
     this.handleMsgContent = async function handleMsgContent(content) {
-      const task = parseTaskFromProto(content);
+      transactionStartDatetime = new Date().getTime();
 
+      const task = parseTaskFromProto(content);
       let result = '';
       result = await postTaskExecution(
         task.containerRef,
@@ -91,8 +92,10 @@ class Consumer {
         task.resource,
         task.runtime
       );
-
-      return { id: task.id, content: result, resourceConsumed: 0.1, transactionStartDatetime: 1, transactionEndDatetime: 2, duration: 1 };
+      
+      transactionEndDatetime = new Date().getTime();
+      duration = transactionEndDatetime - transactionStartDatetime;
+      return { id: task.id, content: result, resourceConsumed: 0.1, transactionStartDatetime, transactionEndDatetime, duration };
     };
   }
 }

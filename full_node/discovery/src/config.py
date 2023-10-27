@@ -11,6 +11,8 @@ class Config:
         access_token_key: str = None
         refresh_token_key: str = None
         server_host_name: str = None
+        server_host_did: str = None
+        server_host_po_did: str = None
 
         class Config:
             env_file = ".env"
@@ -88,3 +90,9 @@ class Config:
     
     def get_transaction_service_url(self) -> str:
         return self.configuration["transaction"]["url"]
+    
+    def get_server_host_did(self) -> str:
+        return self.secrets.server_host_did
+    
+    def get_server_host_po_did(self) -> str:
+        return self.secrets.server_host_po_did

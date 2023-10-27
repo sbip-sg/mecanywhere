@@ -38,7 +38,8 @@ async def register_host(
     (access_token, refresh_token) = await ca_middleware.verify_and_create_tokens(
         did, credential
     )
-    registration_service.register_host(did)
+    po_did = credential["credential"]["issuer"]
+    registration_service.register_host(did, po_did)
     return {
         "access_token": access_token,
         "access_token_type": "Bearer",

@@ -1,4 +1,5 @@
 from contract import DiscoveryContract
+from models.user import User
 from models.responses import PublishTaskResponse, TaskResultModel
 from services.message_queue.shared_data_handler import SharedDataHandler
 from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
@@ -16,6 +17,8 @@ class OffloadingService:
         basic_publisher: BasicTaskPublisher,
         cache: redis.Redis,
         server_host_name: str,
+        server_host_did: str,
+        server_host_po_did: str,
     ) -> None:
         self.contract = contract
         self.rpc_publisher = rpc_publisher
@@ -26,14 +29,22 @@ class OffloadingService:
         except redis.exceptions.ConnectionError as e:
             print("Redis connection error: ", e)
             self.cache = None
-        self.server_host_name = server_host_name
+        print(server_host_name)
+        if server_host_name != "":
+            print(server_host_did)
+            print(server_host_po_did)
+            self.server_host = User(
+                did=server_host_did,
+                po_did=server_host_po_did,
+                queue=server_host_name,
+            )
         self.shared_data = SharedDataHandler()
 
-    def assign_host_to_client(self, did: str) -> str:
-        host = self.contract.get_user_queue(get_current_timestamp())
-        if host == "" and self.server_host_name is not None:
+    def assign_host_to_client(self, did: str) -> User:
+        host = self.contract.get_first_user(get_current_timestamp())
+        if host == None and self.server_host is not None:
             print("Using server-host.")
-            host = self.server_host_name
+            return self.server_host
         return host
 
     def remove_host_from_client(self) -> None:
@@ -42,15 +53,15 @@ class OffloadingService:
     async def offload_and_wait(
         self, did: str, offload_request: OffloadRequest
     ) -> PublishTaskResponse:
-        queue = self.assign_host_to_client(did)
-        if queue == "":
+        host = self.assign_host_to_client(did)
+        if host is None:
             return PublishTaskResponse(
                 status=0,
                 transaction_id="",
-                task_result=None,
                 network_reliability=0,
                 error="Failed to assign host to client",
             )
+        queue = host.queue
 
         # save correlation_id and origin_did of the message to match the result in result relayer
         correlation_id = str(uuid.uuid4())
@@ -65,6 +76,8 @@ class OffloadingService:
                 status=1,
                 transaction_id=correlation_id,
                 task_result=response,
+                host_did=host.did,
+                host_po_did=host.po_did,
                 network_reliability=0,
             )
         except Exception as e:
@@ -72,6 +85,8 @@ class OffloadingService:
                 status=0,
                 transaction_id=correlation_id,
                 task_result=None,
+                host_did=host.did,
+                host_po_did=host.po_did,
                 network_reliability=0,
                 error=str(e),
             )
@@ -79,15 +94,15 @@ class OffloadingService:
     async def offload(
         self, did: str, offload_request: OffloadRequest
     ) -> PublishTaskResponse:
-        queue = self.assign_host_to_client(did)
-        if queue == "":
+        host = self.assign_host_to_client(did)
+        if host is None:
             return PublishTaskResponse(
                 status=0,
                 transaction_id="",
-                task_result=None,
                 network_reliability=0,
                 error="Failed to assign host to client",
             )
+        queue = host.queue
 
         # save correlation_id and origin_did of the message to match the result in result relayer
         correlation_id = str(uuid.uuid4())
@@ -102,6 +117,8 @@ class OffloadingService:
                 status=1,
                 transaction_id=correlation_id,
                 task_result=response,
+                host_did=host.did,
+                host_po_did=host.po_did,
                 network_reliability=0,
             )
         except Exception as e:
@@ -109,6 +126,8 @@ class OffloadingService:
                 status=0,
                 transaction_id=correlation_id,
                 task_result=None,
+                host_did=host.did,
+                host_po_did=host.po_did,
                 network_reliability=0,
                 error=str(e),
             )

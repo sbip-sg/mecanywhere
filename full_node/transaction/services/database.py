@@ -30,6 +30,8 @@ class Database:
             Column("duration", Integer, nullable=False),
             Column("price", Float, nullable=False),
             Column("po_did", String(255), nullable=False),
+            Column("host_did", String(255), nullable=False),
+            Column("host_po_did", String(255), nullable=False),
             Column("network_reliability", Integer, nullable=False),
             UniqueConstraint("transaction_id", "did", name="unique_transaction_id_did"),
             extend_existing=True,
@@ -51,10 +53,16 @@ class Database:
         self.session.commit()
 
     def filter_by_did(self, did: str):
+        print(self.session.query(self.transactions).filter_by(did=did).all())
         return self.session.query(self.transactions).filter_by(did=did).all()
 
     def filter_by_po_did(self, did: str):
         return self.session.query(self.transactions).filter_by(po_did=did).all()
+    
+    def get_transaction(self, transaction_id: str, did: str):
+        print(did)
+        print(self.filter_by_did(did))
+        return self.session.query(self.transactions).filter_by(transaction_id=transaction_id, did=did).first()
 
     def add_without_commit(
         self,
@@ -67,6 +75,8 @@ class Database:
         duration: int,
         price: float,
         po_did: str,
+        host_did: str,
+        host_po_did: str,
         network_reliability: int,
     ):
         new_transaction = self.transactions.insert().values(
@@ -79,6 +89,8 @@ class Database:
             duration=duration,
             price=price,
             po_did=po_did,
+            host_did=host_did,
+            host_po_did=host_po_did,
             network_reliability=network_reliability,
         )
         self.session.execute(new_transaction)
