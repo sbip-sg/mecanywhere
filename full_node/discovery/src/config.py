@@ -85,7 +85,7 @@ class Config:
     def get_mq_url(self) -> str:
         return self.configuration["mq"]["url"]
     
-    def get_server_host_name(self) -> bool:
+    def get_server_host_name(self) -> str:
         return self.secrets.server_host_name
     
     def get_transaction_service_url(self) -> str:

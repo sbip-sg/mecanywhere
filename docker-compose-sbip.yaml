@@ -74,6 +74,8 @@ services:
       - access_token_key
       - refresh_token_key
       - server_host_name
+      - server_host_did
+      - server_host_po_did
     command: --root-path /fn-discovery # for reverse proxy
 
   fn-transaction:
@@ -146,3 +148,7 @@ secrets:
     file: ./keys/wallet_private_key.txt
   server_host_name:
     file: ./keys/server_host_name.txt
+  server_host_did:
+    file: ./keys/server_host_did.txt
+  server_host_po_did:
+    file: ./keys/server_host_po_did.txt
