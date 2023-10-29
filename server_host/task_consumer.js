@@ -99,7 +99,11 @@ class Consumer {
       }
       const transactionEndDatetime = new Date().getTime();
       const duration = transactionEndDatetime - transactionStartDatetime;
-      return { id: task.id, content: result, resourceConsumed, transactionStartDatetime, transactionEndDatetime, duration };
+      const reply = { id: task.id, content: result, resourceConsumed, transactionStartDatetime, transactionEndDatetime, duration };
+      
+      console.log(` [con] Reply: ${JSON.stringify(reply)}`);
+      
+      return reply;
     };
   }
 }
