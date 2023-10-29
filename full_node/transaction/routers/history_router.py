@@ -64,3 +64,19 @@ async def add_dummy_history(
 
     history_service.add_dummy_history(did, po_did)
     return {"message": "Dummy history added"}
+
+
+@history_router.post("/add_host_dummy_history")
+async def add_dummy_history(
+    didModel: DIDModel,
+    history_service: HistoryService = Depends(get_history_service),
+    token_did: str = Depends(get_did_from_token),
+    po_did: str = Depends(get_po_did_from_token),
+):
+    did = didModel.did
+
+    if did != token_did:
+        raise ForbiddenException("DID does not match token")
+
+    history_service.add_dummy_history(did, po_did, host=True)
+    return {"message": "Dummy history added"}

@@ -108,27 +108,48 @@ class HistoryService:
                 f"Error: Failed to get history. {str(e)}",
             )
 
-    def add_dummy_history(self, did: str, po_did: str):
+    def add_dummy_history(self, did: str, po_did: str, host: bool = False):
         try:
-            for i in range(50):
-                start_time = datetime.datetime.now() + datetime.timedelta(
-                    days=random.randint(-100, 0)
-                )
-                end_time = start_time + datetime.timedelta(hours=random.randint(1, 20))
-                self.db.add_without_commit(
-                    str(uuid.uuid4()),
-                    did,
-                    resource_consumed=random.randint(1, 100),
-                    transaction_start_datetime=int(start_time.timestamp()),
-                    transaction_end_datetime=int(end_time.timestamp()),
-                    task_name=f"Task {i}",
-                    duration=random.randint(1, 60),
-                    price=random.uniform(10.0, 100.0),
-                    po_did=po_did,
-                    host_did=str(uuid.uuid4()),
-                    host_po_did=str(uuid.uuid4()),
-                    network_reliability=random.randint(1, 10),
-                )
+            if host:
+                for i in range(50):
+                    start_time = datetime.datetime.now() + datetime.timedelta(
+                        days=random.randint(-100, 0)
+                    )
+                    end_time = start_time + datetime.timedelta(hours=random.randint(1, 20))
+                    self.db.add_without_commit(
+                        str(uuid.uuid4()),
+                        did=str(uuid.uuid4()),
+                        resource_consumed=random.randint(1, 100),
+                        transaction_start_datetime=int(start_time.timestamp()),
+                        transaction_end_datetime=int(end_time.timestamp()),
+                        task_name=f"Task {i}",
+                        duration=random.randint(1, 60),
+                        price=random.uniform(10.0, 100.0),
+                        po_did=str(uuid.uuid4()),
+                        host_did=did,
+                        host_po_did=po_did,
+                        network_reliability=random.randint(1, 10),
+                    )
+            else:
+                for i in range(50):
+                    start_time = datetime.datetime.now() + datetime.timedelta(
+                        days=random.randint(-100, 0)
+                    )
+                    end_time = start_time + datetime.timedelta(hours=random.randint(1, 20))
+                    self.db.add_without_commit(
+                        str(uuid.uuid4()),
+                        did,
+                        resource_consumed=random.randint(1, 100),
+                        transaction_start_datetime=int(start_time.timestamp()),
+                        transaction_end_datetime=int(end_time.timestamp()),
+                        task_name=f"Task {i}",
+                        duration=random.randint(1, 60),
+                        price=random.uniform(10.0, 100.0),
+                        po_did=po_did,
+                        host_did=str(uuid.uuid4()),
+                        host_po_did=str(uuid.uuid4()),
+                        network_reliability=random.randint(1, 10),
+                    )
             self.db.commit()
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
