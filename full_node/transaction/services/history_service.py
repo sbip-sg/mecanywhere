@@ -11,8 +11,11 @@ class HistoryService:
     def __init__(self, db: Database):
         self.db = db
 
-    def get_did_history(self, did: str):
+    def get_did_history(self, did: str, host: bool = False):
         try:
+            if host:
+                print("Getting host history", did)
+                return self.db.filter_by_host_did(did)
             print("Getting history", did)
             return self.db.filter_by_did(did)
         except Exception as e:
@@ -22,7 +25,7 @@ class HistoryService:
                 status.HTTP_500_INTERNAL_SERVER_ERROR,
                 f"Error: Failed to get history. {str(e)}",
             )
-        
+
     def get_transaction(self, did: str, transaction_id: str) -> Transaction:
         try:
             print("Getting transaction", transaction_id, did)

@@ -53,15 +53,15 @@ class Database:
         self.session.commit()
 
     def filter_by_did(self, did: str):
-        print(self.session.query(self.transactions).filter_by(did=did).all())
         return self.session.query(self.transactions).filter_by(did=did).all()
+
+    def filter_by_host_did(self, did: str):
+        return self.session.query(self.transactions).filter_by(host_did=did).all()
 
     def filter_by_po_did(self, did: str):
         return self.session.query(self.transactions).filter_by(po_did=did).all()
     
     def get_transaction(self, transaction_id: str, did: str):
-        print(did)
-        print(self.filter_by_did(did))
         return self.session.query(self.transactions).filter_by(transaction_id=transaction_id, did=did).first()
 
     def add_without_commit(

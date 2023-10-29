@@ -24,6 +24,19 @@ async def find_did_history(
     return history_service.get_did_history(did)
 
 
+@history_router.post("/find_host_history", response_model=List[DidRecord])
+async def find_did_history(
+    didModel: DIDModel,
+    history_service: HistoryService = Depends(get_history_service),
+    token_did: str = Depends(get_did_from_token),
+):
+    did = didModel.did
+    if did != token_did:
+        raise ForbiddenException("DID does not match token")
+
+    return history_service.get_did_history(did, host=True)
+
+
 @history_router.post("/find_po_history", response_model=List[PoDidRecord])
 async def find_po_history(
     didModel: DIDModel,
