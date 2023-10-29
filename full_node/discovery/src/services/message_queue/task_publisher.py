@@ -73,6 +73,7 @@ class RPCTaskPublisher:
             queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
         )
         print("Publishing to queue: " + host_name)
+        print("Task: " + task)
         self.channel.basic_publish(
             exchange="",
             routing_key=host_name,
@@ -132,6 +133,7 @@ class BasicTaskPublisher:
             queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
         )
         print("Publishing to queue: " + host_name)
+        print("Task: " + task)
         self.channel.basic_publish(
             exchange="",
             routing_key=host_name,

@@ -92,10 +92,14 @@ class Consumer {
         task.resource,
         task.runtime
       );
-      
+
+      let resourceConsumed = 0.1;
+      if (task.resource != null) {
+        resourceConsumed = task.resource.cpu * task.resource.memory;
+      }
       const transactionEndDatetime = new Date().getTime();
       const duration = transactionEndDatetime - transactionStartDatetime;
-      return { id: task.id, content: result, resourceConsumed: 0.1, transactionStartDatetime, transactionEndDatetime, duration };
+      return { id: task.id, content: result, resourceConsumed, transactionStartDatetime, transactionEndDatetime, duration };
     };
   }
 }
