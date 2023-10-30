@@ -82,7 +82,7 @@ class Consumer {
     };
 
     this.handleMsgContent = async function handleMsgContent(content) {
-      const transactionStartDatetime = new Date().getTime();
+      const transactionStartDatetime = Math.floor(new Date().getTime() / 1000);
 
       const task = parseTaskFromProto(content);
       let result = '';
@@ -97,7 +97,7 @@ class Consumer {
       if (task.resource != null) {
         resourceConsumed = task.resource.cpu * task.resource.memory;
       }
-      const transactionEndDatetime = new Date().getTime();
+      const transactionEndDatetime = Math.floor(new Date().getTime() / 1000);
       const duration = transactionEndDatetime - transactionStartDatetime;
       const reply = { id: task.id, content: result, resourceConsumed, transactionStartDatetime, transactionEndDatetime, duration };
       
