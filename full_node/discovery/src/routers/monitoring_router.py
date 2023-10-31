@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Body, Depends, status
-from exceptions.http_exceptions import ForbiddenException
+from exceptions.http_exceptions import ForbiddenException, BadRequestException
 from models.did import DIDModel
 from services.monitoring_service import MonitoringService
-from dependencies import get_monitoring_service, get_did_from_token
+from dependencies import get_monitoring_service, get_did_from_token, get_po_did_from_token
 
 
 monitoring_router = APIRouter(
@@ -20,8 +20,11 @@ async def heartbeat(
     didModel: DIDModel = Body(..., description="DID of the host"),
     monitoring_service: MonitoringService = Depends(get_monitoring_service),
     token_did: str = Depends(get_did_from_token),
+    token_po_did: str = Depends(get_po_did_from_token),
 ):
     did = didModel.did
     if did != token_did:
         raise ForbiddenException("DID does not match token")
-    monitoring_service.heartbeat(did)
+    if not monitoring_service.is_registered(did):
+        raise BadRequestException("Not registered")
+    monitoring_service.heartbeat(did, token_po_did)

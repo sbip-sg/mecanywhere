@@ -8,6 +8,7 @@ contract DiscoveryContract {
 
     struct User {
         string did;
+        string poDid;
         uint256 index;
         bool isUser;
         uint256 timestamp;
@@ -23,14 +24,15 @@ contract DiscoveryContract {
         EXPIRY_DURATION = expiryDuration;
     }
 
-    function setUser(string memory did, uint256 timestamp, uint256 latency) public {
+    function setUser(string memory did, string memory poDid, uint256 timestamp, uint256 latency) public {
         if (didToUser[did].isUser) {
             uint256 index = didToUser[did].index;
+            users[index].poDid = poDid;
             users[index].timestamp = timestamp;
             users[index].latency = latency;
             return;
         }
-        User memory newUser = User(did, userCount, true, timestamp, latency, did);
+        User memory newUser = User(did, poDid, userCount, true, timestamp, latency, did);
         users.push(newUser);
         didToUser[did] = newUser;
         userCount = userCount + 1;
@@ -42,11 +44,18 @@ contract DiscoveryContract {
         }
     }
 
-    function getFirstUserQueue() public view returns (string memory) {
-        if (userCount == 0) {
-            return "";
+    function getUser(string memory did) public view returns (User memory) {
+        if (didToUser[did].isUser) {
+          return didToUser[did];
         }
-        return users[0].queue;
+        return User("", "", 0, false, 0, 0, "");
+    }
+
+    function getFirstUser() public view returns (User memory) {
+        if (userCount == 0) {
+            return User("", "", 0, false, 0, 0, "");
+        }
+        return users[0];
     }
 
     function getUserCount() public view returns (uint256) {

@@ -3,6 +3,7 @@ from web3 import Web3
 import json
 
 from config import Config
+from models.user import User
 
 
 class DiscoveryContract:
@@ -48,17 +49,27 @@ class DiscoveryContract:
             raise Exception(e)
 
     # record user in the contract
-    def set_user(self, did: str, timestamp: int, latency: int):
-        unbuilt_function = self.contract.functions.setUser(did, timestamp, latency)
+    def set_user(self, did: str, po_did: str, timestamp: int, latency: int):
+        unbuilt_function = self.contract.functions.setUser(did, po_did, timestamp, latency)
         self.call_function(unbuilt_function, {"gas": 600000})
 
+    # get user from the contract
+    def get_user(self, did: str) -> User:
+        user_tuple = self.contract.functions.getUser(did).call()
+        return User(*user_tuple)
+
     # get arbitrary user's queue name from the contract
-    def get_user_queue(self, current_timestamp: int) -> str:
+    def get_first_user(self, current_timestamp: int) -> User:
         lazy_remove_expired_users = self.contract.functions.lazyRemoveExpiredUsers(
             current_timestamp
         )
         self.call_function(lazy_remove_expired_users, {"gas": 300000})
-        return self.contract.functions.getFirstUserQueue().call()
+        user_tuple = self.contract.functions.getFirstUser().call()
+        user = User(*user_tuple)
+        if user.is_user:
+            return user
+        else:
+            return None
 
     # get all dids and timestamps from the contract
     def get_all_did_to_timestamps(self) -> List[Tuple[str, int]]:

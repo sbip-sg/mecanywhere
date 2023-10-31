@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 
+from models.task_result import TaskResultModel
+
 
 class RegistrationResponse(BaseModel):
     access_token: str = Field(description="JWT format token")
@@ -10,9 +12,16 @@ class RegistrationResponse(BaseModel):
 
 class PublishTaskResponse(BaseModel):
     status: int = Field(..., example=1)
-    response: str = Field(..., example="Hello World")
+    transaction_id: str = Field(..., example="001")
+    task_result: TaskResultModel = Field(None)
+    host_did: str = Field(None)
+    host_po_did: str = Field(None)
+    network_reliability: int = Field(..., example=100)
     error: str = Field(None, example="")
 
 
-class OffloadResponse(PublishTaskResponse):
+class OffloadResponse(BaseModel):
     task_id: str = Field(..., example="001")
+    status: int = Field(..., example=1)
+    response: str = Field(..., example="Hello World")
+    error: str = Field(None, example="")

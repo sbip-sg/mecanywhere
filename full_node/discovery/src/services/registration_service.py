@@ -6,8 +6,8 @@ class RegistrationService(object):
     def __init__(self, contract: DiscoveryContract) -> None:
         self.contract = contract
 
-    def register_host(self, did: str) -> None:
-        self.contract.set_user(did, get_current_timestamp(), 0)
+    def register_host(self, did: str, po_did: str) -> None:
+        self.contract.set_user(did, po_did, get_current_timestamp(), 0)
 
     def deregister_host(self, did: str) -> None:
         self.contract.remove_user(did)

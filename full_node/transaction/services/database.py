@@ -21,17 +21,19 @@ class Database:
             "transactions",
             self.metadata,
             Column("id", Integer, primary_key=True, autoincrement=True),
-            Column("session_id", String(255), nullable=False),
+            Column("transaction_id", String(255), nullable=False),
             Column("did", String(255), nullable=False),
             Column("resource_consumed", Integer, nullable=False),
-            Column("session_start_datetime", Integer, nullable=False),
-            Column("session_end_datetime", Integer, nullable=False),
-            Column("task", String(255), nullable=False),
+            Column("transaction_start_datetime", Integer, nullable=False),
+            Column("transaction_end_datetime", Integer, nullable=False),
+            Column("task_name", String(255), nullable=False),
             Column("duration", Integer, nullable=False),
             Column("price", Float, nullable=False),
             Column("po_did", String(255), nullable=False),
+            Column("host_did", String(255), nullable=False),
+            Column("host_po_did", String(255), nullable=False),
             Column("network_reliability", Integer, nullable=False),
-            UniqueConstraint("session_id", "did", name="unique_session_id_did"),
+            UniqueConstraint("transaction_id", "did", name="unique_transaction_id_did"),
             extend_existing=True,
         )
         Session = sessionmaker(bind=engine)
@@ -53,32 +55,70 @@ class Database:
     def filter_by_did(self, did: str):
         return self.session.query(self.transactions).filter_by(did=did).all()
 
+    def filter_by_host_did(self, did: str):
+        return self.session.query(self.transactions).filter_by(host_did=did).all()
+
     def filter_by_po_did(self, did: str):
         return self.session.query(self.transactions).filter_by(po_did=did).all()
+    
+    def get_transaction(self, transaction_id: str, did: str):
+        return self.session.query(self.transactions).filter_by(transaction_id=transaction_id, did=did).first()
 
     def add_without_commit(
         self,
-        session_id: str,
+        transaction_id: str,
         did: str,
         resource_consumed: float,
-        session_start_datetime: int,
-        session_end_datetime: int,
-        task: str,
+        transaction_start_datetime: int,
+        transaction_end_datetime: int,
+        task_name: str,
+        duration: int,
+        price: float,
+        po_did: str,
+        host_did: str,
+        host_po_did: str,
+        network_reliability: int,
+    ):
+        new_transaction = self.transactions.insert().values(
+            transaction_id=transaction_id,
+            did=did,
+            resource_consumed=resource_consumed,
+            transaction_start_datetime=transaction_start_datetime,
+            transaction_end_datetime=transaction_end_datetime,
+            task_name=task_name,
+            duration=duration,
+            price=price,
+            po_did=po_did,
+            host_did=host_did,
+            host_po_did=host_po_did,
+            network_reliability=network_reliability,
+        )
+        self.session.execute(new_transaction)
+
+    def update_without_commit(
+        self,
+        transaction_id: str,
+        did: str,
+        resource_consumed: float,
+        transaction_start_datetime: int,
+        transaction_end_datetime: int,
+        task_name: str,
         duration: int,
         price: float,
         po_did: str,
         network_reliability: int,
     ):
-        new_transaction = self.transactions.insert().values(
-            session_id=session_id,
-            did=did,
-            resource_consumed=resource_consumed,
-            session_start_datetime=session_start_datetime,
-            session_end_datetime=session_end_datetime,
-            task=task,
-            duration=duration,
-            price=price,
-            po_did=po_did,
-            network_reliability=network_reliability,
+        self.session.query(self.transactions).filter_by(
+            transaction_id=transaction_id, did=did
+        ).update(
+            {
+                "resource_consumed": resource_consumed,
+                "transaction_start_datetime": transaction_start_datetime,
+                "transaction_end_datetime": transaction_end_datetime,
+                "task_name": task_name,
+                "duration": duration,
+                "price": price,
+                "po_did": po_did,
+                "network_reliability": network_reliability,
+            }
         )
-        self.session.execute(new_transaction)

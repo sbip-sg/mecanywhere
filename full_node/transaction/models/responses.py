@@ -5,3 +5,12 @@ class DidRecord(TaskMetadataInput):
 
     class Config:
         orm_mode = True
+
+
+class PoDidRecord(TaskMetadataInput):
+    price: float
+    did: str
+    host_did: str
+
+    class Config:
+        orm_mode = True

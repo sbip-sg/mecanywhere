@@ -1,10 +1,9 @@
 from contextlib import asynccontextmanager
 import threading
-import redis
 from config import Config
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from services.result_queue import ResultQueue
+from services.message_queue.result_queue import ResultQueue
 from routers.account_creation_router import account_creation_router
 from routers.login_router import login_router
 from routers.registration_router import registration_router

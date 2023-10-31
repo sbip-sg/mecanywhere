@@ -71,7 +71,7 @@ class Consumer {
     this.close = function close() {
       if (channel != null) {
         channel.close();
-        channel == null;
+        channel = null;
       }
       if (connection != null) {
         connection.close();
@@ -82,8 +82,9 @@ class Consumer {
     };
 
     this.handleMsgContent = async function handleMsgContent(content) {
-      const task = parseTaskFromProto(content);
+      const transactionStartDatetime = Math.floor(new Date().getTime() / 1000);
 
+      const task = parseTaskFromProto(content);
       let result = '';
       result = await postTaskExecution(
         task.containerRef,
@@ -92,7 +93,17 @@ class Consumer {
         task.runtime
       );
 
-      return { id: task.id, content: result };
+      let resourceConsumed = 0.1;
+      if (task.resource != null) {
+        resourceConsumed = task.resource.cpu * task.resource.memory;
+      }
+      const transactionEndDatetime = Math.floor(new Date().getTime() / 1000);
+      const duration = transactionEndDatetime - transactionStartDatetime;
+      const reply = { id: task.id, content: result, resourceConsumed, transactionStartDatetime, transactionEndDatetime, duration };
+      
+      console.log(` [con] Reply: ${JSON.stringify(reply)}`);
+      
+      return reply;
     };
   }
 }

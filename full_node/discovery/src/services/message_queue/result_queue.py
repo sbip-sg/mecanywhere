@@ -1,10 +1,10 @@
 from datetime import timedelta
 import pika
 from config import Config
-from exceptions.http_exceptions import BadRequestException
-from services.shared_data_handler import SharedDataHandler
+from services.message_queue.shared_data_handler import SharedDataHandler
 import models.schema_pb2 as schema
 import redis
+from google.protobuf import json_format
 
 
 class ResultQueue:
@@ -22,6 +22,8 @@ class ResultQueue:
                 port=config.get_redis_port(),
                 decode_responses=True,
             )
+        if not self.cache.ping():
+            raise Exception("Redis is not running")
         self.shared_data = SharedDataHandler()
 
     def __new__(cls, config, cache):
@@ -63,12 +65,13 @@ class ResultQueue:
 
     def callback(self, ch, method, properties, body):
         # Tests if the message is a TaskResult
+        task_result = schema.TaskResult()
         try:
-            task = schema.TaskResult()
-            task.ParseFromString(body)
-            print(task, "received")
+            task_result.ParseFromString(body)
+            print(task_result, "received")
         except Exception as e:
-            raise BadRequestException("Error parsing received result")
+            print(e, "error parsing received result")
+            task_result.content = str(e)
 
         correlation_id = properties.correlation_id
         origin_did = self.shared_data.get_origin_did(correlation_id)
@@ -79,8 +82,13 @@ class ResultQueue:
 
         self.shared_data.remove_origin_did(correlation_id)
 
-        task_dict = {"id": task.id, "content": task.content}
+        task_result_dict = json_format.MessageToDict(task_result, preserving_proto_field_name=True)
 
-        # TODO: handle error
-        self.cache.hset(correlation_id, mapping=task_dict)
-        self.cache.expire(correlation_id, timedelta(minutes=60 * 30))
+        try:
+            self.cache.hset(correlation_id, mapping=task_result_dict)
+            self.cache.expire(correlation_id, timedelta(minutes=60 * 30))
+            print(f"Result {correlation_id} saved to cache")
+        except Exception as e:
+            print(e, "error saving result to cache")
+            print(correlation_id, task_result_dict)
+            return

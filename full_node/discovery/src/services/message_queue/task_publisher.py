@@ -1,9 +1,12 @@
 import threading
 import pika
 from config import Config
+from services.message_queue.queue_config import declare_rpc_queue, declare_host_queue
+from models.responses import TaskResultModel
 from models.requests import OffloadRequest
 import models.schema_pb2 as schema
-from services.result_queue import ResultQueue
+from services.message_queue.result_queue import ResultQueue
+from google.protobuf import json_format
 
 
 class RPCTaskPublisher:
@@ -14,7 +17,7 @@ class RPCTaskPublisher:
         self.config = config
         self.connection = None
         self.channel = None
-        self.synchronous_queue = ""
+        self.rpc_queue = ""
         self.responses = dict()
         self.responses_lock = threading.Lock()
         self.start_publisher()
@@ -29,33 +32,32 @@ class RPCTaskPublisher:
             pika.URLParameters(self.config.get_mq_url())
         )
         self.channel = self.connection.channel()
-        self.synchronous_queue = self.channel.queue_declare(
-            queue="", exclusive=True, durable=True, auto_delete=True
-        ).method.queue
+        self.rpc_queue = declare_rpc_queue(self.channel).method.queue
 
         self.channel.basic_consume(
-            queue=self.synchronous_queue,
+            queue=self.rpc_queue,
             on_message_callback=self.on_response,
             auto_ack=True,
         )
         print("Task publisher started")
 
     def on_response(self, ch, method, props, body):
-        response = None
+        task_result = schema.TaskResult()
         try:
-            task = schema.TaskResult()
-            task.ParseFromString(body)
-            print(task, "received")
-            response = task.content
+            task_result.ParseFromString(body)
+            print(task_result, "received")
         except Exception as e:
             print(e, "error parsing received result")
-            response = str(e)
+            task_result.content = str(e)
+        task_result_dict = json_format.MessageToDict(task_result, preserving_proto_field_name=True)
         with self.responses_lock:
-            self.responses[props.correlation_id] = response
+            self.responses[props.correlation_id] = TaskResultModel(**task_result_dict)
+        print("task_publisher response")
+        print(task_result_dict)
 
     async def publish(
         self, correlation_id: str, offload_request: OffloadRequest, host_name: str
-    ):
+    ) -> TaskResultModel:
         task = schema.Task()
         task.id = offload_request.task_id
         task.containerRef = offload_request.container_reference
@@ -65,16 +67,15 @@ class RPCTaskPublisher:
         if offload_request.runtime is not None:
             task.runtime = offload_request.runtime
 
-        # TODO: centralize queue definition and declaration
-        self.channel.queue_declare(
-            queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
-        )
+        declare_host_queue(self.channel, host_name)
+        print("Publishing to queue: " + host_name)
+        print(task)
         self.channel.basic_publish(
             exchange="",
             routing_key=host_name,
             properties=pika.BasicProperties(
                 correlation_id=correlation_id,
-                reply_to=self.synchronous_queue,
+                reply_to=self.rpc_queue,
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
             ),
             body=task.SerializeToString(),
@@ -114,7 +115,7 @@ class BasicTaskPublisher:
 
     async def publish(
         self, correlation_id: str, offload_request: OffloadRequest, host_name: str
-    ):
+    ) -> TaskResultModel:
         task = schema.Task()
         task.id = offload_request.task_id
         task.containerRef = offload_request.container_reference
@@ -124,9 +125,9 @@ class BasicTaskPublisher:
         if offload_request.runtime is not None:
             task.runtime = offload_request.runtime
 
-        self.channel.queue_declare(
-            queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
-        )
+        declare_host_queue(self.channel, host_name)
+        print("Publishing to queue: " + host_name)
+        print(task)
         self.channel.basic_publish(
             exchange="",
             routing_key=host_name,
@@ -137,7 +138,14 @@ class BasicTaskPublisher:
             ),
             body=task.SerializeToString(),
         )
-        return correlation_id
+        return TaskResultModel(
+            id=task.id,
+            resource_consumed=0,
+            transaction_start_datetime=0,
+            transaction_end_datetime=0,
+            content=correlation_id,
+            duration=0,
+        )
 
     def close(self):
         self.connection.close()

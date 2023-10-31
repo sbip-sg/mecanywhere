@@ -6,6 +6,8 @@ class MonitoringService(object):
     def __init__(self, contract: DiscoveryContract) -> None:
         self.contract = contract
 
-    def heartbeat(self, did: str) -> None:
-        # TODO: check if registered
-        self.contract.set_user(did, get_current_timestamp(), 0)
+    def is_registered(self, did: str) -> bool:
+        return self.contract.get_user(did).is_user
+
+    def heartbeat(self, did: str, po_did: str) -> None:
+        self.contract.set_user(did, po_did, get_current_timestamp(), 0)

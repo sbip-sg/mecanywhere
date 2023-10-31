@@ -14,7 +14,8 @@ from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
-from services.task_publisher import RPCTaskPublisher, BasicTaskPublisher
+from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
+from services.transaction_service import TransactionService
 
 
 @lru_cache()
@@ -50,6 +51,20 @@ def get_did_from_token(
     return ca_middleware.get_did_from_token(authorization)
 
 
+def get_po_did_from_token(
+    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+) -> str:
+    return ca_middleware.get_po_did_from_token(authorization)
+
+
+def get_token(
+    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+) -> str:
+    return ca_middleware.get_token(authorization)
+
+
 async def has_ca_access(
     ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
     authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
@@ -81,19 +96,15 @@ def get_basic_task_publisher(
     return BasicTaskPublisher(config)
 
 
-def get_server_host_name(config: Config = Depends(get_config)) -> str:
-    return config.get_server_host_name()
-
-
 def get_offloading_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
     rpc_publisher: RPCTaskPublisher = Depends(get_rpc_task_publisher),
     basic_publisher: BasicTaskPublisher = Depends(get_basic_task_publisher),
     cache: redis.Redis = Depends(get_redis_client),
-    server_host_name: str = Depends(get_server_host_name),
+    config: Config = Depends(get_config),
 ) -> OffloadingService:
     return OffloadingService(
-        contract, rpc_publisher, basic_publisher, cache, server_host_name
+        contract, rpc_publisher, basic_publisher, cache, config.get_server_host_name(), config.get_server_host_did(), config.get_server_host_po_did()
     )
 
 
@@ -107,3 +118,9 @@ def get_monitoring_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
 ) -> MonitoringService:
     return MonitoringService(contract)
+
+def get_transaction_service(
+    config: Config = Depends(get_config),
+    session: ClientSession = Depends(get_session),
+) -> TransactionService:
+    return TransactionService(config, session)

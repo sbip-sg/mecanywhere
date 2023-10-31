@@ -5,7 +5,7 @@ import aiohttp
 import redis
 from contract import PaymentContract
 from config import Config
-from middleware.credential_authentication import (
+from common.middleware.credential_authentication import (
     CredentialAuthenticationMiddleware,
 )
 from contract import PaymentContract
