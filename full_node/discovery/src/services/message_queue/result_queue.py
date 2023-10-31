@@ -22,6 +22,8 @@ class ResultQueue:
                 port=config.get_redis_port(),
                 decode_responses=True,
             )
+        if not self.cache.ping():
+            raise Exception("Redis is not running")
         self.shared_data = SharedDataHandler()
 
     def __new__(cls, config, cache):
@@ -82,6 +84,11 @@ class ResultQueue:
 
         task_result_dict = json_format.MessageToDict(task_result, preserving_proto_field_name=True)
 
-        # TODO: handle error
-        self.cache.hset(correlation_id, mapping=task_result_dict)
-        self.cache.expire(correlation_id, timedelta(minutes=60 * 30))
+        try:
+            self.cache.hset(correlation_id, mapping=task_result_dict)
+            self.cache.expire(correlation_id, timedelta(minutes=60 * 30))
+            print(f"Result {correlation_id} saved to cache")
+        except Exception as e:
+            print(e, "error saving result to cache")
+            print(correlation_id, task_result_dict)
+            return

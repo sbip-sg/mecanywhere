@@ -53,6 +53,11 @@ class DiscoveryContract:
         unbuilt_function = self.contract.functions.setUser(did, po_did, timestamp, latency)
         self.call_function(unbuilt_function, {"gas": 600000})
 
+    # get user from the contract
+    def get_user(self, did: str) -> User:
+        user_tuple = self.contract.functions.getUser(did).call()
+        return User(*user_tuple)
+
     # get arbitrary user's queue name from the contract
     def get_first_user(self, current_timestamp: int) -> User:
         lazy_remove_expired_users = self.contract.functions.lazyRemoveExpiredUsers(

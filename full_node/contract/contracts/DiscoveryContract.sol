@@ -44,6 +44,13 @@ contract DiscoveryContract {
         }
     }
 
+    function getUser(string memory did) public view returns (User memory) {
+        if (didToUser[did].isUser) {
+          return didToUser[did];
+        }
+        return User("", "", 0, false, 0, 0, "");
+    }
+
     function getFirstUser() public view returns (User memory) {
         if (userCount == 0) {
             return User("", "", 0, false, 0, 0, "");

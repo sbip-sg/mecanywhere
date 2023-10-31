@@ -29,7 +29,6 @@ async def record_task(
     client_po_did = request.client_po_did
     host_po_did = request.host_po_did
     task_metadata = request.task_metadata
-    # TODO: validate task_metadata
 
     if client_did != token_did or client_po_did != token_po_did:
         raise ForbiddenException("DID does not match token")

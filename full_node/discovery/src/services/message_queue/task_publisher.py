@@ -1,6 +1,7 @@
 import threading
 import pika
 from config import Config
+from services.message_queue.queue_config import declare_rpc_queue, declare_host_queue
 from models.responses import TaskResultModel
 from models.requests import OffloadRequest
 import models.schema_pb2 as schema
@@ -16,7 +17,7 @@ class RPCTaskPublisher:
         self.config = config
         self.connection = None
         self.channel = None
-        self.synchronous_queue = ""
+        self.rpc_queue = ""
         self.responses = dict()
         self.responses_lock = threading.Lock()
         self.start_publisher()
@@ -31,12 +32,10 @@ class RPCTaskPublisher:
             pika.URLParameters(self.config.get_mq_url())
         )
         self.channel = self.connection.channel()
-        self.synchronous_queue = self.channel.queue_declare(
-            queue="", exclusive=True, durable=True, auto_delete=True
-        ).method.queue
+        self.rpc_queue = declare_rpc_queue(self.channel).method.queue
 
         self.channel.basic_consume(
-            queue=self.synchronous_queue,
+            queue=self.rpc_queue,
             on_message_callback=self.on_response,
             auto_ack=True,
         )
@@ -68,10 +67,7 @@ class RPCTaskPublisher:
         if offload_request.runtime is not None:
             task.runtime = offload_request.runtime
 
-        # TODO: centralize queue definition and declaration
-        self.channel.queue_declare(
-            queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
-        )
+        declare_host_queue(self.channel, host_name)
         print("Publishing to queue: " + host_name)
         print(task)
         self.channel.basic_publish(
@@ -79,7 +75,7 @@ class RPCTaskPublisher:
             routing_key=host_name,
             properties=pika.BasicProperties(
                 correlation_id=correlation_id,
-                reply_to=self.synchronous_queue,
+                reply_to=self.rpc_queue,
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
             ),
             body=task.SerializeToString(),
@@ -129,9 +125,7 @@ class BasicTaskPublisher:
         if offload_request.runtime is not None:
             task.runtime = offload_request.runtime
 
-        self.channel.queue_declare(
-            queue=host_name, durable=True, arguments={"x-expires": 1000 * 60 * 30}
-        )
+        declare_host_queue(self.channel, host_name)
         print("Publishing to queue: " + host_name)
         print(task)
         self.channel.basic_publish(
