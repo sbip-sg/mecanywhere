@@ -3,6 +3,7 @@ import threading
 from config import Config
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from routers.authentication_router import authentication_router
 from services.message_queue.result_queue import ResultQueue
 from routers.account_creation_router import account_creation_router
 from routers.login_router import login_router
@@ -64,7 +65,8 @@ app.add_middleware(
     allow_headers=["*"],
     allow_origins=["*"],
 )
-app.include_router(registration_router)
+app.include_router(authentication_router)
+app.include_router(registration_router, dependencies=[Depends(has_ca_access)])
 app.include_router(account_creation_router)
 app.include_router(login_router)
 app.include_router(offload_router, dependencies=[Depends(has_ca_access)])

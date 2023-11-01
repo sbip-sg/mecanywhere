@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from models.task_result import TaskResultModel
 
 
-class RegistrationResponse(BaseModel):
+class AuthenticationResponse(BaseModel):
     access_token: str = Field(description="JWT format token")
     access_token_type: str = Field(example="Bearer")
     refresh_token: str = Field(description="JWT format token")

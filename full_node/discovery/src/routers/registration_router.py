@@ -1,19 +1,13 @@
 from fastapi import APIRouter, Depends, status
-from fastapi.security import HTTPBearer
-from exceptions.http_exceptions import ForbiddenException, UnauthorizedException
-from models.responses import RegistrationResponse
-from models.requests import RegistrationRequest
+from exceptions.http_exceptions import ForbiddenException, BadRequestException, ContractException
 from models.did import DIDModel
 from services.registration_service import RegistrationService
 from dependencies import (
     get_registration_service,
     get_ca_middleware,
-    has_ca_access,
     get_did_from_token,
+    get_po_did_from_token,
 )
-from common.middleware.credential_authentication import CredentialAuthenticationMiddleware
-
-security = HTTPBearer()
 
 registration_router = APIRouter(
     dependencies=[
@@ -25,34 +19,28 @@ registration_router = APIRouter(
 )
 
 
-@registration_router.post("/register_host", response_model=RegistrationResponse)
+@registration_router.post(
+    "/register_host", response_model=None
+)
 async def register_host(
-    request: RegistrationRequest,
+    didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
-    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    token_did: str = Depends(get_did_from_token),
+    token_po_did: str = Depends(get_po_did_from_token),
 ):
-    credential = request.credential
-    did = request.did
-    if credential == {}:
-        raise UnauthorizedException("No credential provided")
-    (access_token, refresh_token) = await ca_middleware.verify_and_create_tokens(
-        did, credential
-    )
-    po_did = credential["credential"]["issuer"]
-    registration_service.register_host(did, po_did)
-    return {
-        "access_token": access_token,
-        "access_token_type": "Bearer",
-        "refresh_token": refresh_token,
-        "refresh_token_type": "Bearer",
-    }
+    did = didModel.did
+    if did != token_did:
+        raise ForbiddenException("DID does not match token")
+    try:
+        registration_service.register_host(did, token_po_did)
+    except Exception as e:
+        print(e)
+        raise ContractException(str(e))
 
 
 @registration_router.post(
     "/deregister_host",
-    status_code=status.HTTP_200_OK,
     response_model=None,
-    dependencies=[Depends(has_ca_access)],
 )
 async def deregister_host(
     didModel: DIDModel,
@@ -62,37 +50,37 @@ async def deregister_host(
     did = didModel.did
     if did != token_did:
         raise ForbiddenException("DID does not match token")
-    registration_service.deregister_host(did)
+    try:
+        if not registration_service.is_registered(did):
+            raise BadRequestException("Host is not registered")
+        registration_service.deregister_host(did)
+    except Exception as e:
+        print(e)
+        raise ContractException(str(e))
     # TODO: blacklist token
 
 
-@registration_router.post("/register_client", response_model=RegistrationResponse)
+@registration_router.post(
+    "/register_client", response_model=None
+)
 async def register_client(
-    request: RegistrationRequest,
+    didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),
-    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
+    token_did: str = Depends(get_did_from_token),
 ):
-    credential = request.credential
-    did = request.did
-    if credential == {}:
-        raise UnauthorizedException("No credential provided")
-    (access_token, refresh_token) = await ca_middleware.verify_and_create_tokens(
-        did, credential
-    )
-    registration_service.register_client(did)
-    return {
-        "access_token": access_token,
-        "access_token_type": "Bearer",
-        "refresh_token": refresh_token,
-        "refresh_token_type": "Bearer",
-    }
+    did = didModel.did
+    if did != token_did:
+        raise ForbiddenException("DID does not match token")
+    try:
+        registration_service.register_client(did)
+    except Exception as e:
+        print(e)
+        raise ContractException(str(e))
 
 
 @registration_router.post(
     "/deregister_client",
-    status_code=status.HTTP_200_OK,
     response_model=None,
-    dependencies=[Depends(has_ca_access)],
 )
 async def deregister_client(
     didModel: DIDModel,
@@ -102,13 +90,9 @@ async def deregister_client(
     did = didModel.did
     if did != token_did:
         raise ForbiddenException("DID does not match token")
-    registration_service.deregister_client(did)
+    try:
+        registration_service.deregister_client(did)
+    except Exception as e:
+        print(e)
+        raise ContractException(str(e))
     # TODO: blacklist token
-
-@registration_router.post("/refresh_access")
-async def refresh_access(
-    refresh_token: str,
-    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
-):
-    access_token = await ca_middleware.refresh_access(refresh_token)
-    return {"access_token": access_token, "access_token_type": "Bearer"}
