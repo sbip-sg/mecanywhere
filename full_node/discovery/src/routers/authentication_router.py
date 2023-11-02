@@ -17,7 +17,7 @@ authentication_router = APIRouter(
 
 
 @authentication_router.post("/authenticate", response_model=AuthenticationResponse)
-async def register_client(
+async def authenticate(
     request: AuthenticationRequest,
     ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
 ):
