@@ -41,6 +41,7 @@ services:
       - "11005:8000"
     depends_on:
       - did-verifier
+      - did-issuer
     command: --root-path /po # for reverse proxy
 
   rabbitmq:
