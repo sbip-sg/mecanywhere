@@ -1,4 +1,5 @@
 from contract import DiscoveryContract
+from exceptions.http_exceptions import ContractException
 from models.user import User
 from models.responses import PublishTaskResponse, TaskResultModel
 from services.message_queue.shared_data_handler import SharedDataHandler
@@ -38,7 +39,10 @@ class OffloadingService:
         self.shared_data = SharedDataHandler()
 
     def assign_host_to_client(self, did: str) -> User:
-        host = self.contract.get_first_user(get_current_timestamp())
+        try:
+            host = self.contract.get_first_user(get_current_timestamp())
+        except Exception as e:
+            raise ContractException("Failed to execute contract function: get_first_user: " + str(e))
         if host == None and self.server_host is not None:
             print("Using server-host.")
             return self.server_host

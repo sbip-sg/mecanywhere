@@ -1,5 +1,6 @@
 from config import Config
 from contract import PaymentContract
+from exceptions.http_exceptions import ContractException
 from models.task_metadata_input import TaskMetadataInput
 
 
@@ -13,8 +14,11 @@ class TaskService:
         if resource_consumed is None or resource_consumed == 0:
             return 0
         fee = self._calculate_fee(resource_consumed)
-        self.contract.increase_balance(host_po_did, fee)
-        self.contract.decrease_balance(client_po_did, fee)
+        try:
+            self.contract.increase_balance(host_po_did, fee)
+            self.contract.decrease_balance(client_po_did, fee)
+        except Exception as e:
+            raise ContractException(f"Error: Failed to change balance in payment contract. {str(e)}")
         return fee
 
     def _calculate_fee(self, resource_consumed: float):
