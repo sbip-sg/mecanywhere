@@ -7,7 +7,7 @@ Services:
     - Hosted by Parent Organisation to issue VC to users of that PO
     - Host URL: 
         - http://localhost:8000
-        - http://sbip-g2.d2.comp.nus.edu.sg:11000/authentication
+        - http://sbip-g2.d2.comp.nus.edu.sg:11000/po
     - API Documentation: {host}/docs
 - [Cloud - DID & VC verification service](#cloud---did--vc-verification-service)
     - verifier port: 8080, issuer port: 9090

@@ -34,14 +34,14 @@ services:
       - wallet_private_key
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
 
-  authentication:
+  po:
     build:
-      context: ./authentication
+      context: ./po
     ports:
       - "11005:8000"
     depends_on:
       - did-verifier
-    command: --root-path /authentication # for reverse proxy
+    command: --root-path /po # for reverse proxy
 
   rabbitmq:
     image:
