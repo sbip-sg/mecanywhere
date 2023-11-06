@@ -7,6 +7,21 @@ class ClaimData(BaseModel):
     gender: str = Field(None, example="M")
     age: int = Field(None, example=42)
 
+    # instantiate with variable number of keyword args or all positional args
+    def __init__(self, *args, **kwargs):
+        if len(kwargs) > 0:
+            super().__init__(**kwargs)
+            return
+        fields = [
+            "did",
+            "name",
+            "gender",
+            "age"
+        ]
+        kwargs = dict(zip(fields, args))
+        super().__init__(**kwargs)
+
+
 
 class NameSchema(BaseModel):
     type: str = Field(..., example="string")

@@ -2,6 +2,8 @@ from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table, 
 from sqlalchemy.orm import sessionmaker
 
 from config import Config
+from models.claim import ClaimData
+from models.requests import CreateAccountRequest
 
 
 class Database:
@@ -15,6 +17,9 @@ class Database:
             Column("did", String(255), unique=True, nullable=False),
             Column("username", String(255), unique=True, nullable=False),
             Column("password", String(255), nullable=False),
+            Column("name", String(255), nullable=False),
+            Column("gender", String(1), nullable=False),
+            Column("age", Integer, nullable=False),
             extend_existing=True,
         )
         Session = sessionmaker(bind=engine)
@@ -30,23 +35,44 @@ class Database:
     def rollback(self):
         self.session.rollback()
 
-    def create_user(self, did: str, username: str, password: str):
-        new_user = self.users.insert().values(
-            did=did, username=username, password=password
-        )
+    def create_user(self, request: CreateAccountRequest):
+        new_user = self.users.insert().values(**request.dict())
         self.session.execute(new_user)
         self.session.commit()
-        print("User created successfully.", new_user)
+        print("User created successfully.", request.did, request.username)
 
-    def verify_user(self, did: str, username: str, password: str):
-        user = self.session.query(self.users).filter_by(did=did).first()
+    def get_user(self, did: str, username: str, password: str):
+        user = (
+            self.session.query(self.users)
+            .filter_by(did=did, username=username, password=password)
+            .first()
+        )
         if user:
-            if user.username == username and user.password == password:
-                return True
-        return False
-    
+            return user
+        return None
+
     def delete_user(self, did: str, username: str, password: str):
-        self.session.execute(self.users.delete().where(self.users.c.did == did))
+        self.session.execute(
+            self.users.delete().where(
+                self.users.c.did == did,
+                self.users.c.username == username,
+                self.users.c.password == password,
+            )
+        )
         self.session.commit()
         print("User deleted successfully.")
-        
+
+    def get_claims(self, did: str, username: str, password: str) -> ClaimData:
+        claims = (
+            self.session.query(
+                self.users.c.did,
+                self.users.c.name,
+                self.users.c.gender,
+                self.users.c.age,
+            )
+            .filter_by(did=did, username=username, password=password)
+            .first()
+        )
+        if claims:
+            return ClaimData(*claims)
+        return None

@@ -1,32 +1,17 @@
 from fastapi import HTTPException, status
 from aiohttp import ClientSession
 from config import Config
-from models.claim import ClaimData
 
 
-class IssuerService:
+class VerifierService:
     def __init__(self, config: Config, session: ClientSession) -> None:
         self.config = config
         self.session = session
 
-    async def create_vc(self, claim_data: ClaimData):
-        request_payload = {
-            "claimData": {**claim_data.dict()},
-            "cptId": self.config.get_cpt_id(),
-            "issuer": self.config.get_issuer_did(),
-        }
-
+    async def create_did(self, public_key: str):
+        request_payload = {"publicKey": public_key}
         return await self._post_request(
-            self.config.get_create_credential_url(), request_payload
-        )
-
-    async def create_schema(self, schema):
-        request_payload = {
-            "claim": {**schema.dict()},
-            "publisher": self.config.get_issuer_did(),
-        }
-        return await self._post_request(
-            self.config.get_create_schema_url(), request_payload
+            self.config.get_verifier_url() + "/api/v1/did/create", request_payload
         )
 
     async def _post_request(self, url, payload):

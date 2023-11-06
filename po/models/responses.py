@@ -6,7 +6,7 @@ class UserResponse(BaseModel):
     did: str
 
 
-class IssuerResponse(BaseModel):
+class DidServiceResponse(BaseModel):
     result: dict | None
     errorCode: int
     errorMessage: str
