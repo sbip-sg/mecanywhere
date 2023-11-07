@@ -3,7 +3,7 @@ from models.did import DIDModel
 from pydantic import Field
 
 
-class RegistrationRequest(CredentialModel, DIDModel):
+class AuthenticationRequest(CredentialModel, DIDModel):
     pass
 
 

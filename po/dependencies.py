@@ -2,6 +2,7 @@ from functools import lru_cache
 from fastapi import Depends
 import aiohttp
 from config import Config
+from services.verifier_service import VerifierService
 from services.account_service import AccountService
 from services.database import Database
 from services.issuer_service import IssuerService
@@ -30,3 +31,9 @@ def get_issuer_service(
     session: aiohttp.ClientSession = Depends(get_client_session),
 ):
     return IssuerService(config, session)
+
+def get_verifier_service(
+    config: Config = Depends(get_config),
+    session: aiohttp.ClientSession = Depends(get_client_session),
+):
+    return VerifierService(config, session)

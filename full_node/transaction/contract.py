@@ -25,6 +25,7 @@ class PaymentContract:
 
     def call_function(self, unbuilt_function, add_params):
         try:
+            print("Calling function: " + unbuilt_function.function_identifier)
             caller = self.config.get_wallet_address()
             built_function = unbuilt_function.build_transaction(
                 {

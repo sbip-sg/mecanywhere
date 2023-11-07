@@ -45,6 +45,8 @@ class CredentialAuthenticationMiddleware:
                     return verifiedDID == did
             except redis.exceptions.RedisError as e:
                 print(e)
+                # works without caching if redis is down
+                pass
 
         async with self.session.post(
             self.config.get_verify_vc_url(), json=vc
@@ -65,6 +67,8 @@ class CredentialAuthenticationMiddleware:
                     )
                 except redis.exceptions.RedisError as e:
                     print(e)
+                    # works without caching if redis is down
+                    pass
             return is_verified
 
     def _check_expiry(self, expiry: float):

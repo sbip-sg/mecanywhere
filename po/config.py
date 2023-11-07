@@ -44,6 +44,9 @@ class Config:
 
     def get_issuer_url(self) -> str:
         return self.configuration["issuer_url"]
+    
+    def get_verifier_url(self) -> str:
+        return self.configuration["verifier_url"]
 
     def get_create_credential_url(self) -> str:
         return self.get_issuer_url() + self.configuration["create_credential_route"]

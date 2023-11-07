@@ -37,15 +37,16 @@ services:
       - wallet_private_key
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
 
-  authentication:
+  po:
     build: 
-      context: ./authentication
+      context: ./po
     ports:
       - "8000:8000"
     volumes: # volume mounts ignore dockerignore
-      - ./authentication:/app
+      - ./po:/app
     depends_on:
       - did-verifier
+      - did-issuer
 
   rabbitmq:
     image:

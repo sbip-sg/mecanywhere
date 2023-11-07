@@ -1,5 +1,6 @@
 import uuid
 from fastapi import HTTPException, status
+from exceptions.http_exceptions import InternalServerException
 from models.transaction import Transaction
 from models.requests import RecordTaskRequest
 from services.database import Database
@@ -21,9 +22,8 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise HTTPException(
-                status.HTTP_500_INTERNAL_SERVER_ERROR,
-                f"Error: Failed to get history. {str(e)}",
+            raise InternalServerException(
+                f"Error: Failed to add history. {str(e)}"
             )
 
     def get_transaction(self, did: str, transaction_id: str) -> Transaction:
@@ -36,9 +36,8 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to get history. {str(e)}")
             self.db.rollback()
-            raise HTTPException(
-                status.HTTP_500_INTERNAL_SERVER_ERROR,
-                f"Error: Failed to get history. {str(e)}",
+            raise InternalServerException(
+                f"Error: Failed to get history. {str(e)}"
             )
 
     def add_did_history(
@@ -65,9 +64,8 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise HTTPException(
-                status.HTTP_500_INTERNAL_SERVER_ERROR,
-                f"Error: Failed to add history. {str(e)}",
+            raise InternalServerException(
+                f"Error: Failed to add history. {str(e)}"
             )
         
     def update_did_history(
@@ -92,9 +90,8 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise HTTPException(
-                status.HTTP_500_INTERNAL_SERVER_ERROR,
-                f"Error: Failed to add history. {str(e)}",
+            raise InternalServerException(
+                f"Error: Failed to add history. {str(e)}"
             )
 
     def get_po_did_history(self, did: str):
@@ -103,9 +100,8 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to get history. {str(e)}")
             self.db.rollback()
-            raise HTTPException(
-                status.HTTP_500_INTERNAL_SERVER_ERROR,
-                f"Error: Failed to get history. {str(e)}",
+            raise InternalServerException(
+                f"Error: Failed to get history. {str(e)}"
             )
 
     def add_dummy_history(self, did: str, po_did: str, host: bool = False):
@@ -154,7 +150,6 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise HTTPException(
-                status.HTTP_500_INTERNAL_SERVER_ERROR,
-                f"Error: Failed to add history. {str(e)}",
+            raise InternalServerException(
+                f"Error: Failed to add history. {str(e)}"
             )

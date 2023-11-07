@@ -40,6 +40,6 @@ if /i "%confirmTruffle%"=="Y" (
 cd did
 call did-local-startup.bat
 cd ..
-start "PO" cmd.exe /k "cd authentication && auth-startup.bat"
+start "PO" cmd.exe /k "cd po && auth-startup.bat"
 start "fullnode" cmd.exe /k "cd full_node && fullnode-startup.bat"
 start "payment" cmd.exe /k "cd payment && payment-startup.bat"

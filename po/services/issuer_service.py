@@ -1,4 +1,4 @@
-from fastapi import status
+from fastapi import HTTPException, status
 from aiohttp import ClientSession
 from config import Config
 from models.claim import ClaimData
@@ -30,8 +30,13 @@ class IssuerService:
         )
 
     async def _post_request(self, url, payload):
+        print("POST", url, payload)
         async with self.session.post(url, json=payload) as result:
             result_status = result.status
             result_json = await result.json()
             if result_status == status.HTTP_200_OK:
                 return result_json
+            raise HTTPException(
+                status_code=result_status,
+                detail=result_json["error"],
+            )
