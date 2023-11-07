@@ -19,7 +19,8 @@ public_router = APIRouter(
     response_model=CreateUserResponse,
     description="Creates a user from a created customer account, "
     "and creates a DID and credential for the user using the public key provided. "
-    "Overwrites previous DID if one already exists.",
+    "Overwrites previous DID if one already exists."
+    "The claims for the credential are retrieved from the customer account.",
 )
 async def create_did(
     request: CreateUserRequest,

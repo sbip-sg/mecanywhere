@@ -14,7 +14,7 @@ private_router = APIRouter(
 @private_router.post(
     "/create_customer",
     response_model=UserResponse,
-    description="Creates a user as a child of the PO",
+    description="Creates a customer of the PO that has not registered with MECA.",
 )
 async def create_customer(
     request: CreateAccountRequest,
