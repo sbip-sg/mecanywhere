@@ -22,7 +22,7 @@ public_router = APIRouter(
     "Overwrites previous DID if one already exists."
     "The claims for the credential are retrieved from the customer account.",
 )
-async def create_did(
+async def create_user(
     request: CreateUserRequest,
     verifier_service: VerifierService = Depends(get_verifier_service),
     account_service: AccountService = Depends(get_account_service),
