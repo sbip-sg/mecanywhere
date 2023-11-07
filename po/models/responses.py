@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 class UserResponse(BaseModel):
     username: str
-    did: str
 
 
 class DidServiceResponse(BaseModel):
@@ -11,3 +10,8 @@ class DidServiceResponse(BaseModel):
     errorCode: int
     errorMessage: str
     transactionInfo: dict | None
+
+
+class CreateUserResponse(BaseModel):
+    did: str
+    credential: dict

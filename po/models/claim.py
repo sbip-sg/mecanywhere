@@ -1,26 +1,18 @@
 from pydantic import BaseModel, Field
 
+from models.did import DIDModel
+from models.db_schema import UserDetails
 
-class ClaimData(BaseModel):
-    did: str = Field(..., example="did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8")
-    name: str = Field(None, example="John Doe")
-    gender: str = Field(None, example="M")
-    age: int = Field(None, example=42)
 
+class ClaimData(DIDModel, UserDetails):
     # instantiate with variable number of keyword args or all positional args
     def __init__(self, *args, **kwargs):
         if len(kwargs) > 0:
             super().__init__(**kwargs)
             return
-        fields = [
-            "did",
-            "name",
-            "gender",
-            "age"
-        ]
+        fields = ["did", "name", "gender", "age"]
         kwargs = dict(zip(fields, args))
         super().__init__(**kwargs)
-
 
 
 class NameSchema(BaseModel):

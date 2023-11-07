@@ -14,7 +14,8 @@ class Database:
             "users",
             self.metadata,
             Column("id", Integer, primary_key=True),
-            Column("did", String(255), unique=True, nullable=False),
+            Column("did", String(255), unique=True, nullable=True),
+            Column("pubkey", String(255), unique=True, nullable=True),
             Column("username", String(255), unique=True, nullable=False),
             Column("password", String(255), nullable=False),
             Column("name", String(255), nullable=False),
@@ -39,22 +40,21 @@ class Database:
         new_user = self.users.insert().values(**request.dict())
         self.session.execute(new_user)
         self.session.commit()
-        print("User created successfully.", request.did, request.username)
+        print("User created successfully.", request.username)
 
-    def get_user(self, did: str, username: str, password: str):
+    def get_user(self, username: str, password: str):
         user = (
             self.session.query(self.users)
-            .filter_by(did=did, username=username, password=password)
+            .filter_by(username=username, password=password)
             .first()
         )
         if user:
             return user
         return None
 
-    def delete_user(self, did: str, username: str, password: str):
+    def delete_user(self, username: str, password: str):
         self.session.execute(
             self.users.delete().where(
-                self.users.c.did == did,
                 self.users.c.username == username,
                 self.users.c.password == password,
             )
@@ -62,7 +62,19 @@ class Database:
         self.session.commit()
         print("User deleted successfully.")
 
-    def get_claims(self, did: str, username: str, password: str) -> ClaimData:
+    def update_did_and_pubkey(self, username: str, password: str, did: str, pubkey: str):
+        self.session.execute(
+            self.users.update()
+            .where(
+                self.users.c.username == username,
+                self.users.c.password == password,
+            )
+            .values(did=did, pubkey=pubkey)
+        )
+        self.session.commit()
+        print("User updated DID and pubkey successfully.")
+
+    def get_claims(self, username: str, password: str) -> ClaimData:
         claims = (
             self.session.query(
                 self.users.c.did,
@@ -70,7 +82,7 @@ class Database:
                 self.users.c.gender,
                 self.users.c.age,
             )
-            .filter_by(did=did, username=username, password=password)
+            .filter_by(username=username, password=password)
             .first()
         )
         if claims:

@@ -1,14 +1,11 @@
 from pydantic import BaseModel
-from models.account import AccountModel
+from models.db_schema import AccountModel, UserDetails
 
 
-class CreateAccountRequest(AccountModel):
+class CreateAccountRequest(AccountModel, UserDetails):
     pass
 
 
-class CreateDidRequest(BaseModel):
+class CreateUserRequest(BaseModel):
     public_key: str
-
-
-class CreateVcRequest(AccountModel):
-    pass
+    account: AccountModel
