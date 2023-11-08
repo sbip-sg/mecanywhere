@@ -131,13 +131,13 @@ services:
     secrets:
       - server_host_name
 
-  task-executor:
-    build:
-      context: ../mec_anywhere_desktop/task_executor
-      dockerfile: docker/Dockerfile
-    image: sbipmeca/meca:${BUILD_NUMBER}-task-executor
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+  # task-executor:
+  #   build:
+  #     context: ../mec_anywhere_desktop/task_executor
+  #     dockerfile: docker/Dockerfile
+  #   image: sbipmeca/meca:${BUILD_NUMBER}-task-executor
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
   default:
