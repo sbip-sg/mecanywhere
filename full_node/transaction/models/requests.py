@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from models.task_metadata_input import TaskMetadataInput
+from models.task_metadata import TaskMetadataInput
 
 class RecordTaskRequest(BaseModel):
     client_did: str = Field(
