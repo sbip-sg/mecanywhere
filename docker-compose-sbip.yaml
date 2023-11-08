@@ -117,19 +117,19 @@ services:
       - refresh_token_key
     command: --root-path /payment # for reverse proxy
 
-  host:
-    build: 
-      context: ./server_host
-      dockerfile: Dockerfile.host
-    image: sbipmeca/meca:${BUILD_NUMBER}-host
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      task-executor:
-        condition: service_started
-    restart: on-failure
-    secrets:
-      - server_host_name
+  # host:
+  #   build: 
+  #     context: ./server_host
+  #     dockerfile: Dockerfile.host
+  #   image: sbipmeca/meca:${BUILD_NUMBER}-host
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     task-executor:
+  #       condition: service_started
+  #   restart: on-failure
+  #   secrets:
+  #     - server_host_name
 
   # task-executor:
   #   build:
