@@ -17,6 +17,7 @@ services:
     build:
       context: ./did
       dockerfile: Dockerfile.verifier
+    image: sbipmeca/meca:${BUILD_NUMBER}-did-verifier
     ports:
       - "11003:8080"
     secrets:
@@ -26,6 +27,7 @@ services:
     build:
       context: ./did
       dockerfile: Dockerfile.issuer
+    image: sbipmeca/meca:${BUILD_NUMBER}-did-issuer
     ports:
       - "11004:9090"
     depends_on:
@@ -37,6 +39,7 @@ services:
   po:
     build:
       context: ./po
+    image: sbipmeca/meca:${BUILD_NUMBER}-po
     ports:
       - "11005:8000"
     depends_on:
@@ -60,6 +63,7 @@ services:
     build:
       context: ./full_node
       dockerfile: Dockerfile.discovery
+    image: sbipmeca/meca:${BUILD_NUMBER}-fn-discovery
     ports:
       - "11008:7000"
     depends_on:
@@ -83,6 +87,7 @@ services:
     build:
       context: ./full_node
       dockerfile: Dockerfile.transaction
+    image: sbipmeca/meca:${BUILD_NUMBER}-fn-transaction
     ports:
       - "11009:7001"
     depends_on:
@@ -98,6 +103,7 @@ services:
   payment:
     build:
       context: ./payment
+    image: sbipmeca/meca:${BUILD_NUMBER}-payment
     ports:
       - "11010:7002"    
     volumes: # volume mounts ignore dockerignore
@@ -115,6 +121,7 @@ services:
     build: 
       context: ./server_host
       dockerfile: Dockerfile.host
+    image: sbipmeca/meca:${BUILD_NUMBER}-host
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -128,6 +135,7 @@ services:
     build:
       context: ../mec_anywhere_desktop/task_executor
       dockerfile: docker/Dockerfile
+    image: sbipmeca/meca:${BUILD_NUMBER}-task-executor
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
