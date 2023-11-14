@@ -5,6 +5,7 @@ WORKDIR /app
 COPY mvnw .
 
 RUN sed -i 's/\r$//' mvnw
+RUN chmod +x mvnw
 
 COPY .mvn .mvn
 COPY pom.xml .
