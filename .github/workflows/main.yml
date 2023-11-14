@@ -6,7 +6,7 @@ on:
       - cd
 
 jobs:
-  deploy:
+  push:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,10 +36,14 @@ jobs:
           echo "$KEY6" >> keys/server_host_name.txt
           echo "$KEY7" >> keys/server_host_did.txt
           echo "$KEY8" >> keys/server_host_po_did.txt
-          
+
           docker-compose -f docker-compose-sbip.yaml build
           docker-compose -f docker-compose-sbip.yaml push
 
+  pull:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: SSH into SBIP Server and Deploy
         uses: appleboy/ssh-action@master
         with:
