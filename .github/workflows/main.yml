@@ -52,7 +52,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            ssh worker-111
-            cd mec_anywhere
-            docker compose -f docker-compose-sbip.yaml pull
-            docker compose -f docker-compose-sbip.yaml up -d
+            ssh worker-111 "cd mec_anywhere && docker compose -f docker-compose-sbip.yaml pull && docker compose -f docker-compose-sbip.yaml up -d"
