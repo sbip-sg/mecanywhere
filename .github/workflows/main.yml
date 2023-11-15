@@ -54,5 +54,5 @@ jobs:
           script: |
             ssh worker-111
             cd mec_anywhere
-            docker-compose -f docker-compose-sbip.yaml pull
-            docker-compose -f docker-compose-sbip.yaml up -d
+            docker compose -f docker-compose-sbip.yaml pull
+            docker compose -f docker-compose-sbip.yaml up -d
