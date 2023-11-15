@@ -7,6 +7,7 @@ from sqlalchemy import (
     String,
     MetaData,
     Table,
+    or_
 )
 from sqlalchemy.orm import sessionmaker
 
@@ -61,7 +62,7 @@ class Database:
         return self.session.query(self.transactions).filter_by(host_did=did).all()
 
     def filter_by_po_did(self, did: str):
-        return self.session.query(self.transactions).filter_by(po_did=did).all()
+        return self.session.query(self.transactions).filter(or_(self.transactions.c.po_did==did, self.transactions.c.host_po_did==did)).all()
     
     def get_transaction(self, transaction_id: str, did: str):
         return self.session.query(self.transactions).filter_by(transaction_id=transaction_id, did=did).first()

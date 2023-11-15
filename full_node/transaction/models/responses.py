@@ -10,7 +10,9 @@ class DidRecord(DatabaseTaskMetadata):
 class PoDidRecord(DatabaseTaskMetadata):
     price: float
     did: str
+    po_did: str
     host_did: str
+    host_po_did: str
 
     class Config:
         orm_mode = True

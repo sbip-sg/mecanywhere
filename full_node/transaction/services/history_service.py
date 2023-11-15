@@ -22,9 +22,7 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise InternalServerException(
-                f"Error: Failed to add history. {str(e)}"
-            )
+            raise InternalServerException(f"Error: Failed to add history. {str(e)}")
 
     def get_transaction(self, did: str, transaction_id: str) -> Transaction:
         try:
@@ -36,9 +34,7 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to get history. {str(e)}")
             self.db.rollback()
-            raise InternalServerException(
-                f"Error: Failed to get history. {str(e)}"
-            )
+            raise InternalServerException(f"Error: Failed to get history. {str(e)}")
 
     def add_did_history(self, request: RecordTaskRequest, price: float):
         task_metadata = request.task_metadata
@@ -56,9 +52,7 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise InternalServerException(
-                f"Error: Failed to add history. {str(e)}"
-            )
+            raise InternalServerException(f"Error: Failed to add history. {str(e)}")
 
     def update_did_history(self, request: RecordTaskRequest, price: float):
         task_metadata = request.task_metadata
@@ -74,9 +68,7 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise InternalServerException(
-                f"Error: Failed to add history. {str(e)}"
-            )
+            raise InternalServerException(f"Error: Failed to add history. {str(e)}")
 
     def get_po_did_history(self, did: str):
         try:
@@ -84,39 +76,34 @@ class HistoryService:
         except Exception as e:
             print(f"Error: Failed to get history. {str(e)}")
             self.db.rollback()
-            raise InternalServerException(
-                f"Error: Failed to get history. {str(e)}"
-            )
+            raise InternalServerException(f"Error: Failed to get history. {str(e)}")
 
-    def add_dummy_history(self, did: str, po_did: str, host: bool = False):
+    def add_dummy_history(
+        self,
+        client_did: str = None,
+        client_po_did: str = None,
+        host_did: str = None,
+        host_po_did: str = None,
+    ):
         try:
-            if host:
-                for i in range(50):
-                    self.db.add_without_commit(
-                        self._random_task_metadata(f"Task {i}"),
-                        did=str(uuid.uuid4()),
-                        price=random.uniform(10.0, 100.0),
-                        po_did=str(uuid.uuid4()),
-                        host_did=did,
-                        host_po_did=po_did,
-                    )
-            else:
-                for i in range(50):
-                    self.db.add_without_commit(
-                        self._random_task_metadata(f"Task {i}"),
-                        did,
-                        price=random.uniform(10.0, 100.0),
-                        po_did=po_did,
-                        host_did=str(uuid.uuid4()),
-                        host_po_did=str(uuid.uuid4()),
-                    )
+            for i in range(50):
+                did = client_did or str(uuid.uuid4())
+                po_did = client_po_did or str(uuid.uuid4())
+                host_did = host_did or str(uuid.uuid4())
+                host_po_did = host_po_did or str(uuid.uuid4())
+                self.db.add_without_commit(
+                    self._random_task_metadata(f"Task {i}"),
+                    did=did,
+                    price=random.uniform(10.0, 100.0),
+                    po_did=po_did,
+                    host_did=host_did,
+                    host_po_did=host_po_did,
+                )
             self.db.commit()
         except Exception as e:
             print(f"Error: Failed to add history. {str(e)}")
             self.db.rollback()
-            raise InternalServerException(
-                f"Error: Failed to add history. {str(e)}"
-            )
+            raise InternalServerException(f"Error: Failed to add history. {str(e)}")
 
     def _random_task_metadata(self, task_name: str):
         start_time = datetime.datetime.now() + datetime.timedelta(
