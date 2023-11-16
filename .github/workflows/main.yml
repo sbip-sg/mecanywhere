@@ -26,12 +26,9 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            ssh worker-111 "cd mec_anywhere &&
-            git checkout cd &&
-            git pull &&
-            docker compose -f docker-compose-sbip.yaml build &&
-            docker compose -f docker-compose-sbip.yaml up -d"
+            ssh worker-111 "cd mec_anywhere && git checkout cd && git pull && docker compose -f docker-compose-sbip.yaml build && docker compose -f docker-compose-sbip.yaml up -d"
 
       - name: Disconnect vpn
+        if: always()
         run: |
-          sudo kill ${{ env.OPENCONNECT_PID}}
+          sudo kill ${{ env.OPENCONNECT_PID }}
