@@ -3,7 +3,7 @@ name: Deploy to SBIP Server
 on:
   push:
     branches:
-      - main
+      - cd
 
 jobs:
   deploy-to-g2-server:
@@ -12,33 +12,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Login to DockerHub Registry
-        run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-      - name: Build and Push Docker Images
-        env: 
-          KEY1: ${{ secrets.COMPOSEKEY1 }}
-          KEY2: ${{ secrets.COMPOSEKEY2 }}
-          KEY3: ${{ secrets.COMPOSEKEY3 }}
-          KEY4: ${{ secrets.COMPOSEKEY4 }}
-          KEY5: ${{ secrets.COMPOSEKEY5 }}
-          KEY6: ${{ secrets.COMPOSEKEY6 }}
-          KEY7: ${{ secrets.COMPOSEKEY7 }}
-          KEY8: ${{ secrets.COMPOSEKEY8 }}
-        run: |
-          mkdir keys
-          echo "$KEY1" >> keys/access_token_key.txt
-          echo "$KEY2" >> keys/refresh_token_key.txt
-          echo "$KEY3" >> keys/0x52c328ef8b382b1d71cc262b868d803a137ab8d8
-          echo "$KEY4" >> keys/wallet_address.txt
-          echo "$KEY5" >> keys/wallet_private_key.txt
-          echo "$KEY6" >> keys/server_host_name.txt
-          echo "$KEY7" >> keys/server_host_did.txt
-          echo "$KEY8" >> keys/server_host_po_did.txt
-
-          docker-compose -f docker-compose-sbip.yaml build
-          docker-compose -f docker-compose-sbip.yaml push
 
       - name: VPN into SoC network
         run: |
@@ -51,5 +24,9 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            ssh worker-111 "cd mec_anywhere && docker compose -f docker-compose-sbip.yaml pull && docker compose -f docker-compose-sbip.yaml up -d"
+          script: >
+            ssh worker-111 "cd mec_anywhere && 
+            git checkout cd && 
+            git pull && 
+            docker compose -f docker-compose-sbip.yaml build && 
+            docker compose -f docker-compose-sbip.yaml up -d"
