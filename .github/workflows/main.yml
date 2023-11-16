@@ -17,6 +17,7 @@ jobs:
         run: |
           sudo apt update && sudo apt install -y openconnect
           echo "${{ secrets.SOC_VPN_PASSWORD }}" | sudo openconnect --protocol=fortinet staffvpn.comp.nus.edu.sg -u ${{ secrets.SOC_VPN_USERNAME }} --passwd-on-stdin --background
+          echo OPENCONNECT_PID=$(pgrep -f openconnect) > $GITHUB_ENV
 
       - name: SSH into SBIP Server and Deploy
         uses: appleboy/ssh-action@master
@@ -24,9 +25,13 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: >
-            ssh worker-111 "cd mec_anywhere && 
-            git checkout cd && 
-            git pull && 
-            docker compose -f docker-compose-sbip.yaml build && 
+          script: |
+            ssh worker-111 "cd mec_anywhere &&
+            git checkout cd &&
+            git pull &&
+            docker compose -f docker-compose-sbip.yaml build &&
             docker compose -f docker-compose-sbip.yaml up -d"
+
+      - name: Disconnect vpn
+        run: |
+          sudo kill ${{ env.OPENCONNECT_PID}}
