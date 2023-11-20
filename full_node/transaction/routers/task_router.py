@@ -16,7 +16,7 @@ task_router = APIRouter(dependencies=[Depends(get_task_service)], tags=["task"])
 @task_router.post(
     "/record_task",
     description="For users to record a task's offload or completion. "
-    + "This calculates the fee and updates the balance of the host and client.",
+    "This calculates the fee, updates the balance of the host and client, and returns the fee charged."
 )
 async def record_task(
     request: RecordTaskRequest,
@@ -42,7 +42,7 @@ async def record_task(
 @task_router.post(
     "/update_task",
     description="For users to update a task's offload or completion. "
-    + "This calculates the fee and updates the balance of the host and client.",
+    "This calculates the fee and updates the balance of the host and client, and returns the fee charged."
 )
 async def update_task(
     request: UpdateTaskRequest,

@@ -93,13 +93,9 @@ class Consumer {
         task.runtime
       );
 
-      let resourceConsumed = 0.1;
-      if (task.resource != null) {
-        resourceConsumed = task.resource.cpu * task.resource.memory;
-      }
       const transactionEndDatetime = Math.floor(new Date().getTime() / 1000);
       const duration = transactionEndDatetime - transactionStartDatetime;
-      const reply = { id: task.id, content: result, resourceConsumed, transactionStartDatetime, transactionEndDatetime, duration };
+      const reply = { id: task.id, content: result, resource: task.resource, transactionStartDatetime, transactionEndDatetime, duration };
       
       console.log(` [con] Reply: ${JSON.stringify(reply)}`);
       
