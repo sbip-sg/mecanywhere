@@ -12,7 +12,7 @@ history_router = APIRouter(
 )
 
 
-@history_router.post("/find_did_history", response_model=List[DidRecord])
+@history_router.post("/find_client_history", response_model=List[DidRecord])
 async def find_client_history(
     didModel: DIDModel,
     history_service: HistoryService = Depends(get_history_service),
