@@ -46,7 +46,7 @@ class Consumer {
       channel = await connection.createChannel();
       await channel.assertQueue(queueName, {
         durable: true,
-        expires: 1000 * 60 * 30,
+        autoDelete: true,
       });
       console.log(' [con] Awaiting RPC requests');
 

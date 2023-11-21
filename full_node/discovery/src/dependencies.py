@@ -14,7 +14,7 @@ from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
-from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
+from services.message_queue.task_publisher import RPCTaskPublisher
 from services.transaction_service import TransactionService
 
 
@@ -90,21 +90,14 @@ def get_rpc_task_publisher(config: Config = Depends(get_config)) -> RPCTaskPubli
     return RPCTaskPublisher(config)
 
 
-def get_basic_task_publisher(
-    config: Config = Depends(get_config),
-) -> BasicTaskPublisher:
-    return BasicTaskPublisher(config)
-
-
 def get_offloading_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
     rpc_publisher: RPCTaskPublisher = Depends(get_rpc_task_publisher),
-    basic_publisher: BasicTaskPublisher = Depends(get_basic_task_publisher),
     cache: redis.Redis = Depends(get_redis_client),
     config: Config = Depends(get_config),
 ) -> OffloadingService:
     return OffloadingService(
-        contract, rpc_publisher, basic_publisher, cache, config.get_server_host_name(), config.get_server_host_did(), config.get_server_host_po_did()
+        contract, rpc_publisher, cache, config.get_server_host_name(), config.get_server_host_did(), config.get_server_host_po_did()
     )
 
 

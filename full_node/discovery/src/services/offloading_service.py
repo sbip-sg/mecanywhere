@@ -1,9 +1,10 @@
+from time import sleep
 from contract import DiscoveryContract
 from exceptions.http_exceptions import ContractException
 from models.user import User
 from models.responses import PublishTaskResponse, TaskResultModel
-from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
 from services.message_queue.result_queue import ResultQueue
+from services.message_queue.task_publisher import RPCTaskPublisher
 from models.requests import OffloadRequest
 from utils import get_current_timestamp
 import uuid
@@ -15,7 +16,6 @@ class OffloadingService:
         self,
         contract: DiscoveryContract,
         rpc_publisher: RPCTaskPublisher,
-        basic_publisher: BasicTaskPublisher,
         cache: redis.Redis,
         server_host_name: str,
         server_host_did: str,
@@ -23,7 +23,6 @@ class OffloadingService:
     ) -> None:
         self.contract = contract
         self.rpc_publisher = rpc_publisher
-        self.basic_publisher = basic_publisher
         self.cache = cache
         try:
             self.cache.ping()
@@ -67,16 +66,8 @@ class OffloadingService:
         correlation_id = str(uuid.uuid4())
 
         try:
-            response = await self.rpc_publisher.publish(
+            receipt = await self.rpc_publisher.publish(
                 correlation_id, offload_request, host_name=queue
-            )
-            return PublishTaskResponse(
-                status=1,
-                transaction_id=correlation_id,
-                task_result=response,
-                host_did=host.did,
-                host_po_did=host.po_did,
-                network_reliability=0,
             )
         except Exception as e:
             return PublishTaskResponse(
@@ -88,6 +79,19 @@ class OffloadingService:
                 network_reliability=0,
                 error=str(e),
             )
+        response = self.rpc_publisher.get_response(correlation_id)
+        while response is None:
+            sleep(0.1)
+            response = self.rpc_publisher.get_response(correlation_id)
+            # test no time out
+        return PublishTaskResponse(
+            status=1,
+            transaction_id=correlation_id,
+            task_result=response,
+            host_did=host.did,
+            host_po_did=host.po_did,
+            network_reliability=0,
+        )
 
     async def offload(
         self, did: str, offload_request: OffloadRequest
@@ -104,13 +108,16 @@ class OffloadingService:
         correlation_id = str(uuid.uuid4())
 
         try:
-            response = await self.basic_publisher.publish(
-                correlation_id, offload_request, host_name=queue
+            receipt = await self.rpc_publisher.publish(
+                correlation_id,
+                offload_request,
+                host_name=queue,
+                reply_to=ResultQueue.result_queue,
             )
             return PublishTaskResponse(
                 status=1,
                 transaction_id=correlation_id,
-                task_result=response,
+                task_result=receipt,
                 host_did=host.did,
                 host_po_did=host.po_did,
                 network_reliability=0,
