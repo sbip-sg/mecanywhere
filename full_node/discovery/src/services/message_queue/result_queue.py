@@ -1,7 +1,6 @@
 from datetime import timedelta
 import pika
 from config import Config
-from services.message_queue.shared_data_handler import SharedDataHandler
 import models.schema_pb2 as schema
 import redis
 from google.protobuf import json_format
@@ -24,7 +23,6 @@ class ResultQueue:
             )
         if not self.cache.ping():
             raise Exception("Redis is not running")
-        self.shared_data = SharedDataHandler()
 
     def __new__(cls, config, cache):
         if cls._class_instance is None:
@@ -74,14 +72,6 @@ class ResultQueue:
             task_result.content = str(e)
 
         correlation_id = properties.correlation_id
-        origin_did = self.shared_data.get_origin_did(correlation_id)
-
-        # drops the message when the origin_did is not found
-        if origin_did is None:
-            return
-
-        self.shared_data.remove_origin_did(correlation_id)
-
         task_result_dict = json_format.MessageToDict(task_result, preserving_proto_field_name=True)
 
         try:

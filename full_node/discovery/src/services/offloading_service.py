@@ -2,8 +2,8 @@ from contract import DiscoveryContract
 from exceptions.http_exceptions import ContractException
 from models.user import User
 from models.responses import PublishTaskResponse, TaskResultModel
-from services.message_queue.shared_data_handler import SharedDataHandler
 from services.message_queue.task_publisher import RPCTaskPublisher, BasicTaskPublisher
+from services.message_queue.result_queue import ResultQueue
 from models.requests import OffloadRequest
 from utils import get_current_timestamp
 import uuid
@@ -36,13 +36,14 @@ class OffloadingService:
                 po_did=server_host_po_did,
                 queue=server_host_name,
             )
-        self.shared_data = SharedDataHandler()
 
     def assign_host_to_client(self, did: str) -> User:
         try:
             host = self.contract.get_first_user(get_current_timestamp())
         except Exception as e:
-            raise ContractException("Failed to execute contract function: get_first_user: " + str(e))
+            raise ContractException(
+                "Failed to execute contract function: get_first_user: " + str(e)
+            )
         if host == None and self.server_host is not None:
             print("Using server-host.")
             return self.server_host
@@ -60,14 +61,10 @@ class OffloadingService:
                 status=0,
                 transaction_id="",
                 network_reliability=0,
-                error="Failed to assign host to client",
+                error="No host available.",
             )
         queue = host.queue
-
-        # save correlation_id and origin_did of the message to match the result in result relayer
         correlation_id = str(uuid.uuid4())
-        origin_did = offload_request.did
-        self.shared_data.save_origin_did(correlation_id, origin_did)
 
         try:
             response = await self.rpc_publisher.publish(
@@ -104,11 +101,7 @@ class OffloadingService:
                 error="Failed to assign host to client",
             )
         queue = host.queue
-
-        # save correlation_id and origin_did of the message to match the result in result relayer
         correlation_id = str(uuid.uuid4())
-        origin_did = offload_request.did
-        self.shared_data.save_origin_did(correlation_id, origin_did)
 
         try:
             response = await self.basic_publisher.publish(
