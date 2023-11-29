@@ -71,14 +71,14 @@ class ResultQueue:
             print(e, "error parsing received result")
             task_result.content = str(e)
 
-        correlation_id = properties.correlation_id
+        transaction_id = properties.correlation_id
         task_result_dict = json_format.MessageToDict(task_result, preserving_proto_field_name=True)
 
         try:
-            self.cache.hset(correlation_id, mapping=task_result_dict)
-            self.cache.expire(correlation_id, timedelta(minutes=60 * 30))
-            print(f"Result {correlation_id} saved to cache")
+            self.cache.hset(transaction_id, mapping=task_result_dict)
+            self.cache.expire(transaction_id, timedelta(minutes=60 * 30))
+            print(f"Result {transaction_id} saved to cache")
         except Exception as e:
             print(e, "error saving result to cache")
-            print(correlation_id, task_result_dict)
+            print(transaction_id, task_result_dict)
             return

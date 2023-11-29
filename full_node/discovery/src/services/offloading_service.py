@@ -63,30 +63,30 @@ class OffloadingService:
                 error="No host available.",
             )
         queue = host.queue
-        correlation_id = str(uuid.uuid4())
+        transaction_id = str(uuid.uuid4())
 
         try:
             receipt = await self.rpc_publisher.publish(
-                correlation_id, offload_request, host_name=queue
+                transaction_id, offload_request, host_name=queue
             )
         except Exception as e:
             return PublishTaskResponse(
                 status=0,
-                transaction_id=correlation_id,
+                transaction_id=transaction_id,
                 task_result=None,
                 host_did=host.did,
                 host_po_did=host.po_did,
                 network_reliability=0,
                 error=str(e),
             )
-        response = self.rpc_publisher.get_response(correlation_id)
+        response = self.rpc_publisher.get_response(transaction_id)
         while response is None:
             sleep(0.1)
-            response = self.rpc_publisher.get_response(correlation_id)
+            response = self.rpc_publisher.get_response(transaction_id)
             # test no time out
         return PublishTaskResponse(
             status=1,
-            transaction_id=correlation_id,
+            transaction_id=transaction_id,
             task_result=response,
             host_did=host.did,
             host_po_did=host.po_did,
@@ -105,18 +105,18 @@ class OffloadingService:
                 error="Failed to assign host to client",
             )
         queue = host.queue
-        correlation_id = str(uuid.uuid4())
+        transaction_id = str(uuid.uuid4())
 
         try:
             receipt = await self.rpc_publisher.publish(
-                correlation_id,
+                transaction_id,
                 offload_request,
                 host_name=queue,
                 reply_to=ResultQueue.result_queue,
             )
             return PublishTaskResponse(
                 status=1,
-                transaction_id=correlation_id,
+                transaction_id=transaction_id,
                 task_result=receipt,
                 host_did=host.did,
                 host_po_did=host.po_did,
@@ -125,7 +125,7 @@ class OffloadingService:
         except Exception as e:
             return PublishTaskResponse(
                 status=0,
-                transaction_id=correlation_id,
+                transaction_id=transaction_id,
                 task_result=None,
                 host_did=host.did,
                 host_po_did=host.po_did,

@@ -30,10 +30,12 @@ class RPCTaskPublisher:
         return cls._class_instance
 
     def start_publisher(self):
-        self.connection = pika.BlockingConnection(
-            pika.URLParameters(self.config.get_mq_url())
-        )
+        connection_params = pika.URLParameters(self.config.get_mq_url())
+        connection_params.blocked_connection_timeout = 60
+        self.connection = pika.BlockingConnection(connection_params)
+
         self.channel = self.connection.channel()
+        self.channel.confirm_delivery()
         self.rpc_queue = declare_rpc_queue(self.channel).method.queue
 
         self.processing_thread = threading.Thread(target=self._process_data_events)
@@ -70,7 +72,7 @@ class RPCTaskPublisher:
 
     async def publish(
         self,
-        correlation_id: str,
+        transaction_id: str,
         offload_request: OffloadRequest,
         host_name: str,
         reply_to: str = None,
@@ -93,26 +95,28 @@ class RPCTaskPublisher:
             exchange="",
             routing_key=host_name,
             properties=pika.BasicProperties(
-                correlation_id=correlation_id,
+                correlation_id=transaction_id,
                 reply_to=reply_to,
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
             ),
             body=task.SerializeToString(),
+            mandatory=True,
         )
         return TaskResultModel(
             id=task.id,
-            content=correlation_id,
+            content=transaction_id,
         )
 
-    def get_response(self, correlation_id: str) -> TaskResultModel:
+    def get_response(self, transaction_id: str) -> TaskResultModel:
         with self.responses_lock:
-            if correlation_id not in self.responses:
+            if transaction_id not in self.responses:
                 return None
-            response = self.responses[correlation_id]
-            del self.responses[correlation_id]
+            response = self.responses[transaction_id]
+            del self.responses[transaction_id]
             return response
 
     def close(self):
         with self.internal_lock:
             self.channel.stop_consuming()
+            self.processing_thread.join()
             self.connection.close()

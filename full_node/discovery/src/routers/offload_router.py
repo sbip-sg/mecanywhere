@@ -38,6 +38,7 @@ async def offload_task_and_get_result(
         return await record_response(transaction_service, token, did, po_did, response)
     else:
         return OffloadResponse(
+            transaction_id=response.transaction_id,
             task_id=task_id,
             status=response.status,
             response="",
@@ -63,6 +64,7 @@ async def offload_task(
         return await record_response(transaction_service, token, did, po_did, response)
     else:
         return OffloadResponse(
+            transaction_id=response.transaction_id,
             task_id=task_id,
             status=response.status,
             response="",
@@ -80,13 +82,14 @@ async def poll_result(
     po_did: str = Depends(get_po_did_from_token),
 ):
     did = poll_result_request.did
-    correlation_id = poll_result_request.correlation_id
+    transaction_id = poll_result_request.transaction_id
     if did != token_did:
         raise ForbiddenException("DID does not match token")
-    response = await offloading_service.poll_result(correlation_id)
+    response = await offloading_service.poll_result(transaction_id)
     if response is None:
         return OffloadResponse(
-            task_id=correlation_id,
+            transaction_id=transaction_id,
+            task_id=transaction_id,
             status=0,
             response="",
             error="No result found",
@@ -104,6 +107,7 @@ async def record_response(
 ):
     task_result = response.task_result
     offload_response = OffloadResponse(
+        transaction_id=response.transaction_id,
         task_id=task_result.id,
         status=response.status,
         response=task_result.content,
