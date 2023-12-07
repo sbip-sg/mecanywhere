@@ -4,7 +4,8 @@ from services.verifier_service import VerifierService
 from services.account_service import AccountService
 from services.issuer_service import IssuerService
 from models.claim import ClaimSchema
-from models.requests import CreateUserRequest
+from models.db_schema import AccountModel
+from models.requests import CreateAccountRequest, CreateUserRequest
 from models.responses import CreateUserResponse, DidServiceResponse
 from dependencies import get_account_service, get_issuer_service, get_verifier_service
 
@@ -17,7 +18,7 @@ public_router = APIRouter(
 @public_router.post(
     "/user/create_user",
     response_model=CreateUserResponse,
-    description="Creates a user from a created customer account, "
+    description="Creates a user from a created (now mocked) customer account, "
     "and creates a DID and credential for the user using the public key provided. "
     "Overwrites previous DID if one already exists."
     "The claims for the credential are retrieved from the customer account.",
@@ -29,10 +30,21 @@ async def create_user(
     issuer_service: IssuerService = Depends(get_issuer_service),
 ):
     public_key = request.public_key
-    account = request.account
+
+    # account = request.account
+    # NOTE: hard coded mock account, which is supposed to be retrieved from the database
+    account = AccountModel(username="bro", password="bro")
+
     user = account_service.get_user(account)
     if user is None:
-        raise BadRequestException("Error: Customer does not exist.")
+        # raise BadRequestException("Error: Customer does not exist.")
+        # NOTE: hard coded mock account, which is supposed to be retrieved from the database
+        account_service.create_user(
+            CreateAccountRequest(
+                name="bro", gender="M", age=42, username="bro", password="bro"
+            )
+        )
+        user = account_service.get_user(account)
 
     did = user.did
     prev_pubkey = user.pubkey
