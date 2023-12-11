@@ -8,9 +8,7 @@ class Resources(BaseModel):
 
 class TaskResultModel(BaseModel):
     id: str = Field(default="0", example="001", min_length=1, max_length=255)
-    content: str = Field(
-        default="", example="Hello World", min_length=1, max_length=255
-    )
+    content: str = Field(default="", example="Hello World")
     resource_consumed: Resources = Field(...)
     transaction_start_datetime: int = Field(default=0, example=1694563200, ge=0)
     transaction_end_datetime: int = Field(default=0, example=1694649600, ge=0)

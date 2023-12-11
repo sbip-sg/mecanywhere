@@ -29,16 +29,22 @@ class ResultQueue:
             cls._class_instance = super(ResultQueue, cls).__new__(cls)
         return cls._class_instance
 
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.stop()
+
     def stop(self):
         if self.channel is not None:
-            print("Stopping consuming")
+            print("Stopping consuming", flush=True)
             self.channel.basic_cancel(consumer_tag=ResultQueue.result_queue)
             self.channel.stop_consuming()
-            print("Stopped consuming")
+            print("Stopped consuming", flush=True)
         if self.connection is not None:
-            print("Closing connection")
+            print("Closing connection", flush=True)
             self.connection.close()
-            print("Connection closed")
+            print("Connection closed", flush=True)
 
     def start_consumer(self):
         self.connection = pika.BlockingConnection(
@@ -58,7 +64,7 @@ class ResultQueue:
             on_message_callback=self.callback,
             auto_ack=True,
         )
-        print("Result relayer started consuming")
+        print("Result relayer started consuming", flush=True)
         self.channel.start_consuming()
 
     def callback(self, ch, method, properties, body):
@@ -66,9 +72,9 @@ class ResultQueue:
         task_result = schema.TaskResult()
         try:
             task_result.ParseFromString(body)
-            print(task_result, "received")
+            print(task_result, "received", flush=True)
         except Exception as e:
-            print(e, "error parsing received result")
+            print(e, "error parsing received result", flush=True)
             task_result.content = str(e)
 
         transaction_id = properties.correlation_id
@@ -77,8 +83,8 @@ class ResultQueue:
         try:
             self.cache.hset(transaction_id, mapping=task_result_dict)
             self.cache.expire(transaction_id, timedelta(minutes=60 * 30))
-            print(f"Result {transaction_id} saved to cache")
+            print(f"Result {transaction_id} saved to cache", flush=True)
         except Exception as e:
-            print(e, "error saving result to cache")
+            print(e, "error saving result to cache", flush=True)
             print(transaction_id, task_result_dict)
             return

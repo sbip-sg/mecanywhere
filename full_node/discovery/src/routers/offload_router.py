@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from exceptions.http_exceptions import ForbiddenException
 from models.responses import OffloadResponse, PublishTaskResponse
-from models.requests import OffloadRequest, PollResultRequest
+from models.requests import OffloadRequest
 from services.offloading_service import OffloadingService
 from services.transaction_service import TransactionService
 from dependencies import (
@@ -44,57 +44,6 @@ async def offload_task_and_get_result(
             response="",
             error=response.error,
         )
-
-
-@offload_router.post("/offload_task", response_model=OffloadResponse)
-async def offload_task(
-    offload_request: OffloadRequest,
-    offloading_service: OffloadingService = Depends(get_offloading_service),
-    transaction_service: TransactionService = Depends(get_transaction_service),
-    token: str = Depends(get_token),
-    token_did: str = Depends(get_did_from_token),
-    po_did: str = Depends(get_po_did_from_token),
-):
-    did = offload_request.did
-    task_id = offload_request.task_id
-    if did != token_did:
-        raise ForbiddenException("DID does not match token")
-    response = await offloading_service.offload(did, offload_request)
-    if response.status == 1:
-        return await record_response(transaction_service, token, did, po_did, response)
-    else:
-        return OffloadResponse(
-            transaction_id=response.transaction_id,
-            task_id=task_id,
-            status=response.status,
-            response="",
-            error=response.error,
-        )
-
-
-@offload_router.post("/poll_result", response_model=OffloadResponse)
-async def poll_result(
-    poll_result_request: PollResultRequest,
-    offloading_service: OffloadingService = Depends(get_offloading_service),
-    transaction_service: TransactionService = Depends(get_transaction_service),
-    token: str = Depends(get_token),
-    token_did: str = Depends(get_did_from_token),
-    po_did: str = Depends(get_po_did_from_token),
-):
-    did = poll_result_request.did
-    transaction_id = poll_result_request.transaction_id
-    if did != token_did:
-        raise ForbiddenException("DID does not match token")
-    response = await offloading_service.poll_result(transaction_id)
-    if response is None:
-        return OffloadResponse(
-            transaction_id=transaction_id,
-            task_id=transaction_id,
-            status=0,
-            response="",
-            error="No result found",
-        )
-    return await record_response(transaction_service, token, did, po_did, response, is_update=True)
 
 
 async def record_response(

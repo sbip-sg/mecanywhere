@@ -1,10 +1,9 @@
-from time import sleep
+import asyncio
 from contract import DiscoveryContract
 from exceptions.http_exceptions import ContractException
 from models.user import User
 from models.responses import PublishTaskResponse, TaskResultModel
-from services.message_queue.result_queue import ResultQueue
-from services.message_queue.task_publisher import RPCTaskPublisher
+from services.message_queue.task_publisher import BasicTaskPublisher
 from models.requests import OffloadRequest
 from utils import get_current_timestamp
 import uuid
@@ -15,7 +14,7 @@ class OffloadingService:
     def __init__(
         self,
         contract: DiscoveryContract,
-        rpc_publisher: RPCTaskPublisher,
+        rpc_publisher: BasicTaskPublisher,
         cache: redis.Redis,
         server_host_name: str,
         server_host_did: str,
@@ -67,60 +66,9 @@ class OffloadingService:
 
         try:
             receipt = await self.rpc_publisher.publish(
-                transaction_id, offload_request, host_name=queue
-            )
-        except Exception as e:
-            return PublishTaskResponse(
-                status=0,
-                transaction_id=transaction_id,
-                task_result=None,
-                host_did=host.did,
-                host_po_did=host.po_did,
-                network_reliability=0,
-                error=str(e),
-            )
-        response = self.rpc_publisher.get_response(transaction_id)
-        while response is None:
-            sleep(0.1)
-            response = self.rpc_publisher.get_response(transaction_id)
-            # test no time out
-        return PublishTaskResponse(
-            status=1,
-            transaction_id=transaction_id,
-            task_result=response,
-            host_did=host.did,
-            host_po_did=host.po_did,
-            network_reliability=0,
-        )
-
-    async def offload(
-        self, did: str, offload_request: OffloadRequest
-    ) -> PublishTaskResponse:
-        host = self.assign_host_to_client(did)
-        if host is None:
-            return PublishTaskResponse(
-                status=0,
-                transaction_id="",
-                network_reliability=0,
-                error="Failed to assign host to client",
-            )
-        queue = host.queue
-        transaction_id = str(uuid.uuid4())
-
-        try:
-            receipt = await self.rpc_publisher.publish(
                 transaction_id,
                 offload_request,
                 host_name=queue,
-                reply_to=ResultQueue.result_queue,
-            )
-            return PublishTaskResponse(
-                status=1,
-                transaction_id=transaction_id,
-                task_result=receipt,
-                host_did=host.did,
-                host_po_did=host.po_did,
-                network_reliability=0,
             )
         except Exception as e:
             return PublishTaskResponse(
@@ -132,6 +80,14 @@ class OffloadingService:
                 network_reliability=0,
                 error=str(e),
             )
+        response = None
+        while response is None:
+            await asyncio.sleep(0.1)
+            response = await self.poll_result(transaction_id)
+            # test no time out
+        response.host_did = host.did
+        response.host_po_did = host.po_did
+        return response
 
     async def poll_result(self, corr_id_to_find: str) -> PublishTaskResponse:
         # look up redis
