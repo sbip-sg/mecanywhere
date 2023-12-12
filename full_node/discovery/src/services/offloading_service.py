@@ -1,4 +1,5 @@
 import asyncio
+import json
 from contract import DiscoveryContract
 from exceptions.http_exceptions import ContractException
 from models.user import User
@@ -9,19 +10,20 @@ from utils import get_current_timestamp
 import uuid
 import redis
 
+MAX_TIMEOUT = 60 * 5
 
 class OffloadingService:
     def __init__(
         self,
         contract: DiscoveryContract,
-        rpc_publisher: BasicTaskPublisher,
+        publisher: BasicTaskPublisher,
         cache: redis.Redis,
         server_host_name: str,
         server_host_did: str,
         server_host_po_did: str,
     ) -> None:
         self.contract = contract
-        self.rpc_publisher = rpc_publisher
+        self.publisher = publisher
         self.cache = cache
         try:
             self.cache.ping()
@@ -65,7 +67,7 @@ class OffloadingService:
         transaction_id = str(uuid.uuid4())
 
         try:
-            receipt = await self.rpc_publisher.publish(
+            receipt = await self.publisher.publish(
                 transaction_id,
                 offload_request,
                 host_name=queue,
@@ -81,10 +83,21 @@ class OffloadingService:
                 error=str(e),
             )
         response = None
+        clock = 0
         while response is None:
+            if clock > MAX_TIMEOUT:
+                return PublishTaskResponse(
+                    status=0,
+                    transaction_id=transaction_id,
+                    task_result=None,
+                    host_did=host.did,
+                    host_po_did=host.po_did,
+                    network_reliability=0,
+                    error="Time out.",
+                )
             await asyncio.sleep(0.1)
             response = await self.poll_result(transaction_id)
-            # test no time out
+            clock += 0.1
         response.host_did = host.did
         response.host_po_did = host.po_did
         return response
@@ -94,12 +107,12 @@ class OffloadingService:
         if self.cache is None:
             print("Redis is not connected.")
             return None
-        result = self.cache.hgetall(corr_id_to_find)
-        if len(result) == 0:
+        result = self.cache.get(corr_id_to_find)
+        if result is None:
             return None
 
         self.cache.delete(corr_id_to_find)
-        task_result_model = TaskResultModel(**result)
+        task_result_model = TaskResultModel(**json.loads(result))
         publish_task_response = PublishTaskResponse(
             status=1,
             transaction_id=corr_id_to_find,

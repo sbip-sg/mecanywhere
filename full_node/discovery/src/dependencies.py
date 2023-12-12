@@ -92,12 +92,12 @@ def get_rpc_task_publisher(config: Config = Depends(get_config)) -> BasicTaskPub
 
 def get_offloading_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
-    rpc_publisher: BasicTaskPublisher = Depends(get_rpc_task_publisher),
+    publisher: BasicTaskPublisher = Depends(get_rpc_task_publisher),
     cache: redis.Redis = Depends(get_redis_client),
     config: Config = Depends(get_config),
 ) -> OffloadingService:
     return OffloadingService(
-        contract, rpc_publisher, cache, config.get_server_host_name(), config.get_server_host_did(), config.get_server_host_po_did()
+        contract, publisher, cache, config.get_server_host_name(), config.get_server_host_did(), config.get_server_host_po_did()
     )
 
 

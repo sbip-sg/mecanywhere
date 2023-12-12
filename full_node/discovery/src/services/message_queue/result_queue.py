@@ -78,13 +78,13 @@ class ResultQueue:
             task_result.content = str(e)
 
         transaction_id = properties.correlation_id
-        task_result_dict = json_format.MessageToDict(task_result, preserving_proto_field_name=True)
+        task_result_json = json_format.MessageToJson(task_result, preserving_proto_field_name=True)
 
         try:
-            self.cache.hset(transaction_id, mapping=task_result_dict)
+            self.cache.set(transaction_id, task_result_json)
             self.cache.expire(transaction_id, timedelta(minutes=60 * 30))
             print(f"Result {transaction_id} saved to cache", flush=True)
         except Exception as e:
             print(e, "error saving result to cache", flush=True)
-            print(transaction_id, task_result_dict)
+            print(transaction_id, task_result_json, flush=True)
             return
