@@ -94,7 +94,9 @@ async def poll_result(
             response="",
             error="No result found",
         )
-    return await record_response(transaction_service, token, did, po_did, response, is_update=True)
+    return await record_response(
+        transaction_service, token, did, po_did, response, is_update=True
+    )
 
 
 async def record_response(
@@ -116,7 +118,11 @@ async def record_response(
     host_po_did = response.host_po_did
     try:
         print("recording task in transaction service")
-        record_func = transaction_service.update_task if is_update else transaction_service.record_task
+        record_func = (
+            transaction_service.update_task
+            if is_update
+            else transaction_service.record_task
+        )
         await record_func(
             token,
             client_did,

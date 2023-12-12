@@ -12,6 +12,7 @@ import redis
 
 MAX_TIMEOUT = 60 * 5
 
+
 class OffloadingService:
     def __init__(
         self,
@@ -101,7 +102,7 @@ class OffloadingService:
         response.host_did = host.did
         response.host_po_did = host.po_did
         return response
-    
+
     async def offload(
         self, did: str, offload_request: OffloadRequest
     ) -> PublishTaskResponse:

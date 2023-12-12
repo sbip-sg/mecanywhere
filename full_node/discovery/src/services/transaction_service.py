@@ -43,7 +43,7 @@ class TransactionService:
         return await self.post_transaction(
             token, f"{self.config.get_transaction_service_url()}/record_task", request
         )
-    
+
     async def update_task(
         self,
         token: str,
