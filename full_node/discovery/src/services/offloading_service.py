@@ -101,6 +101,46 @@ class OffloadingService:
         response.host_did = host.did
         response.host_po_did = host.po_did
         return response
+    
+    async def offload(
+        self, did: str, offload_request: OffloadRequest
+    ) -> PublishTaskResponse:
+        host = self.assign_host_to_client(did)
+        if host is None:
+            return PublishTaskResponse(
+                status=0,
+                transaction_id="",
+                network_reliability=0,
+                error="No host available.",
+            )
+        queue = host.queue
+        transaction_id = str(uuid.uuid4())
+
+        try:
+            receipt = await self.publisher.publish(
+                transaction_id,
+                offload_request,
+                host_name=queue,
+            )
+        except Exception as e:
+            return PublishTaskResponse(
+                status=0,
+                transaction_id=transaction_id,
+                task_result=None,
+                host_did=host.did,
+                host_po_did=host.po_did,
+                network_reliability=0,
+                error=str(e),
+            )
+        return PublishTaskResponse(
+            status=1,
+            transaction_id=transaction_id,
+            task_result=receipt,
+            host_did=host.did,
+            host_po_did=host.po_did,
+            network_reliability=0,
+            error="",
+        )
 
     async def poll_result(self, corr_id_to_find: str) -> PublishTaskResponse:
         # look up redis
