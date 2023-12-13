@@ -21,6 +21,7 @@ class PublishTaskResponse(BaseModel):
 
 
 class OffloadResponse(BaseModel):
+    transaction_id: str = Field(..., example="001")
     task_id: str = Field(..., example="001")
     status: int = Field(..., example=1)
     response: str = Field(..., example="Hello World")

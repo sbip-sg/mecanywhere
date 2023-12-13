@@ -1,4 +1,7 @@
+import asyncio
 from contextlib import asynccontextmanager
+from multiprocessing import Process, Event
+import signal
 import threading
 from config import Config
 from fastapi import FastAPI, Depends
@@ -14,38 +17,32 @@ from dependencies import has_ca_access, get_config, get_redis_client
 
 
 result_queue = None
-queue_thread = None
+queue_process = None
 
 
 def start_consuming(config: Config) -> None:
     global result_queue
     cache = get_redis_client(config)
-    try:
-        result_queue = ResultQueue(config, cache)
-        print("Starting relayer")
+    with ResultQueue(config, cache) as result_queue:
+        print("Starting relayer", flush=True)
         result_queue.start_consumer()
-    except Exception as e:
-        raise SystemExit(e)
-    print("Relayer stopped")
+        print("Relayer stopped", flush=True)
 
 
 async def start_up():
-    global result_queue, queue_thread
+    global result_queue, queue_process
 
     config = get_config()
-
-    queue_thread = threading.Thread(
-        target=start_consuming, args=([config])
-    )
-    queue_thread.start()
+    queue_process = Process(target=start_consuming, args=(config,))
+    queue_process.start()
 
 
 async def shut_down():
-    global result_queue, queue_thread
+    global result_queue, queue_process
     if result_queue is not None:
         result_queue.stop()
-    if queue_thread is not None:
-        queue_thread.join()
+    if queue_process is not None:
+        queue_process.join()
 
 
 @asynccontextmanager

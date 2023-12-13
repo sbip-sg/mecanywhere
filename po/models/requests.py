@@ -8,4 +8,3 @@ class CreateAccountRequest(AccountModel, UserDetails):
 
 class CreateUserRequest(BaseModel):
     public_key: str
-    account: AccountModel

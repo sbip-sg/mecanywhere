@@ -1,6 +1,8 @@
 from config import Config
 import aiohttp
 
+from models.task_result import Resources
+
 
 class TransactionService:
     def __init__(self, config: Config, session: aiohttp.ClientSession) -> None:
@@ -15,7 +17,7 @@ class TransactionService:
         host_did: str,
         host_po_did: str,
         transaction_id: str,
-        resource_consumed: dict,
+        resource_consumed: Resources,
         transaction_start_datetime: int,
         transaction_end_datetime: int,
         name: str,
@@ -24,7 +26,7 @@ class TransactionService:
     ):
         task_metadata = {
             "transaction_id": transaction_id,
-            "resource_consumed": resource_consumed,
+            "resource_consumed": resource_consumed.dict(),
             "transaction_start_datetime": int(transaction_start_datetime),
             "transaction_end_datetime": int(transaction_end_datetime),
             "task_name": name,
@@ -41,7 +43,7 @@ class TransactionService:
         return await self.post_transaction(
             token, f"{self.config.get_transaction_service_url()}/record_task", request
         )
-    
+
     async def update_task(
         self,
         token: str,
@@ -50,7 +52,7 @@ class TransactionService:
         host_did: str,
         host_po_did: str,
         transaction_id: str,
-        resource_consumed: dict,
+        resource_consumed: Resources,
         transaction_start_datetime: int,
         transaction_end_datetime: int,
         name: str,
@@ -59,7 +61,7 @@ class TransactionService:
     ):
         task_metadata = {
             "transaction_id": transaction_id,
-            "resource_consumed": resource_consumed,
+            "resource_consumed": resource_consumed.dict(),
             "transaction_start_datetime": int(transaction_start_datetime),
             "transaction_end_datetime": int(transaction_end_datetime),
             "task_name": name,

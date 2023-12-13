@@ -16,4 +16,4 @@ class OffloadRequest(DIDModel):
 
 
 class PollResultRequest(DIDModel):
-    correlation_id: str
+    transaction_id: str

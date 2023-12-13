@@ -11,10 +11,9 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-from google.protobuf import struct_pb2 as google_dot_protobuf_dot_struct__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cschema.proto\x1a\x1cgoogle/protobuf/struct.proto\"u\n\x04Task\x12\n\n\x02id\x18\x01 \x01(\t\x12\x14\n\x0c\x63ontainerRef\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\x12)\n\x08resource\x18\x04 \x01(\x0b\x32\x17.google.protobuf.Struct\x12\x0f\n\x07runtime\x18\x05 \x01(\t\"\x9c\x01\n\nTaskResult\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\x12\x19\n\x11resource_consumed\x18\x03 \x01(\x02\x12\"\n\x1atransaction_start_datetime\x18\x04 \x01(\x05\x12 \n\x18transaction_end_datetime\x18\x05 \x01(\x05\x12\x10\n\x08\x64uration\x18\x06 \x01(\x05\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0cschema.proto\"\'\n\x08Resource\x12\x0b\n\x03\x63pu\x18\x01 \x01(\x05\x12\x0e\n\x06memory\x18\x02 \x01(\x05\"g\n\x04Task\x12\n\n\x02id\x18\x01 \x01(\t\x12\x14\n\x0c\x63ontainerRef\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t\x12\x1b\n\x08resource\x18\x04 \x01(\x0b\x32\t.Resource\x12\x0f\n\x07runtime\x18\x05 \x01(\t\"\x9e\x01\n\nTaskResult\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\x12\x1b\n\x08resource\x18\x03 \x01(\x0b\x32\t.Resource\x12\"\n\x1atransaction_start_datetime\x18\x04 \x01(\x05\x12 \n\x18transaction_end_datetime\x18\x05 \x01(\x05\x12\x10\n\x08\x64uration\x18\x06 \x01(\x05\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,8 +21,10 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'schema_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _globals['_TASK']._serialized_start=46
-  _globals['_TASK']._serialized_end=163
-  _globals['_TASKRESULT']._serialized_start=166
-  _globals['_TASKRESULT']._serialized_end=322
+  _globals['_RESOURCE']._serialized_start=16
+  _globals['_RESOURCE']._serialized_end=55
+  _globals['_TASK']._serialized_start=57
+  _globals['_TASK']._serialized_end=160
+  _globals['_TASKRESULT']._serialized_start=163
+  _globals['_TASKRESULT']._serialized_end=321
 # @@protoc_insertion_point(module_scope)

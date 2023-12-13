@@ -6,14 +6,10 @@ const { postTaskExecution } = require('./executor_api');
 const MQ_URL = process.env.MQ_URL || 'amqp://rabbitmq:5672';
 
 const Task = protobuf.loadSync('schema.proto').lookupType('Task');
-
 const TaskResult = protobuf.loadSync('schema.proto').lookupType('TaskResult');
 
 const parseTaskFromProto = (content) => {
   const task = Task.decode(content);
-  if (task.resource != null) {
-    task.resource = struct.decode(task.resource);
-  }
   const typeError = Task.verify(task);
 
   if (typeError) {
@@ -46,14 +42,14 @@ class Consumer {
       channel = await connection.createChannel();
       await channel.assertQueue(queueName, {
         durable: true,
-        expires: 1000 * 60 * 30,
+        autoDelete: true,
       });
       console.log(' [con] Awaiting RPC requests');
 
       channel.consume(queueName, async (msg) => {
         const { correlationId } = msg.properties;
         const resultObject = await this.handleMsgContent(msg.content);
-        const serializedResult = TaskResult.encode(resultObject).finish();
+        const serializedResult = TaskResult.encode(TaskResult.fromObject(resultObject)).finish();
 
         channel.sendToQueue(
           msg.properties.replyTo,
@@ -92,11 +88,14 @@ class Consumer {
         task.resource,
         task.runtime
       );
-
+      
+      if (task.resource == null) {
+        task.resource = { "cpu": 1, "memory": 128 };
+      }
       const transactionEndDatetime = Math.floor(new Date().getTime() / 1000);
       const duration = transactionEndDatetime - transactionStartDatetime;
       const reply = { id: task.id, content: result, resource: task.resource, transactionStartDatetime, transactionEndDatetime, duration };
-      
+
       console.log(` [con] Reply: ${JSON.stringify(reply)}`);
       
       return reply;
