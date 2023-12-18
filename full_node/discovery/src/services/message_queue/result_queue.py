@@ -1,8 +1,9 @@
 from datetime import timedelta
 import pika
 from config import Config
+from contract import DiscoveryContract
+from services.cache import DCache
 import models.schema_pb2 as schema
-import redis
 from google.protobuf import json_format
 
 
@@ -10,28 +11,23 @@ class ResultQueue:
     _class_instance = None
     result_queue = "result_queue"
 
-    def __init__(self, config: Config, cache: redis.Redis):
+    def __init__(self, config: Config, cache: DCache, contract: DiscoveryContract):
         self.config = config
         self.connection = None
         self.channel = None
         self.cache = cache
-        if self.cache is None:
-            self.cache = redis.Redis(
-                host=config.get_redis_host(),
-                port=config.get_redis_port(),
-                decode_responses=True,
-            )
+        self.contract = contract
         if not self.cache.ping():
-            raise Exception("Redis is not running")
+            raise Exception("Cache is not running")
 
-    def __new__(cls, config, cache):
+    def __new__(cls, config, cache, contract):
         if cls._class_instance is None:
             cls._class_instance = super(ResultQueue, cls).__new__(cls)
         return cls._class_instance
 
     def __enter__(self):
         return self
-    
+
     def __exit__(self, exc_type, exc_value, traceback):
         self.stop()
 
@@ -78,13 +74,26 @@ class ResultQueue:
             task_result.content = str(e)
 
         transaction_id = properties.correlation_id
-        task_result_json = json_format.MessageToJson(task_result, preserving_proto_field_name=True)
+        task_result_json = json_format.MessageToJson(
+            task_result, preserving_proto_field_name=True
+        )
 
         try:
-            self.cache.set(transaction_id, task_result_json)
-            self.cache.expire(transaction_id, timedelta(minutes=60 * 30))
-            print(f"Result {transaction_id} saved to cache", flush=True)
+            hostdid = self.cache.get_recipient(transaction_id)
         except Exception as e:
-            print(e, "error saving result to cache", flush=True)
-            print(transaction_id, task_result_json, flush=True)
-            return
+            print(e, "error getting publish receipt", flush=True)
+        if hostdid is None:
+            print(
+                f"Host for published transaction {transaction_id} not found in cache",
+                flush=True,
+            )
+        else:
+            self.contract.add_resource(
+                hostdid,
+                task_result.resource.cpu,
+                task_result.resource.memory,
+            )
+            self.cache.delete_recipient(transaction_id)
+
+        self.cache.set_result(transaction_id, task_result_json)
+        

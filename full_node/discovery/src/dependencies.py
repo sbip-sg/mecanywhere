@@ -9,6 +9,7 @@ from contract import DiscoveryContract
 from common.middleware.credential_authentication import (
     CredentialAuthenticationMiddleware,
 )
+from services.cache import DCache
 from services.offloading_service import OffloadingService
 from services.registration_service import RegistrationService
 from services.monitoring_service import MonitoringService
@@ -26,6 +27,10 @@ def get_config() -> Config:
 async def get_session() -> ClientSession:
     async with aiohttp.ClientSession() as session:
         yield session
+
+
+def get_cache(config: Config = Depends(get_config)) -> DCache:
+    return DCache(config)
 
 
 def get_redis_client(config: Config = Depends(get_config)) -> redis.Redis:
@@ -93,7 +98,7 @@ def get_rpc_task_publisher(config: Config = Depends(get_config)) -> BasicTaskPub
 def get_offloading_service(
     contract: DiscoveryContract = Depends(get_discovery_contract),
     publisher: BasicTaskPublisher = Depends(get_rpc_task_publisher),
-    cache: redis.Redis = Depends(get_redis_client),
+    cache: DCache = Depends(get_cache),
     config: Config = Depends(get_config),
 ) -> OffloadingService:
     return OffloadingService(

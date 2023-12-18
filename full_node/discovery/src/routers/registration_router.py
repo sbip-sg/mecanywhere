@@ -1,5 +1,10 @@
-from fastapi import APIRouter, Depends, status
-from exceptions.http_exceptions import ForbiddenException, BadRequestException, ContractException
+from fastapi import APIRouter, Depends
+from exceptions.http_exceptions import (
+    ForbiddenException,
+    BadRequestException,
+    ContractException,
+)
+from models.requests import RegisterHostRequest
 from models.did import DIDModel
 from services.registration_service import RegistrationService
 from dependencies import (
@@ -19,20 +24,20 @@ registration_router = APIRouter(
 )
 
 
-@registration_router.post(
-    "/register_host", response_model=None
-)
+@registration_router.post("/register_host", response_model=None)
 async def register_host(
-    didModel: DIDModel,
+    request: RegisterHostRequest,
     registration_service: RegistrationService = Depends(get_registration_service),
     token_did: str = Depends(get_did_from_token),
     token_po_did: str = Depends(get_po_did_from_token),
 ):
-    did = didModel.did
+    did = request.did
     if did != token_did:
         raise ForbiddenException("DID does not match token")
     try:
-        registration_service.register_host(did, token_po_did)
+        registration_service.register_host(
+            did, token_po_did, request.resources.cpu, request.resources.memory
+        )
     except Exception as e:
         print(e)
         raise ContractException(str(e))
@@ -60,9 +65,7 @@ async def deregister_host(
     # TODO: blacklist token
 
 
-@registration_router.post(
-    "/register_client", response_model=None
-)
+@registration_router.post("/register_client", response_model=None)
 async def register_client(
     didModel: DIDModel,
     registration_service: RegistrationService = Depends(get_registration_service),

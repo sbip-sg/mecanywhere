@@ -50,24 +50,29 @@ class DiscoveryContract:
             raise Exception(e)
 
     # record user in the contract
-    def set_user(self, did: str, po_did: str, timestamp: int, latency: int):
-        unbuilt_function = self.contract.functions.setUser(did, po_did, timestamp, latency)
-        self.call_function(unbuilt_function, {"gas": 600000})
+    def set_user(self, did: str, po_did: str, timestamp: int, cpu: int, mem: int):
+        unbuilt_function = self.contract.functions.setUser(did, po_did, timestamp, cpu, mem)
+        self.call_function(unbuilt_function, {"gas": 750000})
+
+    def update_timestamp(self, did: str, timestamp: int):
+        unbuilt_function = self.contract.functions.updateTimestamp(did, timestamp)
+        self.call_function(unbuilt_function, {"gas": 150000})
 
     # get user from the contract
     def get_user(self, did: str) -> User:
         user_tuple = self.contract.functions.getUser(did).call()
         return User(*user_tuple)
 
-    # get arbitrary user's queue name from the contract
-    def get_first_user(self, current_timestamp: int) -> User:
+    # get available user's queue name from the contract
+    def get_available_user(self, current_timestamp: int, cpu: int, mem: int) -> User:
         lazy_remove_expired_users = self.contract.functions.lazyRemoveExpiredUsers(
             current_timestamp
         )
         self.call_function(lazy_remove_expired_users, {"gas": 300000})
-        user_tuple = self.contract.functions.getFirstUser().call()
+        user_tuple = self.contract.functions.getAvailableUser(cpu, mem).call()
         user = User(*user_tuple)
         if user.is_user:
+            self.subtract_resource(user.did, cpu, mem)
             return user
         else:
             return None
@@ -94,3 +99,11 @@ class DiscoveryContract:
     def remove_users(self, dids: List[str]) -> None:
         unbuilt_function = self.contract.functions.removeUsers(dids)
         self.call_function(unbuilt_function, {"gas": 300000})
+
+    def add_resource(self, did: str, cpu: int, mem: int) -> None:
+        unbuilt_function = self.contract.functions.addResource(did, cpu, mem)
+        self.call_function(unbuilt_function, {"gas": 150000})
+
+    def subtract_resource(self, did: str, cpu: int, mem: int) -> None:
+        unbuilt_function = self.contract.functions.subtractResource(did, cpu, mem)
+        self.call_function(unbuilt_function, {"gas": 150000})
