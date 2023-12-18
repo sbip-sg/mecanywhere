@@ -6,7 +6,8 @@ class User(BaseModel):
     index: int = Field(None)
     is_user: bool = Field(None)
     timestamp: int = Field(None)
-    latency: int = Field(None)
+    cpu: int = Field(None)
+    mem: int = Field(None)
     queue: str = Field(None)
 
     # instantiate with variable number of keyword args or all positional args
@@ -20,7 +21,8 @@ class User(BaseModel):
             "index",
             "is_user",
             "timestamp",
-            "latency",
+            "cpu",
+            "mem",
             "queue",
         ]
         kwargs = dict(zip(fields, args))

@@ -12,7 +12,10 @@ contract DiscoveryContract {
         uint256 index;
         bool isUser;
         uint256 timestamp;
-        uint256 latency;
+
+        uint256 cpu;
+        uint256 mem;
+
         string queue;
     }
 
@@ -24,18 +27,29 @@ contract DiscoveryContract {
         EXPIRY_DURATION = expiryDuration;
     }
 
-    function setUser(string memory did, string memory poDid, uint256 timestamp, uint256 latency) public {
+    function setUser(string memory did, string memory poDid, uint256 timestamp, uint256 cpu, uint256 mem) public {
         if (didToUser[did].isUser) {
-            uint256 index = didToUser[did].index;
-            users[index].poDid = poDid;
-            users[index].timestamp = timestamp;
-            users[index].latency = latency;
+            User memory user = didToUser[did];
+            user.poDid = poDid;
+            user.timestamp = timestamp;
+            user.cpu = cpu;
+            user.mem = mem;
+            users[user.index] = user;
+            didToUser[did] = user;
             return;
         }
-        User memory newUser = User(did, poDid, userCount, true, timestamp, latency, did);
+        User memory newUser = User(did, poDid, userCount, true, timestamp, cpu, mem, did);
         users.push(newUser);
         didToUser[did] = newUser;
         userCount = userCount + 1;
+    }
+
+    function updateTimestamp(string memory did, uint256 timestamp) public {
+        require(didToUser[did].isUser, "Id does not exist");
+        User memory user = didToUser[did];
+        user.timestamp = timestamp;
+        users[user.index] = user;
+        didToUser[did] = user;
     }
 
     function lazyRemoveExpiredUsers(uint256 currentTimestamp) public {
@@ -48,14 +62,16 @@ contract DiscoveryContract {
         if (didToUser[did].isUser) {
           return didToUser[did];
         }
-        return User("", "", 0, false, 0, 0, "");
+        return User("", "", 0, false, 0, 0, 0, "");
     }
 
-    function getFirstUser() public view returns (User memory) {
-        if (userCount == 0) {
-            return User("", "", 0, false, 0, 0, "");
+    function getAvailableUser(uint256 cpu, uint256 mem) public view returns (User memory) {
+        for (uint256 i = 0; i < userCount; i++) {
+            if (users[i].cpu >= cpu && users[i].mem >= mem) {
+                return users[i];
+            }
         }
-        return users[0];
+        return User("", "", 0, false, 0, 0, 0, "");
     }
 
     function getUserCount() public view returns (uint256) {
@@ -92,5 +108,23 @@ contract DiscoveryContract {
         for (uint256 i = 0; i < dids.length; i++) {
             removeUser(dids[i]);
         }
+    }
+
+    function addResource(string memory did, uint256 cpu, uint256 mem) public {
+        require(didToUser[did].isUser, "Id does not exist");
+        User memory user = didToUser[did];
+        user.cpu = user.cpu + cpu;
+        user.mem = user.mem + mem;
+        users[user.index] = user;
+        didToUser[did] = user;
+    }
+
+    function subtractResource(string memory did, uint256 cpu, uint256 mem) public {
+        require(didToUser[did].isUser, "Id does not exist");
+        User memory user = didToUser[did];
+        user.cpu = user.cpu - cpu;
+        user.mem = user.mem - mem;
+        users[user.index] = user;
+        didToUser[did] = user;
     }
 }

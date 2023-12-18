@@ -42,8 +42,8 @@ class BasicTaskPublisher:
         task.content = offload_request.content
         if offload_request.resource is not None:
             resource = schema.Resource()
-            resource.cpu = offload_request.resource["cpu"]
-            resource.memory = offload_request.resource["memory"]
+            resource.cpu = offload_request.resource.cpu
+            resource.memory = offload_request.resource.memory
             task.resource.CopyFrom(resource)
         if offload_request.runtime is not None:
             task.runtime = offload_request.runtime
