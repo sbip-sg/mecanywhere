@@ -66,7 +66,12 @@ See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf6
         - For python services, you have to add your variables in the settings class in `config.py` too.
 
 ### Contracts
-- For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker. The default testnet contracts have been migrated to sepolia.
+
+> 1. `did/contract/contracts/DIDContract.sol`, `did/contract/contracts/CptContract.sol`: used by verifier and issuer services
+> 2. `full_node/contract/contracts/PaymentContract.sol`: used by payment and transaction services
+> 3. `full_node/contract/contracts/DiscoveryContract.sol`: used by discovery service
+
+- For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker.
 - Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
 - For docker local:
     - `truffle migrate --network development`
@@ -79,15 +84,19 @@ In sbip servers, run `docker-compose -f docker-compose-sbip.yaml up -d --no-deps
 Use `docker-compose-proxy.yaml` to run the nginx set to proxy services in node `worker-111`.
 
 # Quick Start
-1. Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
-> **Note:** Hot reload is enabled for the python services but not the java services. 
-
-- OR run `startup.bat` to start all the services on windows. Run any startup script in each service folder to start the service individually on windows.
+1. Run docker services
+- `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
+> [!NOTE]  
+> Hot reload is enabled for the python services but not the java services. 
 
 2. Migrate the contracts onto your chosen blockchain.
-- For development, the simplest way would be to run `truffle migrate` in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
+- For development, run `truffle migrate` in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
+- OR run `load_po.bat` which automates migration of the contracts and loads a standard PO onto the blockchain.
 
 # Manual Start
+
+> [!NOTE]  
+> This is no longer recommended as we move towards production.
 
 ## Pre-requisites
 - running ganache container
