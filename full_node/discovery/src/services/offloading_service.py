@@ -12,7 +12,7 @@ from models.requests import OffloadRequest
 from utils import get_current_timestamp
 import uuid
 
-MAX_TIMEOUT = 60 * 5
+MAX_TIMEOUT = 60 * 10
 
 
 class OffloadingService:
