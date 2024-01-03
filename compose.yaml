@@ -138,6 +138,7 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ../mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
 
 networks:
   default:

@@ -52,7 +52,7 @@ services:
       - "11007:5672"
     healthcheck:
       test: "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"
-      interval: 5s
+      interval: 30s
       timeout: 10s
       retries: 3
 
@@ -130,6 +130,7 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ../mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
 
 networks:
   default:
