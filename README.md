@@ -13,6 +13,10 @@ Table of Contents
 
 # Overview
 
+### Architecture
+<https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&node-id=0%3A1&t=IANJCjD1wgNtEChu-1>
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="750" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FeBlw4rqX7MT3He8O4t7nxI%2FMECAnywhere-Architecture-Diagram%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DKMSVEWp4c3UO9Rgy-1" allowfullscreen></iframe>
+
 ### Services
 - Proxy
     - Host URL: http://sbip-g2.d2.comp.nus.edu.sg:11000
@@ -50,10 +54,6 @@ Table of Contents
 1. `did/contract/contracts/DIDContract.sol`, `did/contract/contracts/CptContract.sol`: used by verifier and issuer services
 2. `full_node/contract/contracts/PaymentContract.sol`: used by payment and transaction services
 3. `full_node/contract/contracts/DiscoveryContract.sol`: used by discovery service
-
-### Architecture
-<https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&node-id=0%3A1&t=IANJCjD1wgNtEChu-1>
-<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="750" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FeBlw4rqX7MT3He8O4t7nxI%2FMECAnywhere-Architecture-Diagram%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DKMSVEWp4c3UO9Rgy-1" allowfullscreen></iframe>
 
 # Quick Start
 1. Run docker services

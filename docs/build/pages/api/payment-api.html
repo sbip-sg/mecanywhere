@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Payment API</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body { margin: 0; padding: 0; }
+    </style>
+  </head>
+  <body>
+    <redoc
+           
+           
+           
+           
+           
+           
+           
+           
+           
+           >
+    </redoc>
+
+    <script src="../../_static/redoc.js"></script>
+    
+    <script type="application/json" id="spec">
+    {"openapi": "3.0.2", "info": {"title": "Cloud - Payment", "version": "0.1.0"}, "paths": {"/withdraw": {"post": {"tags": ["payment"], "summary": "Withdraw", "description": "For POs to withdraw from their balance.", "operationId": "withdraw_withdraw_post", "requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/WithdrawalRequest"}}}, "required": true}, "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "security": [{"HTTPBearer": []}, {"HTTPBearer": []}]}}}, "components": {"schemas": {"HTTPValidationError": {"title": "HTTPValidationError", "type": "object", "properties": {"detail": {"title": "Detail", "type": "array", "items": {"$ref": "#/components/schemas/ValidationError"}}}}, "ValidationError": {"title": "ValidationError", "required": ["loc", "msg", "type"], "type": "object", "properties": {"loc": {"title": "Location", "type": "array", "items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}}, "msg": {"title": "Message", "type": "string"}, "type": {"title": "Error Type", "type": "string"}}}, "WithdrawalRequest": {"title": "WithdrawalRequest", "required": ["did", "address", "amount"], "type": "object", "properties": {"did": {"title": "Did", "type": "string", "example": "did:meca:0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f"}, "address": {"title": "Address", "type": "string", "example": "0x0fa21fd3d11d2cd5e6cdef2c7cd6531a25a5964f"}, "amount": {"title": "Amount", "type": "string", "description": "Amount in ether. Provide as string for accuracy.", "example": 0.001}}}}, "securitySchemes": {"HTTPBearer": {"type": "http", "scheme": "bearer"}}}}
+    </script>
+    
+    <script>
+        
+        var spec = JSON.parse(document.getElementById("spec").innerHTML);
+        
+        Redoc.init(spec);
+    </script>
+  </body>
+</html>
