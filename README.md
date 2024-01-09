@@ -18,6 +18,9 @@ Table of Contents
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="750" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FeBlw4rqX7MT3He8O4t7nxI%2FMECAnywhere-Architecture-Diagram%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DKMSVEWp4c3UO9Rgy-1" allowfullscreen></iframe>
 
 ### Services
+
+> Open `docs/build/index.html` to view the offline API documentation.
+
 - Proxy
     - Host URL: http://sbip-g2.d2.comp.nus.edu.sg:11000
 - PO - Authentication service
@@ -71,7 +74,7 @@ Table of Contents
 Options: manual, docker local / sbip server (recommended), docker testnet
 
 ### Changing environments
-See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf600b557f4410c28a29c6b0cfa2f23)
+> See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf600b557f4410c28a29c6b0cfa2f23)
 - For manual:
     - `"environment": "development"` in `config.json` for python services.
     - For java services, just use the `verifier` or `issuer` profiles when activating the profile.
