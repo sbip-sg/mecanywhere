@@ -1,29 +1,49 @@
 # MECAnywhere Services (Development)
 
-Services: 
+Table of Contents
+
+* [Overview](#overview)
+* [Quick Start](#quick-start)
+* [Configuration](#configuration)
+    * [Changing environments](#changing-environments)
+    * [Secret keys](#secret-keys)
+    * [Contracts](#contracts)
+    * [Serving on SBIP Servers](#serving-on-sbip-servers)
+
+
+# Overview
+
+### Architecture
+<https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&node-id=0%3A1&t=IANJCjD1wgNtEChu-1>
+<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="750" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FeBlw4rqX7MT3He8O4t7nxI%2FMECAnywhere-Architecture-Diagram%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DKMSVEWp4c3UO9Rgy-1" allowfullscreen></iframe>
+
+### Services
+
+> Open `docs/build/index.html` to view the offline API documentation.
+
 - Proxy
     - Host URL: http://sbip-g2.d2.comp.nus.edu.sg:11000
-- [PO - Authentication service](#po---authentication-service)
+- PO - Authentication service
     - Hosted by Parent Organisation to issue VC to users of that PO
     - Host URL: 
         - http://localhost:8000
         - http://sbip-g2.d2.comp.nus.edu.sg:11000/po
     - API Documentation: {host}/docs
-- [Cloud - DID & VC verification service](#cloud---did--vc-verification-service)
+- Cloud - DID & VC verification service
     - verifier port: 8080, issuer port: 9090
     - Hosted by MECA to provide DID and VC verification services
     - Host URL: 
         - http://localhost:8080, http://localhost:9090
         - http://sbip-g2.d2.comp.nus.edu.sg:11000/did-verifier, http://sbip-g2.d2.comp.nus.edu.sg:11000/did-issuer
     - API Documentation: {host}/swagger-ui
-- [Full Node - Discovery & Transaction service](#full-node---discovery--transaction-service)
+- Full Node - Discovery & Transaction service
     - discovery port: 7000, transaction port: 7001
     - Hosted on the edge to provide MECA service for end users
     - Host URL: 
         - http://localhost:7000, http://localhost:7001
         - http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-discovery, http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-transaction
     - API Documentation: {host}/docs
-- [Cloud - Payment service](#cloud---payment-service)
+- Cloud - Payment service
     - Hosted by MECA to provide payment service for POs
     - Host URL: 
         - http://localhost:7002
@@ -33,20 +53,28 @@ Services:
     - Hosted on the edge to ensure availability of hosts
     - No host URL
 
-Smart contracts:
+### Smart contracts
 1. `did/contract/contracts/DIDContract.sol`, `did/contract/contracts/CptContract.sol`: used by verifier and issuer services
 2. `full_node/contract/contracts/PaymentContract.sol`: used by payment and transaction services
 3. `full_node/contract/contracts/DiscoveryContract.sol`: used by discovery service
 
-Architecture:
-https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&node-id=0%3A1&t=IANJCjD1wgNtEChu-1
+# Quick Start
+1. Run docker services
+- `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
+> [!NOTE]  
+> Hot reload is enabled for the python services but not the java services. 
+
+2. Migrate the contracts onto your chosen blockchain.
+- For development, run `truffle migrate` in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
+- OR run `load_po.bat` which automates migration of the contracts and loads a standard PO onto the blockchain.
+
 
 # Configuration
 
 Options: manual, docker local / sbip server (recommended), docker testnet
 
 ### Changing environments
-See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf600b557f4410c28a29c6b0cfa2f23)
+> See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf600b557f4410c28a29c6b0cfa2f23)
 - For manual:
     - `"environment": "development"` in `config.json` for python services.
     - For java services, just use the `verifier` or `issuer` profiles when activating the profile.
@@ -62,11 +90,14 @@ See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf6
 - For manual:
     - Secret keys can be loaded in `.env` in each service folder. Follow the `.env.example` file for the required variables. 
 - For docker local/testnet:
-    - Secret keys are loaded by creating a `keys` folder in this base directory where `compose.yaml` is. Each file contains the secret key and the file name is the name of the secret. Required variables are shown in `compose.yaml`. 
+    - Secret keys are loaded by creating a `keys` folder in this base directory where `compose.yaml` is. Each file contains the secret key and the file name is the name of the secret. Required variables are shown in [`compose.yaml`](compose.yaml). 
         - For python services, you have to add your variables in the settings class in `config.py` too.
 
 ### Contracts
-- For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker. The default testnet contracts have been migrated to sepolia.
+
+[List of contracts](#smart-contracts)
+
+- For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker.
 - Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
 - For docker local:
     - `truffle migrate --network development`
@@ -74,138 +105,17 @@ See [commit 568f67d](https://github.com/sbip-sg/mec_anywhere/commit/568f67d3cdf6
 - For docker testnet:
     - `truffle migrate --network sepolia`
 
-### Development
-In sbip servers, run `docker-compose -f docker-compose-sbip.yaml up -d --no-deps --build {service name}` to rebuild a specific service.
-Use `docker-compose-proxy.yaml` to run the nginx set to proxy services in node `worker-111`.
+### Serving on SBIP Servers
+We use `docker-compose-sbip.yaml` for production configuration instead of `compose.yaml`.
 
-# Quick Start
-1. Run `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
-> **Note:** Hot reload is enabled for the python services but not the java services. 
-
-- OR run `startup.bat` to start all the services on windows. Run any startup script in each service folder to start the service individually on windows.
-
-2. Migrate the contracts onto your chosen blockchain.
-- For development, the simplest way would be to run `truffle migrate` in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
-
-# Manual Start
-
-## Pre-requisites
-- running ganache container
-- running local rabbitmq service
-
-## PO - Authentication service
-
-### Requirements
-- python3
-
-### Installation
-
-Install python and its relevant packages
+On sbip servers, run 
 ```
-python3 -m venv venv
-venv/bin/activate
-pip install -r requirements.txt
+docker compose -f docker-compose-sbip.yaml up -d --no-deps --build {service name}
+``` 
+to rebuild a specific service.
+
+Use `docker-compose-proxy.yaml` to run the nginx on the main node by running 
 ```
-
-### Usage
-
-Run `auth-startup.bat` or run the python service
+docker compose -f docker-compose-proxy.yaml up -d
 ```
-venv/bin/activate
-uvicorn main:app --port 8000 --reload
-```
-
-
-## Cloud - DID & VC verification service
-
-### Requirements
-- java
-- maven
-- node
-- docker ganache container
-
-### Installation
-
-1. Install the necessary node packages for compiling the smart contracts in the contract folder
-```
-cd contract
-npm install
-```
-2. Build jar file: `mvn clean install`
-
-### Usage
-Run `did-local-startup.bat` or follow the instructions below
-```
-cd /contract
-truffle migrate --network development
-cd ..
-java -Dspring.profiles.active=verifier -jar target/did-0.0.1-SNAPSHOT.jar
-java -Dspring.profiles.active=issuer -jar target/did-0.0.1-SNAPSHOT.jar
-```
-
-
-## Full Node - Discovery & Transaction service
-
-### Requirements
-- python3
-- node
-- docker ganache container
-- rabbitmq
-
-### Installation
-
-1. Install the necessary node packages for compiling the smart contracts in the contract folder
-2. Install python and its relevant packages
-```
-cd full_node/contract
-npm install
-cd ../discovery
-python3 -m venv venv
-venv/bin/activate
-pip install -r requirements-local.txt
-```
-
-### Usage
-
-Either run the `fullnode-startup.bat` file or follow the instructions below
-
-1. Deploy the smart contracts in the contract folder
-2. Run the python service in the discovery folder
-```
-cd /contract
-truffle migrate --network development
-cd ../discovery
-venv/bin/activate
-cd src
-uvicorn main:app --port 7000 --reload
-```
-3. Do the same in the transaction folder
-
-
-## Cloud - Payment service
-
-### Requirements
-- python3
-- node
-- docker ganache container
-
-### Installation
-
-1. Install python and copy the payment contract build file from full_node/contract after compiling it
-```
-cd payment
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-cd ../full_node/contract
-truffle migrate --network development
-```
-
-### Usage
-
-Run `payment-startup.bat` or follow the instructions below
-```
-source venv/bin/activate
-cd src
-uvicorn main:app --port 7002 --reload
-```
+and it is set to proxy services in node `worker-111`.

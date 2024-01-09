@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import json
 from multiprocessing import Process
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -65,3 +66,6 @@ app.include_router(account_creation_router)
 app.include_router(login_router)
 app.include_router(offload_router, dependencies=[Depends(has_ca_access)])
 app.include_router(monitoring_router, dependencies=[Depends(has_ca_access)])
+
+with open("openapi.json", "w") as f:
+    json.dump(app.openapi(), f)
