@@ -4,7 +4,7 @@ from dependencies import get_account_creation_service
 
 account_creation_router = APIRouter(dependencies=[Depends(get_account_creation_service)])
 
-@account_creation_router.post("/create_account/")
+@account_creation_router.post("/create_account/", deprecated=True)
 async def create_user(
     request: Request, 
     account_creation_service: AccountCreationService = Depends(get_account_creation_service)

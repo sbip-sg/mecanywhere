@@ -4,7 +4,7 @@ from dependencies import get_login_service
 
 login_router = APIRouter(dependencies=[Depends(get_login_service)])
 
-@login_router.post("/create_challenge/")
+@login_router.post("/create_challenge/", deprecated=True)
 async def create_challenge(
     request: Request, 
     login_service: LoginService = Depends(get_login_service)
@@ -14,7 +14,7 @@ async def create_challenge(
     challenge = login_service.create_challenge()
     return challenge
 
-@login_router.post("/verify_response/")
+@login_router.post("/verify_response/", deprecated=True)
 async def verify_response(
     request: Request, 
     login_service: LoginService = Depends(get_login_service)
