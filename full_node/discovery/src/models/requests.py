@@ -18,6 +18,8 @@ class OffloadRequest(DIDModel):
     content: str = Field(..., example='{\"name\": \"meca dev\"}')
     resource: Resources = Field(None, example='{"cpu": 2, "memory": 256}')
     runtime: str = Field(None, example="microVM")
+    use_gpu: bool = Field(False, example=True)
+    gpu_count: int = Field(None, example=1)
 
 
 class PollResultRequest(DIDModel):

@@ -74,7 +74,7 @@ Table of Contents
 > Hot reload is enabled for the python services but not the java services. 
 
 3. Migrate the contracts onto your chosen blockchain.
-- For development, run `truffle migrate` in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
+- For development, run the commands in [Contracts](#contracts) in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
 > Requirements: truffle
 - OR run `load_po.bat` which automates migration of the contracts and loads a standard PO onto the blockchain.
 > Requirements: truffle, python
@@ -105,7 +105,8 @@ Options: manual, docker local / sbip server (recommended), docker testnet
         - For python services, you have to add your variables in the settings class in `config.py` too.
 
 #### List of keys
-> key: value
+> Format: _key: value_
+> See compose files for the dependent services of each key.
 - `0x52c...`(DID of issuer for did-issuer service): private key
 - `access_token_key.txt`: secret key for encoding the jwt access token
 - `refresh_token_key.txt`: secret key for encoding the jwt refresh token

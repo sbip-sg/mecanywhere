@@ -2,8 +2,8 @@ import pika
 from services.message_queue.queue_config import declare_host_queue
 from models.responses import TaskResultModel
 from models.requests import OffloadRequest
-import models.schema_pb2 as schema
 from services.message_queue.result_queue import ResultQueue
+import models.protobuf_orm as protobuf_orm
 
 
 class BasicTaskPublisher:
@@ -36,17 +36,7 @@ class BasicTaskPublisher:
         host_name: str,
         reply_to: str = ResultQueue.result_queue,
     ) -> TaskResultModel:
-        task = schema.Task()
-        task.id = offload_request.task_id
-        task.containerRef = offload_request.container_reference
-        task.content = offload_request.content
-        if offload_request.resource is not None:
-            resource = schema.Resource()
-            resource.cpu = offload_request.resource.cpu
-            resource.memory = offload_request.resource.memory
-            task.resource.CopyFrom(resource)
-        if offload_request.runtime is not None:
-            task.runtime = offload_request.runtime
+        task = protobuf_orm.obj_to_task_msg(offload_request)
 
         declare_host_queue(self.channel, host_name)
         print("Publishing to queue: " + host_name)
