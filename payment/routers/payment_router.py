@@ -7,7 +7,10 @@ from models.requests import WithdrawalRequest
 payment_router = APIRouter(tags=["payment"])
 
 
-@payment_router.post("/withdraw", description="For POs to withdraw from their balance.")
+@payment_router.post(
+    "/withdraw",
+    description="For POs to withdraw from their balance of the account associated with the did to the account of the address given.",
+)
 async def withdraw(
     withdrawal: WithdrawalRequest,
     contract: PaymentContract = Depends(get_contract_instance),

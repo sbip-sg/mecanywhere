@@ -51,7 +51,7 @@
     async function getContractAddress() {
       const response = await fetch('../config.json');
       const data = await response.json();
-      return data['docker_testnet']['contract']['contract_address']
+      return data[data['environment']]['contract']['contract_address']
     }
 
     async function loadContractAbi() {
