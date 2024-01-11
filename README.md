@@ -52,21 +52,32 @@ Table of Contents
 - Server-host
     - Hosted on the edge to ensure availability of hosts
     - No host URL
+- Ganache
+    - Blockchain for development
+    - Host URL: 
+        - http://localhost:8545
+        - http://sbip-g2.d2.comp.nus.edu.sg:11011
 
 ### Smart contracts
 1. `did/contract/contracts/DIDContract.sol`, `did/contract/contracts/CptContract.sol`: used by verifier and issuer services
 2. `full_node/contract/contracts/PaymentContract.sol`: used by payment and transaction services
 3. `full_node/contract/contracts/DiscoveryContract.sol`: used by discovery service
 
-# Quick Start
-1. Run docker services
+# Quick Start (local)
+> If starting fresh on SBIP servers, see [serving on SBIP servers](#serving-on-sbip-servers).
+
+1. Configure keys/env variables (see [Configuration -> Secret keys](#secret-keys))
+
+2. Run docker services
 - `docker-compose up` to start all services as containers. Run `docker-compose up --build <service_name>` to rebuild a specific service.
 > [!NOTE]  
 > Hot reload is enabled for the python services but not the java services. 
 
-2. Migrate the contracts onto your chosen blockchain.
+3. Migrate the contracts onto your chosen blockchain.
 - For development, run `truffle migrate` in the `did/contract` and `full_node/contract` folders to deploy those contracts to ganache that is launched with the docker compose group.
+> Requirements: truffle
 - OR run `load_po.bat` which automates migration of the contracts and loads a standard PO onto the blockchain.
+> Requirements: truffle, python
 
 
 # Configuration
@@ -93,6 +104,17 @@ Options: manual, docker local / sbip server (recommended), docker testnet
     - Secret keys are loaded by creating a `keys` folder in this base directory where `compose.yaml` is. Each file contains the secret key and the file name is the name of the secret. Required variables are shown in [`compose.yaml`](compose.yaml). 
         - For python services, you have to add your variables in the settings class in `config.py` too.
 
+#### List of keys
+> key: value
+- `0x52c...`(DID of issuer for did-issuer service): private key
+- `access_token_key.txt`: secret key for encoding the jwt access token
+- `refresh_token_key.txt`: secret key for encoding the jwt refresh token
+- `server_host_did.txt`: arbitrary string used as DID of the server host
+- `server_host_name.txt`: arbitrary string used as name of the server host
+- `server_host_po_did.txt`: arbitrary string used as DID of the server host's PO
+- `wallet_address.txt`: address of the wallet/account for services that calls the smart contracts
+- `wallet_private_key.txt`: private key of the wallet/account for services that calls the smart contracts
+
 ### Contracts
 
 [List of contracts](#smart-contracts)
@@ -100,10 +122,14 @@ Options: manual, docker local / sbip server (recommended), docker testnet
 - For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker.
 - Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
 - For docker local:
-    - `truffle migrate --network development`
+    ```
+    truffle migrate --network development
+    ```
     - Migrate the DID contracts first, then the full node contracts to correspond to the default config addresses.
 - For docker testnet:
-    - `truffle migrate --network sepolia`
+    ```
+    truffle migrate --network sepolia
+    ```
 
 ### Serving on SBIP Servers
 We use `docker-compose-sbip.yaml` for production configuration instead of `compose.yaml`.
@@ -119,3 +145,9 @@ Use `docker-compose-proxy.yaml` to run the nginx on the main node by running
 docker compose -f docker-compose-proxy.yaml up -d
 ```
 and it is set to proxy services in node `worker-111`.
+
+Migrate the contracts to this ganache by running
+```
+truffle migrate --network docker_sbip
+```
+in each contract folder. Basically do `load_po.bat` but with `docker_sbip` network configured in `truffle-config.js`.
