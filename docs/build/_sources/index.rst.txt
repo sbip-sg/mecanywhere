@@ -22,5 +22,6 @@ This is for developers working on MECAnywhere backend.
    
    pages/structure
    pages/algorithms
+   pages/services/services
    pages/api/api
 
