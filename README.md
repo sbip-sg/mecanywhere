@@ -63,7 +63,9 @@ Table of Contents
 2. `full_node/contract/contracts/PaymentContract.sol`: used by payment and transaction services
 3. `full_node/contract/contracts/DiscoveryContract.sol`: used by discovery service
 
-# Quick Start
+# Quick Start (local)
+> If starting fresh on SBIP servers, see [serving on SBIP servers](#serving-on-sbip-servers).
+
 1. Configure keys/env variables (see [Configuration -> Secret keys](#secret-keys))
 
 2. Run docker services
@@ -147,3 +149,9 @@ Use `docker-compose-proxy.yaml` to run the nginx on the main node by running
 docker compose -f docker-compose-proxy.yaml up -d
 ```
 and it is set to proxy services in node `worker-111`.
+
+Migrate the contracts to this ganache by running
+```
+truffle migrate --network docker_sbip
+```
+in each contract folder. Basically do `load_po.bat` but with `docker_sbip` network configured in `truffle-config.js`.
