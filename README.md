@@ -121,15 +121,11 @@ Options: manual, docker local / sbip server (recommended), docker testnet
 
 - For all configurations, you still **need to truffle migrate** the contracts to local ganache or sepolia testnet because I'm not able automate it on docker.
 - Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config. 
-- `PaymentContract` has to be deployed on Sepolia testnet. This is because external services cannot reach and pay to the contract inside the SBIP servers. 
-    - Any change to the contract means the contract needs to be redeployed to sepolia and the address must be updated in the configs that use it (`transaction`, `payment` services).
-    - The frontend that uses the address and abi also needs to be updated.
-- `DiscoveryContract` is deployed on our ganache server. Just restart the ganache server to reset the blockchain and redeploy the contract so the configs do not need to be updated.
 - For docker local:
     ```
-    truffle migrate --f 1 --to 1 --network development
-    truffle migrate --f 2 --to 2 --network sepolia
+    truffle migrate --network development
     ```
+    - Migrate the DID contracts first, then the full node contracts to correspond to the default config addresses.
 - For docker testnet:
     ```
     truffle migrate --network sepolia
