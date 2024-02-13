@@ -4,16 +4,18 @@ pragma solidity >=0.4.22 <0.9.0;
 contract Tasks {
     struct Task {
         string tid;
-        uint256 blockTimeout;
+        // uint256 blockTimeout;
         uint256 ioSizeLimit;
-        string exampleInput;
-        string exampleOutput;
+        string exampleInput; //ipfs
+        string exampleOutput; //ipfs
         uint256 price;
-        string ownerAddr;
+        address ownerWallet;
+        // bool active;
+        type;
     }
 
-    mapping(string => uint256) private tidToIndex;
-    Task[] private tasks;
+    mapping(string => uint256) public tidToIndex;
+    Task[] public tasks;
 
     constructor() {
         delete tasks;
@@ -27,20 +29,27 @@ contract Tasks {
         tasks.push(dummy);
     }
 
-    function getAllTasks() public view returns (Task[] memory) {
-        return tasks;
+    function getActiveTasks() public view returns (Task[] memory) {
+        Task[] memory activeTasks;
+        uint activeTasksLength = 0;
+        for (uint i = 0; i < tasks.length; i++) {
+            if (tasks[i].active) {
+                activeTasks[activeTasksLength] = tasks[i];
+                activeTasksLength++;
+            }
+        }
+        return activeTasks;
     }
 
+    // sent by task owner
     function listTask(
         string memory tid,
         uint256 blockTimeout,
         uint256 ioSizeLimit,
         string memory exampleInput,
         string memory exampleOutput,
-        uint256 price,
-        string memory ownerAddr
+        uint256 price
     ) public {
-        require(tidToIndex[tid] == 0, "Task already exists");
         Task memory task;
         task.tid = tid;
         task.blockTimeout = blockTimeout;
@@ -48,16 +57,14 @@ contract Tasks {
         task.exampleInput = exampleInput;
         task.exampleOutput = exampleOutput;
         task.price = price;
-        task.ownerAddr = ownerAddr;
+        task.active = true;
+        task.ownerWallet = msg.sender;
         tasks.push(task);
         tidToIndex[tid] = tasks.length - 1;
     }
 
     function unlistTask(string memory tid) public {
         require(tidToIndex[tid] != 0, "Task does not exist");
-        tidToIndex[tasks[tasks.length - 1].tid] = tidToIndex[tid];
-        tasks[tidToIndex[tid]] = tasks[tasks.length - 1];
-        tasks.pop();
-        delete tidToIndex[tid];
+        tasks[tidToIndex[tid]].active = false;
     }
 }

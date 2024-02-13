@@ -116,12 +116,12 @@ http://localhost:8080/swagger-ui/
 http://localhost:9090/swagger-ui/
 ```
 
-8. (Optional) Build Docker container for deployment (SBIP Server)
+8. (Optional) Build Docker container for development
 
 ```
 # Under the current settings, port 8080 is reserved for the did service and 9090 for the issuer service. 
 
-# Make sure did-0.0.1-SNAPSHOT.jar is build and in the target folder
+# Note that this is not safe for production. But tbh neither is using docker secrets.
 
 # Run docker build commands in the did directory. Build 2 docker files, Dockerfile.verifier for did service and Dockerfile.issuer for issuer
 
@@ -129,8 +129,8 @@ cd did
 docker build -f Dockerfile.verifier -t verifier .
 docker build -f Dockerfile.issuer -t issuer .
 
-docker run -d -p 8080:8080 verifier
-docker run -d -p 9090:9090 issuer
+docker run -d -p 8080:8080 --env-file src/main/resources/.env verifier
+docker run -d -p 9090:9090 --env-file src/main/resources/.env issuer
 
 ```
 
