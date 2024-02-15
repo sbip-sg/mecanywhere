@@ -2,8 +2,14 @@
     "environment": "docker_local",
     "development": {
         "contract": {
-            "contract_address": "0x69565A95FaC461605CE764714A5b92695C02dd7F",
-            "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
+            "scheduler": {
+                "contract_address": "0x2367CcFbcA27aA2071a21D6dc13A08a0b786bE42",
+                "abi_path": "../../contract/artifacts/contracts/SchedulerContract.sol/MecaSchedulerContract.json"
+            },
+            "tower": {
+                "contract_address": "0xD31a7B6D8333312a31d9E82b9B7B9aC3698300cd",
+                "abi_path": "../../contract/artifacts/contracts/TowerContract.sol/MecaTowerContract.json"
+            },
             "url": "http://localhost:8545/"
         },
         "did": {
@@ -24,9 +30,15 @@
     },
     "docker_local": {
         "contract": {
-            "contract_address": "0x69565A95FaC461605CE764714A5b92695C02dd7F",
-            "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
-            "url": "http://ganache:8545/"
+            "scheduler": {
+                "contract_address": "0x2367CcFbcA27aA2071a21D6dc13A08a0b786bE42",
+                "abi_path": "../../contract/artifacts/contracts/SchedulerContract.sol/MecaSchedulerContract.json"
+            },
+            "tower": {
+                "contract_address": "0xD31a7B6D8333312a31d9E82b9B7B9aC3698300cd",
+                "abi_path": "../../contract/artifacts/contracts/TowerContract.sol/MecaTowerContract.json"
+            },
+            "url": "http://blockchain:8545/"
         },
         "did": {
             "verify_credential": "http://did-verifier:8080/api/v1/credential/verify",
@@ -46,8 +58,14 @@
     },
     "docker_testnet": {
         "contract": {
-            "contract_address": "0x59A8E8986dbbb35b63eC15893D1AFFC37dE46286",
-            "abi_path": "../../contract/build/contracts/DiscoveryContract.json",
+            "scheduler": {
+                "contract_address": "0x2367CcFbcA27aA2071a21D6dc13A08a0b786bE42",
+                "abi_path": "../../contract/artifacts/contracts/SchedulerContract.sol/MecaSchedulerContract.json"
+            },
+            "tower": {
+                "contract_address": "0xD31a7B6D8333312a31d9E82b9B7B9aC3698300cd",
+                "abi_path": "../../contract/artifacts/contracts/TowerContract.sol/MecaTowerContract.json"
+            },
             "url": "https://sepolia.infura.io/v3/85f42a4ab71e4e5b836e01c68d7cf116"
         },
         "did": {

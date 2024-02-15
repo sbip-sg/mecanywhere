@@ -10,7 +10,7 @@ RUN echo "STARTING DISCOVERY SERVICE..." && \
 
 COPY discovery discovery
 COPY config.json config.json
-COPY contract/build contract/build
+COPY contract/artifacts contract/artifacts
 COPY common discovery/src/common
 
 WORKDIR /app/discovery/src

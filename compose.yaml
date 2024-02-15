@@ -1,11 +1,17 @@
 services:
-  ganache:
-    image:
-      trufflesuite/ganache-cli:latest
+  # ganache:
+  #   image:
+  #     trufflesuite/ganache-cli:latest
+  #   ports:
+  #     - "8545:8545"
+  #   command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
+      
+  blockchain:
+    build:
+      context: ../meca_contracts
     ports:
       - "8545:8545"
-    command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
-      
+
   redis:
     image:
       redis:latest
@@ -37,16 +43,16 @@ services:
       - wallet_private_key
       - 52c328ef8b382b1d71cc262b868d803a137ab8d8
 
-  po:
-    build: 
-      context: ./po
-    ports:
-      - "8000:8000"
-    volumes: # volume mounts ignore dockerignore
-      - ./po:/app
-    depends_on:
-      - did-verifier
-      - did-issuer
+  # po:
+  #   build: 
+  #     context: ./po
+  #   ports:
+  #     - "8000:8000"
+  #   volumes: # volume mounts ignore dockerignore
+  #     - ./po:/app
+  #   depends_on:
+  #     - did-verifier
+  #     - did-issuer
 
   rabbitmq:
     image:

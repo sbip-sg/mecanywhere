@@ -15,7 +15,6 @@ class PublishTaskResponse(BaseModel):
     transaction_id: str = Field(..., example="001")
     task_result: TaskResultModel = Field(None)
     host_did: str = Field(None)
-    host_po_did: str = Field(None)
     network_reliability: int = Field(..., example=100)
     error: str = Field(None, example="")
 

@@ -9,7 +9,6 @@ from dependencies import (
     get_did_from_token,
     get_transaction_service,
     get_token,
-    get_po_did_from_token,
 )
 
 
@@ -27,15 +26,16 @@ async def offload_task_and_get_result(
     transaction_service: TransactionService = Depends(get_transaction_service),
     token: str = Depends(get_token),
     token_did: str = Depends(get_did_from_token),
-    po_did: str = Depends(get_po_did_from_token),
 ):
     did = offload_request.did
     if did != token_did:
         raise ForbiddenException("DID does not match token")
+    task = await offloading_service.get_task_record(did, offload_request)
+    host = task.host_address
     task_id = offload_request.task_id
-    response = await offloading_service.offload_and_wait(did, offload_request)
+    response = await offloading_service.offload_and_wait(did, host, offload_request)
     if response.status == 1:
-        return await record_response(transaction_service, token, did, po_did, response)
+        return await record_response(transaction_service, token, did, response)
     else:
         return OffloadResponse(
             transaction_id=response.transaction_id,
@@ -53,15 +53,16 @@ async def offload_task(
     transaction_service: TransactionService = Depends(get_transaction_service),
     token: str = Depends(get_token),
     token_did: str = Depends(get_did_from_token),
-    po_did: str = Depends(get_po_did_from_token),
 ):
     did = offload_request.did
     task_id = offload_request.task_id
     if did != token_did:
         raise ForbiddenException("DID does not match token")
-    response = await offloading_service.offload(did, offload_request)
+    task = await offloading_service.get_task_record(did, offload_request)
+    host = task.host_address
+    response = await offloading_service.offload(did, host, offload_request)
     if response.status == 1:
-        return await record_response(transaction_service, token, did, po_did, response)
+        return await record_response(transaction_service, token, did, response)
     else:
         return OffloadResponse(
             transaction_id=response.transaction_id,
@@ -79,7 +80,6 @@ async def poll_result(
     transaction_service: TransactionService = Depends(get_transaction_service),
     token: str = Depends(get_token),
     token_did: str = Depends(get_did_from_token),
-    po_did: str = Depends(get_po_did_from_token),
 ):
     did = poll_result_request.did
     transaction_id = poll_result_request.transaction_id
@@ -95,7 +95,7 @@ async def poll_result(
             error="No result found",
         )
     return await record_response(
-        transaction_service, token, did, po_did, response, is_update=True
+        transaction_service, token, did, response, is_update=True
     )
 
 
@@ -103,7 +103,6 @@ async def record_response(
     transaction_service: TransactionService,
     token: str,
     client_did: str,
-    client_po_did: str,
     response: PublishTaskResponse,
     is_update: bool = False,
 ):
@@ -115,7 +114,6 @@ async def record_response(
         response=task_result.content,
     )
     host_did = response.host_did
-    host_po_did = response.host_po_did
     try:
         print("recording task in transaction service")
         record_func = (
@@ -126,9 +124,7 @@ async def record_response(
         await record_func(
             token,
             client_did,
-            client_po_did,
             host_did,
-            host_po_did,
             response.transaction_id,
             task_result.resource_consumed,
             task_result.transaction_start_datetime,

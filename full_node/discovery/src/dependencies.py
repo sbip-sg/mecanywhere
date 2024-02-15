@@ -5,14 +5,13 @@ from aiohttp import ClientSession
 from config import Config
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from contract import DiscoveryContract
 from common.middleware.credential_authentication import (
     CredentialAuthenticationMiddleware,
 )
+from contracts.scheduler_contract import SchedulerContract
+from contracts.tower_contract import TowerContract
 from services.cache import DCache
 from services.offloading_service import OffloadingService
-from services.registration_service import RegistrationService
-from services.monitoring_service import MonitoringService
 from services.account_creation_service import AccountCreationService
 from services.login_service import LoginService
 from services.message_queue.task_publisher import BasicTaskPublisher
@@ -77,10 +76,6 @@ async def has_ca_access(
     await ca_middleware.has_access(authorization)
 
 
-def get_discovery_contract(config: Config = Depends(get_config)) -> DiscoveryContract:
-    return DiscoveryContract(config)
-
-
 def get_account_creation_service(
     config: Config = Depends(get_config),
 ) -> AccountCreationService:
@@ -95,27 +90,29 @@ def get_rpc_task_publisher(config: Config = Depends(get_config)) -> BasicTaskPub
     return BasicTaskPublisher(config.get_mq_url())
 
 
+def get_tower_contract(config: Config = Depends(get_config)) -> TowerContract:
+    return TowerContract(config)
+
+
+def get_scheduler_contract(config: Config = Depends(get_config)) -> SchedulerContract:
+    return SchedulerContract(config)
+
+
 def get_offloading_service(
-    contract: DiscoveryContract = Depends(get_discovery_contract),
+    contract: SchedulerContract = Depends(get_scheduler_contract),
     publisher: BasicTaskPublisher = Depends(get_rpc_task_publisher),
     cache: DCache = Depends(get_cache),
     config: Config = Depends(get_config),
 ) -> OffloadingService:
     return OffloadingService(
-        contract, publisher, cache, config.get_server_host_name(), config.get_server_host_did(), config.get_server_host_po_did()
+        contract,
+        publisher,
+        cache,
+        config.get_server_host_name(),
+        config.get_server_host_did(),
+        config.get_server_host_po_did(),
     )
 
-
-def get_registration_service(
-    contract: DiscoveryContract = Depends(get_discovery_contract),
-) -> RegistrationService:
-    return RegistrationService(contract)
-
-
-def get_monitoring_service(
-    contract: DiscoveryContract = Depends(get_discovery_contract),
-) -> MonitoringService:
-    return MonitoringService(contract)
 
 def get_transaction_service(
     config: Config = Depends(get_config),

@@ -8,14 +8,14 @@ class TransactionService:
     def __init__(self, config: Config, session: aiohttp.ClientSession) -> None:
         self.config = config
         self.session = session
+        self.tower_addr = config.get_tower_addr()
+        self.transaction_service_url = config.get_transaction_service_url()
 
     async def record_task(
         self,
         token: str,
         client_did: str,
-        client_po_did: str,
         host_did: str,
-        host_po_did: str,
         transaction_id: str,
         resource_consumed: Resources,
         transaction_start_datetime: int,
@@ -35,22 +35,20 @@ class TransactionService:
         }
         request = {
             "client_did": client_did,
-            "client_po_did": client_po_did,
+            "client_po_did": self.tower_addr,
             "host_did": host_did,
-            "host_po_did": host_po_did,
+            "host_po_did": self.tower_addr,
             "task_metadata": task_metadata,
         }
         return await self.post_transaction(
-            token, f"{self.config.get_transaction_service_url()}/record_task", request
+            token, f"{self.transaction_service_url}/record_task", request
         )
 
     async def update_task(
         self,
         token: str,
         client_did: str,
-        client_po_did: str,
         host_did: str,
-        host_po_did: str,
         transaction_id: str,
         resource_consumed: Resources,
         transaction_start_datetime: int,
@@ -70,13 +68,13 @@ class TransactionService:
         }
         request = {
             "client_did": client_did,
-            "client_po_did": client_po_did,
+            "client_po_did": self.tower_addr,
             "host_did": host_did,
-            "host_po_did": host_po_did,
+            "host_po_did": self.tower_addr,
             "task_metadata": task_metadata,
         }
         return await self.post_transaction(
-            token, f"{self.config.get_transaction_service_url()}/update_task", request
+            token, f"{self.transaction_service_url}/update_task", request
         )
 
     async def post_transaction(self, token: str, url: str, transaction: dict):

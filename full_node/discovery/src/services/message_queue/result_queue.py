@@ -1,7 +1,5 @@
-from datetime import timedelta
 import pika
 from config import Config
-from contract import DiscoveryContract
 from services.cache import DCache
 import models.schema_pb2 as schema
 from google.protobuf import json_format
@@ -11,16 +9,15 @@ class ResultQueue:
     _class_instance = None
     result_queue = "result_queue"
 
-    def __init__(self, config: Config, cache: DCache, contract: DiscoveryContract):
+    def __init__(self, config: Config, cache: DCache):
         self.config = config
         self.connection = None
         self.channel = None
         self.cache = cache
-        self.contract = contract
         if not self.cache.ping():
             raise Exception("Cache is not running")
 
-    def __new__(cls, config, cache, contract):
+    def __new__(cls, config, cache):
         if cls._class_instance is None:
             cls._class_instance = super(ResultQueue, cls).__new__(cls)
         return cls._class_instance
@@ -88,11 +85,6 @@ class ResultQueue:
                 flush=True,
             )
         else:
-            self.contract.add_resource(
-                hostdid,
-                task_result.resource.cpu,
-                task_result.resource.memory,
-            )
             self.cache.delete_recipient(transaction_id)
 
         self.cache.set_result(transaction_id, task_result_json)

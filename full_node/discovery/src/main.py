@@ -7,10 +7,8 @@ from routers.authentication_router import authentication_router
 from services.message_queue.result_queue import ResultQueue
 from routers.account_creation_router import account_creation_router
 from routers.login_router import login_router
-from routers.registration_router import registration_router
 from routers.offload_router import offload_router
-from routers.monitoring_router import monitoring_router
-from dependencies import get_discovery_contract, has_ca_access, get_config, get_cache
+from dependencies import get_tower_contract, has_ca_access, get_config, get_cache
 
 
 result_queue = None
@@ -21,8 +19,7 @@ def start_consuming() -> None:
     global result_queue
     config = get_config()
     cache = get_cache(config)
-    contract = get_discovery_contract(config)
-    with ResultQueue(config, cache, contract) as result_queue:
+    with ResultQueue(config, cache) as result_queue:
         print("Starting relayer", flush=True)
         result_queue.start_consumer()
         print("Relayer stopped", flush=True)
@@ -33,6 +30,9 @@ async def start_up():
 
     queue_process = Process(target=start_consuming)
     queue_process.start()
+
+    contract = get_tower_contract(get_config())
+    contract.registerTower(100, "http://localhost:7000", 100, 0)    
 
 
 async def shut_down():
@@ -61,11 +61,9 @@ app.add_middleware(
     allow_origins=["*"],
 )
 app.include_router(authentication_router)
-app.include_router(registration_router, dependencies=[Depends(has_ca_access)])
 app.include_router(account_creation_router)
 app.include_router(login_router)
 app.include_router(offload_router, dependencies=[Depends(has_ca_access)])
-app.include_router(monitoring_router, dependencies=[Depends(has_ca_access)])
 
 with open("openapi.json", "w") as f:
     json.dump(app.openapi(), f)

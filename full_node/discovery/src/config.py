@@ -46,11 +46,17 @@ class Config:
         except:
             pass
 
-    def get_contract_address(self) -> str:
-        return self.configuration["contract"]["contract_address"]
+    def get_scheduler_contract_addr(self) -> str:
+        return self.configuration["contract"]["scheduler"]["contract_address"]
 
-    def get_abi_path(self) -> str:
-        return self.configuration["contract"]["abi_path"]
+    def get_scheduler_abi_path(self) -> str:
+        return self.configuration["contract"]["scheduler"]["abi_path"]
+
+    def get_tower_contract_addr(self) -> str:
+        return self.configuration["contract"]["tower"]["contract_address"]
+
+    def get_tower_abi_path(self) -> str:
+        return self.configuration["contract"]["tower"]["abi_path"]
 
     def get_blockchain_provider_url(self) -> str:
         return self.configuration["contract"]["url"]
@@ -96,3 +102,6 @@ class Config:
     
     def get_server_host_po_did(self) -> str:
         return self.secrets.server_host_po_did
+
+    def get_tower_addr(self) -> str:
+        return self.secrets.wallet_address
