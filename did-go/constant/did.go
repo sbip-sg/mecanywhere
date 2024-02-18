@@ -8,6 +8,7 @@ const (
 	DID_DOC_AUTHENTICATE_PREFIX      = "/meca/auth"
 	DID_DOC_SERVICE_PREFIX           = "/meca/service"
 	DID_DOC_CREATED                  = "created"
+	DID_DOC_PUBKEY                   = "pubKey"
 	DID_PIPELINE                     = "|"
 	DID_SEPARATOR                    = ":"
 	DID_EVENT_ATTRIBUTE_CHANGE       = "DIDAttributeChanged"

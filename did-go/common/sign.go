@@ -2,9 +2,23 @@ package common
 
 import (
 	"crypto/ecdsa"
+	"encoding/hex"
 
 	"github.com/ethereum/go-ethereum/crypto"
 )
+
+func LoadPublicKey(publicKey string) (*ecdsa.PublicKey, error) {
+	bytes := make([]byte, hex.DecodedLen(len(publicKey)))
+	_, err := hex.Decode(bytes, []byte(publicKey))
+	if err != nil {
+		return nil, err
+	}
+	pub, err := crypto.UnmarshalPubkey(bytes)
+	if err != nil {
+		return nil, err
+	}
+	return pub, nil
+}
 
 func Sign(privateKey *ecdsa.PrivateKey, data []byte) ([]byte, error) {
 	hash := crypto.Keccak256Hash(data)
@@ -31,5 +45,6 @@ func RSVToSignature(r, s [32]byte, v uint8) []byte {
 }
 
 func VerifySignature(publicKey *ecdsa.PublicKey, data []byte, signature []byte) bool {
-	return crypto.VerifySignature(crypto.FromECDSAPub(publicKey), data, signature[:len(signature)-1])
+	hash := crypto.Keccak256Hash(data)
+	return crypto.VerifySignature(crypto.FromECDSAPub(publicKey), hash.Bytes(), signature[:len(signature)-1])
 }

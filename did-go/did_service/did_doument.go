@@ -28,9 +28,10 @@ type ServiceProperty struct {
 type DidDocument struct {
 	ID               string                   `json:"id"`
 	Created          uint64                   `json:"created"`
+	CreatePubKey     string                   `json:"pubKey"`
 	SerialVersionUid uint64                   `json:"serialVersionUid"`
 	Updated          uint64                   `json:"updated"`
-	PublicKey        []PublicKeyProperty      `json:"publicKey"`
+	PublicKey        []PublicKeyProperty      `json:"publicKeys"`
 	Authentication   []AuthenticationProperty `json:"authentication"`
 	Service          []ServiceProperty        `json:"service"`
 }

@@ -3,7 +3,6 @@ package didservice
 import (
 	"context"
 	"crypto/ecdsa"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"log"
@@ -129,19 +128,6 @@ func (s *DidServiceImpl) Init() error {
 
 // TODO need to check if it is the right conversion
 
-func LoadPublicKey(publicKey string) (*ecdsa.PublicKey, error) {
-	bytes := make([]byte, hex.DecodedLen(len(publicKey)))
-	_, err := hex.Decode(bytes, []byte(publicKey))
-	if err != nil {
-		return nil, err
-	}
-	pub, err := crypto.UnmarshalPubkey(bytes)
-	if err != nil {
-		return nil, err
-	}
-	return pub, nil
-}
-
 func (s *DidServiceImpl) prepareContractAuth() (*bind.TransactOpts, error) {
 	auth, err := bind.NewKeyedTransactorWithChainID(s.contractOwnerPrivateKey, s.chainId)
 	if err != nil {
@@ -186,7 +172,7 @@ func (s *DidServiceImpl) CreateDID(publicKey string) (CreateDIDResponse, error) 
 	}
 
 	// get address from public key
-	publicK, err := LoadPublicKey(publicKey)
+	publicK, err := common.LoadPublicKey(publicKey)
 	if err != nil {
 		resp.ErrCode = constant.DID_PUBLICKEY_INVALID
 		return resp, nil
@@ -421,13 +407,16 @@ func constructDIDAttribute(attrKey, attrValue, did string, doc *DidDocument) {
 	} else {
 		// construct did custom attribute
 		log.Printf("construct did custom %v, %v, %v, %v", attrKey, attrValue, did, doc)
-		if strings.Trim(attrKey, " ") == constant.DID_DOC_CREATED {
+		if strings.HasPrefix(attrKey, constant.DID_DOC_CREATED) {
 			// convert attrvalue string to uint64
 			if created, err := strconv.ParseUint(attrValue, 10, 64); err != nil {
 				log.Fatal("failed to convert created time to uint64")
 			} else {
 				doc.Created = created
 			}
+		} else if strings.HasPrefix(attrKey, constant.DID_DOC_PUBKEY) {
+			// retrieve the creation linked public key
+			doc.CreatePubKey = attrValue
 		}
 	}
 }
@@ -501,6 +490,7 @@ func (s *DidServiceImpl) GetDIDDocument(did string) (DidDocumentResponse, error)
 		}
 	}
 
+	log.Printf("doc: %v\n", doc)
 	resp.Doc = doc
 	resp.ErrCode = constant.SUCCESS
 	return resp, nil
@@ -584,7 +574,7 @@ func (s *DidServiceImpl) RevokePublicKeyWithAuth(did string, keyType string, own
 	resp := RevokePublicKeyWithAuthResponse{}
 
 	// get address from public key
-	publicK, err := LoadPublicKey(ownerPublicKey)
+	publicK, err := common.LoadPublicKey(ownerPublicKey)
 	if err != nil {
 		resp.ErrCode = constant.DID_PUBLICKEY_INVALID
 		return resp, nil

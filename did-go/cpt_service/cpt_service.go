@@ -48,6 +48,7 @@ type CptQueryResponse struct {
 }
 
 type CptService interface {
+	Init() error
 	RegisterCpt(auth *common.DIDAuthentication, schema map[string]interface{}, cptType constant.CptType) CptRegisterResponse
 	QueryCpt(cptId int) CptQueryResponse
 }
@@ -89,7 +90,7 @@ func (c *CptServiceImpl) RegisterCpt(auth *common.DIDAuthentication, schema map[
 	// TODO: implement input validation
 	did := auth.DID
 	publicKeyId := auth.DIDPublicKeyId
-	privateKey, err := crypto.LoadECDSA(auth.DIDPrivateKey)
+	privateKey, err := crypto.HexToECDSA(auth.DIDPrivateKey)
 	if err != nil {
 		resp.ErrCode = constant.DID_PRIVATEKEY_INVALID
 		return resp
@@ -127,6 +128,9 @@ func (c *CptServiceImpl) RegisterCpt(auth *common.DIDAuthentication, schema map[
 
 	// to change to just one big int in contract
 	created := [8]*big.Int{}
+	for i := 0; i < 8; i++ {
+		created[i] = big.NewInt(0)
+	}
 	created[1] = big.NewInt(time.Now().UnixMilli())
 
 	// to remove from the contract
@@ -148,6 +152,7 @@ func (c *CptServiceImpl) RegisterCpt(auth *common.DIDAuthentication, schema map[
 	}
 	r, s, v := common.SignatureToRSV(signature)
 
+	log.Printf("inputs for registerCpt: %v, %v, %v, %v, %v, %v, %v\n", address, created, byteArray, schemaBytesArray, v, r, s)
 	txRet, err := c.contract.RegisterCpt(tx, ethcommon.HexToAddress(address), created, byteArray, schemaBytesArray, v, r, s)
 	if err != nil {
 		resp.ErrCode = constant.TRANSACTION_EXECUTE_ERROR
@@ -214,7 +219,7 @@ func (c *CptServiceImpl) QueryCpt(cptId int) CptQueryResponse {
 		return resp
 	}
 
-	jsonSchema := parseJsonSchema(values.Bytes32Array)
+	jsonSchema := parseJsonSchema(values.JsonSchemaArray)
 
 	cpt := Cpt{
 		BaseInfo: CptBaseInfo{
