@@ -12,8 +12,6 @@ from contracts.scheduler_contract import SchedulerContract
 from contracts.tower_contract import TowerContract
 from services.cache import DCache
 from services.offloading_service import OffloadingService
-from services.account_creation_service import AccountCreationService
-from services.login_service import LoginService
 from services.message_queue.task_publisher import BasicTaskPublisher
 from services.transaction_service import TransactionService
 
@@ -74,16 +72,6 @@ async def has_ca_access(
     authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
 ) -> bool:
     await ca_middleware.has_access(authorization)
-
-
-def get_account_creation_service(
-    config: Config = Depends(get_config),
-) -> AccountCreationService:
-    return AccountCreationService(config)
-
-
-def get_login_service() -> LoginService:
-    return LoginService()
 
 
 def get_rpc_task_publisher(config: Config = Depends(get_config)) -> BasicTaskPublisher:

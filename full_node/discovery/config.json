@@ -13,9 +13,7 @@
             "url": "http://localhost:8545/"
         },
         "did": {
-            "verify_credential": "http://localhost:8080/api/v1/credential/verify",
-            "create_did": "http://localhost:8080/api/v1/did/create",
-            "create_credential": "http://localhost:9090/api/v1/credential/create"
+            "verify_credential": "http://localhost:8080/api/v1/credential/verify"
         },
         "redis": {
             "host": "localhost",
@@ -41,9 +39,7 @@
             "url": "http://blockchain:8545/"
         },
         "did": {
-            "verify_credential": "http://did-verifier:8080/api/v1/credential/verify",
-            "create_did": "http://did-verifier:8080/api/v1/did/create",
-            "create_credential": "http://did-issuer:9090/api/v1/credential/create"
+            "verify_credential": "http://did-verifier:8080/api/v1/credential/verify"
         },
         "redis": {
             "host": "redis",
@@ -69,9 +65,7 @@
             "url": "https://sepolia.infura.io/v3/85f42a4ab71e4e5b836e01c68d7cf116"
         },
         "did": {
-            "verify_credential": "http://did-verifier:8080/api/v1/credential/verify",
-            "create_did": "http://did-verifier:8080/api/v1/did/create",
-            "create_credential": "http://did-issuer:9090/api/v1/credential/create"
+            "verify_credential": "http://did-verifier:8080/api/v1/credential/verify"
         },
         "redis": {
             "host": "redis",
