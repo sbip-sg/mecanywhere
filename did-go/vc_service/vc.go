@@ -11,7 +11,6 @@ import (
 
 type Proof struct {
 	Type           string `json:"type"`           // eg: "Secp256k1"
-	Creator        string `json:"creator"`        // eg: "did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8"
 	SignatureValue string `json:"signatureValue"` // eg: "abVirKd3ZvGpJ20BR72SCkb18K/o4ZZT9BqDDU6W8lVv12ttuIfM3s9SAs5RbVJ4M3OrssB6DQ1Mj/YLi8Eq7Rw=""
 }
 
@@ -80,9 +79,6 @@ func IsProofValid(proof *Proof) constant.ErrorCode {
 	}
 	if len(proof.Type) == 0 || proof.Type != constant.CREDENTIAL_PROOF_TYPE_ECDSA {
 		return constant.CREDENTIAL_SIGNATURE_TYPE_ILLEGAL
-	}
-	if len(proof.Creator) == 0 {
-		return constant.CREDENTIAL_ISSUER_INVALID
 	}
 	if len(proof.SignatureValue) == 0 {
 		return constant.CREDENTIAL_SIGNATURE_BROKEN

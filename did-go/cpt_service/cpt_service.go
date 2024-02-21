@@ -89,13 +89,13 @@ func (c *CptServiceImpl) RegisterCpt(auth *common.DIDAuthentication, schema map[
 	resp := CptRegisterResponse{}
 	// TODO: implement input validation
 	did := auth.DID
-	publicKeyId := auth.DIDPublicKeyId
 	privateKey, err := crypto.HexToECDSA(auth.DIDPrivateKey)
 	if err != nil {
 		resp.ErrCode = constant.DID_PRIVATEKEY_INVALID
 		return resp
 	}
-	data := fmt.Sprintf("%s|%s", did, publicKeyId)
+	// the signature indicates that the cpt is indeed uploaded by the did owner.
+	data := fmt.Sprintf("%s", did)
 	signature, err := common.Sign(privateKey, []byte(data))
 	if err != nil {
 		resp.ErrCode = constant.TRANSACTION_EXECUTE_ERROR

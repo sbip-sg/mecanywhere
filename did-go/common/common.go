@@ -36,9 +36,8 @@ func IsCptJsonSchemaValid(cptJsonSchema string) bool {
 }
 
 type DIDAuthentication struct {
-	DID            string
-	DIDPublicKeyId string
-	DIDPrivateKey  string
+	DID           string `json:"did"`
+	DIDPrivateKey string `json:"didPrivateKey"`
 }
 
 func ConvertDIDToAddress(did string) string {

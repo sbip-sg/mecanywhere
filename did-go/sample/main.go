@@ -127,9 +127,8 @@ func main() {
 	}
 
 	didAuth := common.DIDAuthentication{
-		DID:            common.ConvertAddressToDID(contractOwnerAddress),
-		DIDPrivateKey:  contractOwnerPrivateKeyStr,
-		DIDPublicKeyId: contractOwnerAddress,
+		DID:           common.ConvertAddressToDID(contractOwnerAddress),
+		DIDPrivateKey: contractOwnerPrivateKeyStr,
 	}
 
 	cptid := 2000000

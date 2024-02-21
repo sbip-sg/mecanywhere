@@ -19,7 +19,7 @@ import (
 )
 
 type CreateCredentialResponse struct {
-	VC VerifiableCredential
+	VC VerifiableCredential `json:"vc"`
 	common.ServiceResponseInfo
 }
 
@@ -59,7 +59,7 @@ func CreateCredential(args *VerifiableCredentialArgs, didAuth common.DIDAuthenti
 		return resp, errors.New("expiration date is invalid")
 	}
 
-	if !strings.EqualFold(didAuth.DID, args.Issuer) || len(didAuth.DIDPrivateKey) == 0 || len(didAuth.DIDPublicKeyId) == 0 {
+	if !strings.EqualFold(didAuth.DID, args.Issuer) || len(didAuth.DIDPrivateKey) == 0 {
 		fmt.Printf("DID (%d): %v, Issuer (%d): %v\n", len(didAuth.DID), didAuth.DID, len(args.Issuer), args.Issuer)
 		resp.ErrCode = constant.CREDENTIAL_ISSUER_INVALID
 		return resp, errors.New("issuer is invalid (auth vs args)")
@@ -111,7 +111,6 @@ func CreateCredential(args *VerifiableCredentialArgs, didAuth common.DIDAuthenti
 	}
 	vc.Proof = Proof{
 		Type:           constant.CREDENTIAL_PROOF_TYPE_ECDSA,
-		Creator:        didAuth.DIDPublicKeyId,
 		SignatureValue: base64.StdEncoding.EncodeToString(signature), // just use base64.StdEncoding.EncodeToString(signature)
 	}
 	resp.VC = vc
