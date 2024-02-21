@@ -15,5 +15,4 @@ func (c CptType) Code() int {
 
 var (
 	ORIGINAL = CptType{code: 0, name: "original"}
-	ZKP      = CptType{code: 1, name: "zkp"}
 )

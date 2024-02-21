@@ -40,12 +40,7 @@ contract CptContract {
     // Default CPT version
     int constant private CPT_DEFAULT_VERSION = 1;
 
-    // Reserved for contract owner check
-    address private internalRoleControllerAddress;
-
-    // CPT and Policy data storage address separately
     address private cptDataStorageAddress;
-    address private policyDataStorageAddress;
 
     event RegisterCptRetLog(
         uint retCode,
@@ -253,67 +248,6 @@ contract CptContract {
 
     function getTotalCptId() public view returns (uint) {
         return getDatasetLength();
-    }
-
-    // --------------------------------------------------------
-    // Credential Template storage related funcs
-    // store the cptId and blocknumber
-    mapping (uint => uint) credentialTemplateStored;
-    event CredentialTemplate(
-        uint cptId,
-        bytes credentialPublicKey,
-        bytes credentialProof
-    );
-
-    function putCredentialTemplate(
-        uint cptId,
-        bytes memory credentialPublicKey,
-        bytes memory credentialProof
-    )
-    public
-    {
-        emit CredentialTemplate(cptId, credentialPublicKey, credentialProof);
-        credentialTemplateStored[cptId] = block.number;
-    }
-
-    function getCredentialTemplateBlock(
-        uint cptId
-    )
-    public
-    view
-    returns(uint)
-    {
-        return credentialTemplateStored[cptId];
-    }
-
-    // --------------------------------------------------------
-    // Claim Policy storage belonging to v.s. Presentation, Publisher WeID, and CPT
-    // Store the registered Presentation Policy ID (uint) v.s. Claim Policy ID list (uint[])
-    mapping (uint => uint[]) private claimPoliciesFromPresentation;
-    mapping (uint => address) private claimPoliciesWeIdFromPresentation;
-    // Store the registered CPT ID (uint) v.s. Claim Policy ID list (uint[])
-    mapping (uint => uint[]) private claimPoliciesFromCPT;
-
-    uint private presentationClaimMapId = 1;
-
-    function putClaimPoliciesIntoPresentationMap(uint[] memory uintArray) public {
-        claimPoliciesFromPresentation[presentationClaimMapId] = uintArray;
-        claimPoliciesWeIdFromPresentation[presentationClaimMapId] = msg.sender;
-        emit RegisterCptRetLog(0, presentationClaimMapId, CPT_DEFAULT_VERSION);
-        presentationClaimMapId ++;
-    }
-
-    function getClaimPoliciesFromPresentationMap(uint presentationId) public view returns (uint[] memory, address) {
-        return (claimPoliciesFromPresentation[presentationId], claimPoliciesWeIdFromPresentation[presentationId]);
-    }
-
-    function putClaimPoliciesIntoCptMap(uint cptId, uint[] memory uintArray) public {
-        claimPoliciesFromCPT[cptId] = uintArray;
-        emit RegisterCptRetLog(0, cptId, CPT_DEFAULT_VERSION);
-    }
-
-    function getClaimPoliciesFromCptMap(uint cptId) public view returns (uint[] memory) {
-        return claimPoliciesFromCPT[cptId];
     }
 
     function putCpt(

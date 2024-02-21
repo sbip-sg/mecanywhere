@@ -106,7 +106,7 @@ func CreateCredential(args *VerifiableCredentialArgs, didAuth common.DIDAuthenti
 	}
 	signature, err := common.Sign(signKey, vcData)
 	if err != nil {
-		resp.ErrCode = constant.UNKNOW_ERROR
+		resp.ErrCode = constant.UNKNOWN_ERROR
 		return resp, errors.New("signature is invalid")
 	}
 	vc.Proof = Proof{

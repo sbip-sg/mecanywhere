@@ -1,7 +1,6 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract DIDContract {
-
     mapping(address => uint) changed;
 
     uint firstBlockNum;
@@ -13,16 +12,14 @@ contract DIDContract {
     mapping(uint => uint) blockAfterLink;
 
     modifier onlyOwner(address identity, address actor) {
-        require (actor == identity);
+        require(actor == identity);
         _;
     }
 
-    bytes32 constant private DID_KEY_CREATED = "created";
-    bytes32 constant private DID_KEY_AUTHENTICATION = "pubKey";
+    bytes32 private constant DID_KEY_CREATED = "created";
+    bytes32 private constant DID_KEY_AUTHENTICATION = "pubKey";
 
-    constructor ()
-        public
-    {
+    constructor() public {
         firstBlockNum = block.number;
         lastBlockNum = firstBlockNum;
     }
@@ -43,43 +40,25 @@ contract DIDContract {
 
     function getLatestRelatedBlock(
         address identity
-    )
-        public
-        view
-        returns (uint)
-    {
+    ) public view returns (uint) {
         return changed[identity];
     }
 
-    function getFirstBlockNum()
-        public
-        view
-        returns (uint)
-    {
+    function getFirstBlockNum() public view returns (uint) {
         return firstBlockNum;
     }
 
-    function getLatestBlockNum()
-        public
-        view
-        returns (uint)
-    {
+    function getLatestBlockNum() public view returns (uint) {
         return lastBlockNum;
     }
 
-    function getNextBlockNumByBlockNum(uint currentBlockNum)
-        public
-        view
-        returns (uint)
-    {
+    function getNextBlockNumByBlockNum(
+        uint currentBlockNum
+    ) public view returns (uint) {
         return blockAfterLink[currentBlockNum];
     }
 
-    function getDIDCount()
-        public
-        view
-        returns (uint)
-    {
+    function getDIDCount() public view returns (uint) {
         return didCount;
     }
 
@@ -88,12 +67,22 @@ contract DIDContract {
         bytes memory auth,
         bytes memory created,
         int updated
-    )
-        public
-//        onlyOwner(identity, msg.sender)
+    ) public //        onlyOwner(identity, msg.sender)
     {
-        emit DIDAttributeChanged(identity, DID_KEY_CREATED, created, changed[identity], updated);
-        emit DIDAttributeChanged(identity, DID_KEY_AUTHENTICATION, auth, changed[identity], updated);
+        emit DIDAttributeChanged(
+            identity,
+            DID_KEY_CREATED,
+            created,
+            changed[identity],
+            updated
+        );
+        emit DIDAttributeChanged(
+            identity,
+            DID_KEY_AUTHENTICATION,
+            auth,
+            changed[identity],
+            updated
+        );
         changed[identity] = block.number;
         if (block.number > lastBlockNum) {
             blockAfterLink[lastBlockNum] = block.number;
@@ -110,24 +99,22 @@ contract DIDContract {
         bytes32 key,
         bytes memory value,
         int updated
-    )
-        public
-//        onlyOwner(identity, msg.sender)
+    ) public //        onlyOwner(identity, msg.sender)
     {
-        emit DIDAttributeChanged(identity, key, value, changed[identity], updated);
+        emit DIDAttributeChanged(
+            identity,
+            key,
+            value,
+            changed[identity],
+            updated
+        );
         changed[identity] = block.number;
     }
 
-    function identityExists(
-        address identity
-    )
-        public
-        view
-        returns (bool)
-    {
+    function identityExists(address identity) public view returns (bool) {
         if (address(0x0) != identity && 0 != changed[identity]) {
             return true;
-    }
+        }
         return false;
     }
 }

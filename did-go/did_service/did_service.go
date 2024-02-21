@@ -184,7 +184,7 @@ func (s *DidServiceImpl) CreateDID(publicKey string) (CreateDIDResponse, error) 
 	log.Printf("targetDid: {%v}", targetDid)
 	resp.Did = targetDid
 	if existResp, err := s.DidExist(targetDid); err != nil {
-		resp.ErrCode = constant.UNKNOW_ERROR
+		resp.ErrCode = constant.UNKNOWN_ERROR
 		return resp, nil
 	} else if existResp.Exist {
 		resp.ErrCode = constant.DID_ALREADY_EXIST
@@ -227,7 +227,7 @@ func (s *DidServiceImpl) CreateDID(publicKey string) (CreateDIDResponse, error) 
 	ac := ReadDIDAttributeChangedEvent(it)
 	if len(ac) == 0 {
 		log.Fatal("DIDAttributeChangedEvent is empty")
-		resp.ErrCode = constant.UNKNOW_ERROR
+		resp.ErrCode = constant.UNKNOWN_ERROR
 		return resp, nil
 	}
 
@@ -242,7 +242,7 @@ func (s *DidServiceImpl) SetAuthentication(did string, owner string, publicKey s
 	// check if did exist
 	existResp, err := s.DidExist(did)
 	if err != nil {
-		resp.ErrCode = constant.UNKNOW_ERROR
+		resp.ErrCode = constant.UNKNOWN_ERROR
 		return resp, nil
 	}
 	if !existResp.Exist {
@@ -304,7 +304,7 @@ func (s *DidServiceImpl) DidExist(did string) (DidExistResponse, error) {
 	log.Printf("did %v exist: {%v}", did, exist)
 	log.Printf("err: {%v}", err)
 	if err != nil {
-		resp.ErrCode = constant.UNKNOW_ERROR
+		resp.ErrCode = constant.UNKNOWN_ERROR
 		return resp, errors.New("failed to check if did exist")
 	}
 	resp.Exist = exist
@@ -447,7 +447,7 @@ func (s *DidServiceImpl) GetDIDDocument(did string) (DidDocumentResponse, error)
 		// filter attribute changed event
 		it, err := s.contract.FilterDIDAttributeChanged(&bind.FilterOpts{Start: currentBlockNumber, End: nil}, []ethcommon.Address{identityAddr})
 		if err != nil {
-			resp.ErrCode = constant.UNKNOW_ERROR
+			resp.ErrCode = constant.UNKNOWN_ERROR
 			return resp, nil
 		}
 		for it.Next() {
@@ -560,7 +560,7 @@ func (s *DidServiceImpl) setAttribute(didAddress string, attrKey string, attrVal
 	ac := ReadDIDAttributeChangedEvent(it)
 	if len(ac) == 0 {
 		log.Fatal("DIDAttributeChangedEvent is empty")
-		resp.ErrCode = constant.UNKNOW_ERROR
+		resp.ErrCode = constant.UNKNOWN_ERROR
 		return resp, nil
 	}
 
@@ -711,7 +711,7 @@ func (s *DidServiceImpl) GetDIDCount() (GetDidCountResponse, error) {
 	resp := GetDidCountResponse{}
 	total, err := s.contract.GetDIDCount(nil)
 	if err != nil {
-		resp.ErrCode = constant.UNKNOW_ERROR
+		resp.ErrCode = constant.UNKNOWN_ERROR
 		return resp, err
 	} else {
 		resp.Count = total.Uint64()

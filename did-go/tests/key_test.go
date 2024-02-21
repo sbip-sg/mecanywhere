@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/big"
+	"meca_did/common"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/crypto"
@@ -84,5 +85,30 @@ func TestKey(t *testing.T) {
 	// convert public key to hex string
 	address2 := crypto.PubkeyToAddress(*pubKey2).Hex()
 	fmt.Printf("address2: %v\n", address2)
+}
 
+func TestSignAndVerify(t *testing.T) {
+	testPrivateKeyStr := "41055558ff6c8d5340d9c6ebfbaa2aa96db811254cc8be8440f5a4abf54f51e6"
+	testPrivateKey, err := crypto.HexToECDSA(testPrivateKeyStr)
+	if err != nil {
+		panic(err)
+	}
+	data := []byte("hello")
+	signature, err := common.Sign(testPrivateKey, data)
+	if err != nil {
+		panic(err)
+	}
+
+	// verify signature
+	pubBytes := crypto.FromECDSAPub(testPrivateKey.Public().(*ecdsa.PublicKey))
+	pubKeyHex := hex.EncodeToString(pubBytes)
+	loadedKey, err := common.LoadPublicKey(pubKeyHex)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Public Key: %v\n", loadedKey)
+	// if !common.VerifySignature(loadedKey, data, signature) {
+	if !common.VerifySignature(&testPrivateKey.PublicKey, data, signature) {
+		panic("signature verification failed")
+	}
 }

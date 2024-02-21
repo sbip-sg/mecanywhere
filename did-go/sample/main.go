@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"meca_did/common"
 	"meca_did/constant"
 	cptservice "meca_did/cpt_service"
@@ -133,15 +134,15 @@ func main() {
 
 	cptid := 2000000
 
-	// {
-	// 	resp4 := cs.RegisterCpt(&didAuth, cptSchemaMap, constant.ORIGINAL)
-	// 	if resp4.ErrCode != constant.SUCCESS {
-	// 		log.Fatalf("Error: %v\n", resp4.ErrCode)
-	// 	} else {
-	// 		fmt.Printf("CPT ID: %v\n", resp4.CptBaseInfo)
-	// 		cptid = resp4.CptBaseInfo.CptId
-	// 	}
-	// }
+	{
+		resp4 := cs.RegisterCpt(&didAuth, cptSchemaMap, constant.ORIGINAL)
+		if resp4.ErrCode != constant.SUCCESS {
+			log.Fatalf("Error: %v\n", resp4.ErrCode)
+		} else {
+			fmt.Printf("CPT ID: %v\n", resp4.CptBaseInfo)
+			cptid = resp4.CptBaseInfo.CptId
+		}
+	}
 
 	// issue vc
 	claim := fmt.Sprintf(`{"info": "Chai", "DID": "%s"}`, candidateAddress)
