@@ -1,9 +1,9 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract CptContract {
-
-    uint constant public AUTHORITY_ISSUER_START_ID = 1000;
-    uint constant public NONE_AUTHORITY_ISSUER_START_ID = 2000000;
+    address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
+    uint public constant AUTHORITY_ISSUER_START_ID = 1000;
+    uint public constant NONE_AUTHORITY_ISSUER_START_ID = 2000000;
     uint private authority_issuer_current_id = 1000;
     uint private none_authority_issuer_current_id = 2000000;
 
@@ -29,207 +29,51 @@ contract CptContract {
     mapping(uint => Cpt) private cptMap;
     uint[] private cptIdList;
 
-
     // Error codes
-    uint constant private CPT_NOT_EXIST = 500301;
-    uint constant private AUTHORITY_ISSUER_CPT_ID_EXCEED_MAX = 500302;
-    uint constant private CPT_PUBLISHER_NOT_EXIST = 500303;
-    uint constant private CPT_ALREADY_EXIST = 500304;
-    uint constant private NO_PERMISSION = 500305;
+    uint private constant CPT_NOT_EXIST = 500301;
+    uint private constant AUTHORITY_ISSUER_CPT_ID_EXCEED_MAX = 500302;
+    uint private constant CPT_PUBLISHER_NOT_EXIST = 500303;
+    uint private constant CPT_ALREADY_EXIST = 500304;
+    uint private constant NO_PERMISSION = 500305;
 
     // Default CPT version
-    int constant private CPT_DEFAULT_VERSION = 1;
+    int private constant CPT_DEFAULT_VERSION = 1;
 
     address private cptDataStorageAddress;
 
-    event RegisterCptRetLog(
-        uint retCode,
-        uint cptId,
-        int cptVersion
-    );
+    event RegisterCptRetLog(uint retCode, uint cptId, int cptVersion);
 
-    event UpdateCptRetLog(
-        uint retCode,
-        uint cptId,
-        int cptVersion
-    );
+    event UpdateCptRetLog(uint retCode, uint cptId, int cptVersion);
 
-    function registerCptInner(
-        address publisher,
-        int[8] memory intArray,
-        bytes32[8] memory bytes32Array,
-        bytes32[32] memory jsonSchemaArray,
-        uint8 v,
-        bytes32 r,
-        bytes32 s,
-        address dataStorageAddress
-    )
-    private
-    returns (bool)
-    {
-        uint cptId = getCptId();
-
-        int cptVersion = CPT_DEFAULT_VERSION;
-        intArray[0] = cptVersion;
-        putCpt(cptId, publisher, intArray, bytes32Array, jsonSchemaArray, v, r, s);
-
-        emit RegisterCptRetLog(0, cptId, cptVersion);
-        return true;
+    function isCptExist(uint cptId) public view returns (bool) {
+        // int[8] memory intArray = getCptIntArray(cptId);
+        // if (intArray[0] != 0) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+        return cptMap[cptId].publisher != ZERO_ADDRESS;
     }
 
-    function registerCpt(
-        address publisher,
-        int[8] memory intArray,
-        bytes32[8] memory bytes32Array,
-        bytes32[32] memory jsonSchemaArray,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    )
-    public
-    returns (bool)
-    {
-        return registerCptInner(publisher, intArray, bytes32Array, jsonSchemaArray, v, r, s, cptDataStorageAddress);
-    }
-
-    function updateCptInner(
-        uint cptId,
-        address publisher,
-        int[8] memory intArray,
-        bytes32[8] memory bytes32Array,
-        bytes32[32] memory jsonSchemaArray,
-        uint8 v,
-        bytes32 r,
-        bytes32 s,
-        address dataStorageAddress
-    )
-    private
-    returns (bool)
-    {
-        if (isCptExist(cptId)) {
-            int[8] memory cptIntArray = getCptIntArray(cptId);
-            int cptVersion = cptIntArray[0] + 1;
-            intArray[0] = cptVersion;
-            int created = cptIntArray[1];
-            intArray[1] = created;
-            putCpt(cptId, publisher, intArray, bytes32Array, jsonSchemaArray, v, r, s);
-            emit UpdateCptRetLog(0, cptId, cptVersion);
-            return true;
-        } else {
-            emit UpdateCptRetLog(CPT_NOT_EXIST, 0, 0);
-            return false;
+    function allocateCptId() public returns (uint cptId) {
+        while (isCptExist(none_authority_issuer_current_id)) {
+            none_authority_issuer_current_id++;
         }
+        cptId = none_authority_issuer_current_id++;
     }
 
-    function updateCpt(
-        uint cptId,
-        address publisher,
-        int[8] memory intArray,
-        bytes32[8] memory bytes32Array,
-        bytes32[32] memory jsonSchemaArray,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    )
-    public
-    returns (bool)
-    {
-        return updateCptInner(cptId, publisher, intArray, bytes32Array, jsonSchemaArray, v, r, s, cptDataStorageAddress);
+    function getCptIdFromIndex(uint index) public view returns (uint) {
+        return cptIdList[index];
     }
 
-    function queryCptInner(
-        uint cptId,
-        address dataStorageAddress
-    )
-    private
-    view
-    returns (
-        address publisher,
-        int[] memory intArray,
-        bytes32[] memory bytes32Array,
-        bytes32[] memory jsonSchemaArray,
-        uint8 v,
-        bytes32 r,
-        bytes32 s)
-    {
-        publisher = getCptPublisher(cptId);
-        intArray = getCptDynamicIntArray(cptId, dataStorageAddress);
-        bytes32Array = getCptDynamicBytes32Array(cptId, dataStorageAddress);
-        jsonSchemaArray = getCptDynamicJsonSchemaArray(cptId, dataStorageAddress);
-        (v, r, s) = getCptSignature(cptId);
+    function getDatasetLength() public view returns (uint) {
+        return cptIdList.length;
     }
 
-    function queryCpt(
-        uint cptId
-    )
-    public
-    view
-    returns
-    (
-        address publisher,
-        int[] memory intArray,
-        bytes32[] memory bytes32Array,
-        bytes32[] memory jsonSchemaArray,
-        uint8 v,
-        bytes32 r,
-        bytes32 s)
-    {
-        return queryCptInner(cptId, cptDataStorageAddress);
-    }
-
-    function getCptDynamicIntArray(
-        uint cptId,
-        address dataStorageAddress
-    )
-    public
-    view
-    returns (int[] memory)
-    {
-        int[8] memory staticIntArray = getCptIntArray(cptId);
-        int[] memory dynamicIntArray = new int[](8);
-        for (uint i = 0; i < 8; i++) {
-            dynamicIntArray[i] = staticIntArray[i];
-        }
-        return dynamicIntArray;
-    }
-
-    function getCptDynamicBytes32Array(
-        uint cptId,
-        address dataStorageAddress
-    )
-    public
-    view
-    returns (bytes32[] memory)
-    {
-        bytes32[8] memory staticBytes32Array = getCptBytes32Array(cptId);
-        bytes32[] memory dynamicBytes32Array = new bytes32[](8);
-        for (uint i = 0; i < 8; i++) {
-            dynamicBytes32Array[i] = staticBytes32Array[i];
-        }
-        return dynamicBytes32Array;
-    }
-
-    function getCptDynamicJsonSchemaArray(
-        uint cptId,
-        address dataStorageAddress
-    )
-    public
-    view
-    returns (bytes32[] memory)
-    {
-        bytes32[32] memory staticBytes32Array = getCptJsonSchemaArray(cptId);
-        bytes32[] memory dynamicBytes32Array = new bytes32[](32);
-        for (uint i = 0; i < 32; i++) {
-            dynamicBytes32Array[i] = staticBytes32Array[i];
-        }
-        return dynamicBytes32Array;
-    }
-
-    function getCptIdList(uint startPos, uint num)
-    public
-    view
-    returns (uint[] memory)
-    {
+    function getCptIdList(
+        uint startPos,
+        uint num
+    ) public view returns (uint[] memory) {
         uint totalLength = getDatasetLength();
         uint dataLength;
         if (totalLength < startPos) {
@@ -259,105 +103,231 @@ contract CptContract {
         uint8 cptV,
         bytes32 cptR,
         bytes32 cptS
-    )
-    public
-    returns (bool)
-    {
-        Signature memory cptSignature = Signature({v : cptV, r : cptR, s : cptS});
-        cptMap[cptId] = Cpt({publisher : cptPublisher, intArray : cptIntArray, bytes32Array : cptBytes32Array, jsonSchemaArray : cptJsonSchemaArray, signature : cptSignature});
+    ) public returns (bool) {
+        Signature memory cptSignature = Signature({v: cptV, r: cptR, s: cptS});
+        cptMap[cptId] = Cpt({
+            publisher: cptPublisher,
+            intArray: cptIntArray,
+            bytes32Array: cptBytes32Array,
+            jsonSchemaArray: cptJsonSchemaArray,
+            signature: cptSignature
+        });
         cptIdList.push(cptId);
         return true;
     }
 
-    function getCptId(
-    )
-    public
-    returns
-    (uint cptId)
-    {
-        while (isCptExist(none_authority_issuer_current_id)) {
-            none_authority_issuer_current_id++;
-        }
-        cptId = none_authority_issuer_current_id++;
+    function registerCptInner(
+        address publisher,
+        int[8] memory intArray,
+        bytes32[8] memory bytes32Array,
+        bytes32[32] memory jsonSchemaArray,
+        uint8 v,
+        bytes32 r,
+        bytes32 s,
+        address dataStorageAddress
+    ) private returns (bool) {
+        uint cptId = allocateCptId();
+
+        int cptVersion = CPT_DEFAULT_VERSION;
+        intArray[0] = cptVersion;
+        putCpt(
+            cptId,
+            publisher,
+            intArray,
+            bytes32Array,
+            jsonSchemaArray,
+            v,
+            r,
+            s
+        );
+
+        emit RegisterCptRetLog(0, cptId, cptVersion);
+        return true;
     }
 
-    function isCptExist(
-        uint cptId
-    )
-    public
-    view
-    returns (bool)
-    {
-        int[8] memory intArray = getCptIntArray(cptId);
-        if (intArray[0] != 0) {
-            return true;
-        } else {
-            return false;
-        }
+    function registerCpt(
+        address publisher,
+        int[8] memory intArray,
+        bytes32[8] memory bytes32Array,
+        bytes32[32] memory jsonSchemaArray,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public returns (bool) {
+        return
+            registerCptInner(
+                publisher,
+                intArray,
+                bytes32Array,
+                jsonSchemaArray,
+                v,
+                r,
+                s,
+                cptDataStorageAddress
+            );
     }
 
     function getCptPublisher(
         uint cptId
-    )
-    public
-    view
-    returns (address publisher)
-    {
+    ) public view returns (address publisher) {
         Cpt memory cpt = cptMap[cptId];
         publisher = cpt.publisher;
     }
 
     function getCptIntArray(
         uint cptId
-    )
-    public
-    view
-    returns (int[8] memory intArray)
-    {
+    ) public view returns (int[8] memory intArray) {
         Cpt memory cpt = cptMap[cptId];
         intArray = cpt.intArray;
     }
 
-    function getCptJsonSchemaArray(
-        uint cptId
-    )
-    public
-    view
-    returns (bytes32[32] memory jsonSchemaArray)
-    {
-        Cpt memory cpt = cptMap[cptId];
-        jsonSchemaArray = cpt.jsonSchemaArray;
+    function getCptDynamicIntArray(
+        uint cptId,
+        address dataStorageAddress
+    ) public view returns (int[] memory) {
+        int[8] memory staticIntArray = getCptIntArray(cptId);
+        int[] memory dynamicIntArray = new int[](8);
+        for (uint i = 0; i < 8; i++) {
+            dynamicIntArray[i] = staticIntArray[i];
+        }
+        return dynamicIntArray;
     }
 
-    function getCptBytes32Array(
-        uint cptId
-    )
-    public
-    view
-    returns (bytes32[8] memory bytes32Array)
-    {
+    function getCptDynamicBytes32Array(
+        uint cptId,
+        address dataStorageAddress
+    ) public view returns (bytes32[] memory) {
         Cpt memory cpt = cptMap[cptId];
-        bytes32Array = cpt.bytes32Array;
+        bytes32[8] memory staticBytes32Array = cpt.bytes32Array;
+        bytes32[] memory dynamicBytes32Array = new bytes32[](8);
+        for (uint i = 0; i < 8; i++) {
+            dynamicBytes32Array[i] = staticBytes32Array[i];
+        }
+        return dynamicBytes32Array;
+    }
+
+    function getCptDynamicJsonSchemaArray(
+        uint cptId,
+        address dataStorageAddress
+    ) public view returns (bytes32[] memory) {
+        Cpt memory cpt = cptMap[cptId];
+        bytes32[32] memory staticBytes32Array = cpt.jsonSchemaArray;
+        bytes32[] memory dynamicBytes32Array = new bytes32[](32);
+        for (uint i = 0; i < 32; i++) {
+            dynamicBytes32Array[i] = staticBytes32Array[i];
+        }
+        return dynamicBytes32Array;
     }
 
     function getCptSignature(
         uint cptId
-    )
-    public
-    view
-    returns (uint8 v, bytes32 r, bytes32 s)
-    {
+    ) public view returns (uint8 v, bytes32 r, bytes32 s) {
         Cpt memory cpt = cptMap[cptId];
         v = cpt.signature.v;
         r = cpt.signature.r;
         s = cpt.signature.s;
     }
 
-    function getDatasetLength() public view returns (uint) {
-        return cptIdList.length;
+    function queryCptInner(
+        uint cptId,
+        address dataStorageAddress
+    )
+        private
+        view
+        returns (
+            address publisher,
+            int[] memory intArray,
+            bytes32[] memory bytes32Array,
+            bytes32[] memory jsonSchemaArray,
+            uint8 v,
+            bytes32 r,
+            bytes32 s
+        )
+    {
+        publisher = getCptPublisher(cptId);
+        intArray = getCptDynamicIntArray(cptId, dataStorageAddress);
+        bytes32Array = getCptDynamicBytes32Array(cptId, dataStorageAddress);
+        jsonSchemaArray = getCptDynamicJsonSchemaArray(
+            cptId,
+            dataStorageAddress
+        );
+        (v, r, s) = getCptSignature(cptId);
     }
 
-    function getCptIdFromIndex(uint index) public view returns (uint) {
-        return cptIdList[index];
+    function queryCpt(
+        uint cptId
+    )
+        public
+        view
+        returns (
+            address publisher,
+            int[] memory intArray,
+            bytes32[] memory bytes32Array,
+            bytes32[] memory jsonSchemaArray,
+            uint8 v,
+            bytes32 r,
+            bytes32 s
+        )
+    {
+        return queryCptInner(cptId, cptDataStorageAddress);
+    }
+
+    function updateCptInner(
+        uint cptId,
+        address publisher,
+        int[8] memory intArray,
+        bytes32[8] memory bytes32Array,
+        bytes32[32] memory jsonSchemaArray,
+        uint8 v,
+        bytes32 r,
+        bytes32 s,
+        address dataStorageAddress
+    ) private returns (bool) {
+        if (isCptExist(cptId)) {
+            int[8] memory cptIntArray = getCptIntArray(cptId);
+            int cptVersion = cptIntArray[0] + 1;
+            intArray[0] = cptVersion;
+            int created = cptIntArray[1];
+            intArray[1] = created;
+            putCpt(
+                cptId,
+                publisher,
+                intArray,
+                bytes32Array,
+                jsonSchemaArray,
+                v,
+                r,
+                s
+            );
+            emit UpdateCptRetLog(0, cptId, cptVersion);
+            return true;
+        } else {
+            emit UpdateCptRetLog(CPT_NOT_EXIST, 0, 0);
+            return false;
+        }
+    }
+
+    function updateCpt(
+        uint cptId,
+        address publisher,
+        int[8] memory intArray,
+        bytes32[8] memory bytes32Array,
+        bytes32[32] memory jsonSchemaArray,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public returns (bool) {
+        return
+            updateCptInner(
+                cptId,
+                publisher,
+                intArray,
+                bytes32Array,
+                jsonSchemaArray,
+                v,
+                r,
+                s,
+                cptDataStorageAddress
+            );
     }
 }
