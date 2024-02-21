@@ -15,42 +15,6 @@ services:
       redis:latest
     ports:
       - "6379:6379"
-  
-  did-verifier:
-    build:
-      context: ./did
-      dockerfile: Dockerfile.verifier
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./did/src:/app/src
-    secrets:
-      - wallet_private_key
-  
-  did-issuer:
-    build:
-      context: ./did
-      dockerfile: Dockerfile.issuer
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./did/src:/app/src
-    depends_on:
-      - did-verifier
-    secrets:
-      - wallet_private_key
-      - 52c328ef8b382b1d71cc262b868d803a137ab8d8
-
-  # po:
-  #   build: 
-  #     context: ./po
-  #   ports:
-  #     - "8000:8000"
-  #   volumes: # volume mounts ignore dockerignore
-  #     - ./po:/app
-  #   depends_on:
-  #     - did-verifier
-  #     - did-issuer
 
   rabbitmq:
     image:
@@ -80,69 +44,11 @@ services:
         condition: service_started
       rabbitmq:
         condition: service_healthy
+      blockchain:
+        condition: service_started
     secrets:
       - wallet_private_key
       - wallet_address
-      - access_token_key
-      - refresh_token_key
-      - server_host_name
-      - server_host_did
-      - server_host_po_did
-
-  fn-transaction:
-    build:
-      context: ./full_node
-      dockerfile: Dockerfile.transaction
-    ports:
-      - "7001:7001"
-    volumes: # volume mounts ignore dockerignore
-      - ./full_node/transaction:/app/transaction
-      - ./full_node/common:/app/transaction/common
-    depends_on:
-      - did-verifier
-      - redis
-    secrets:
-      - wallet_private_key
-      - wallet_address
-      - access_token_key
-      - refresh_token_key
-  
-  # payment:
-  #   build:
-  #     context: ./payment
-  #   ports:
-  #     - "7002:7002"
-  #   volumes: # volume mounts ignore dockerignore
-  #     - ./payment:/app
-  #     - ./full_node/common:/app/common
-  #   depends_on:
-  #     - did-verifier
-  #   secrets:
-  #     - wallet_private_key
-  #     - wallet_address
-  #     - access_token_key
-  #     - refresh_token_key
-
-  # host:
-  #   build: 
-  #     context: ./server_host
-  #     dockerfile: Dockerfile.host
-  #   depends_on:
-  #     rabbitmq:
-  #       condition: service_healthy
-  #     task-executor:
-  #       condition: service_started
-  #   restart: on-failure
-  #   secrets:
-  #     - server_host_name
-
-  # task-executor:
-  #   build:
-  #     context: ../mec_anywhere_desktop/task_executor
-  #     dockerfile: docker/Dockerfile
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ../mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
 
 networks:
   default:
@@ -150,19 +56,7 @@ networks:
     external: true
 
 secrets:
-  access_token_key:
-    file: ./keys/access_token_key.txt
-  refresh_token_key:
-    file: ./keys/refresh_token_key.txt
-  52c328ef8b382b1d71cc262b868d803a137ab8d8:
-    file: ./keys/0x52c328ef8b382b1d71cc262b868d803a137ab8d8
   wallet_address:
     file: ./keys/wallet_address.txt
   wallet_private_key:
     file: ./keys/wallet_private_key.txt
-  server_host_name:
-    file: ./keys/server_host_name.txt
-  server_host_did:
-    file: ./keys/server_host_did.txt
-  server_host_po_did:
-    file: ./keys/server_host_po_did.txt

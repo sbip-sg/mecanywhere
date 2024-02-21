@@ -89,13 +89,9 @@ def get_offloading_service(
     contract: SchedulerContract = Depends(get_scheduler_contract),
     publisher: BasicTaskPublisher = Depends(get_rpc_task_publisher),
     cache: DCache = Depends(get_cache),
-    config: Config = Depends(get_config),
 ) -> OffloadingService:
     return OffloadingService(
         contract,
         publisher,
-        cache,
-        config.get_server_host_name(),
-        config.get_server_host_did(),
-        config.get_server_host_po_did(),
+        cache
     )
