@@ -21,9 +21,6 @@
         },
         "mq": {
             "url": "amqp://localhost:5672"
-        },
-        "transaction": {
-            "url": "http://localhost:7001"
         }
     },
     "docker_local": {
@@ -47,9 +44,6 @@
         },
         "mq": {
             "url": "amqp://rabbitmq:5672"
-        },
-        "transaction": {
-            "url": "http://fn-transaction:7001"
         }
     },
     "docker_testnet": {
@@ -73,9 +67,6 @@
         },
         "mq": {
             "url": "amqp://rabbitmq:5672"
-        },
-        "transaction": {
-            "url": "http://fn-transaction:7001"
         }
     }
 }

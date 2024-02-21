@@ -1,12 +1,10 @@
 services:
-  # ganache:
+  blockchain:
   #   image:
   #     trufflesuite/ganache-cli:latest
   #   ports:
   #     - "8545:8545"
   #   command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
-      
-  blockchain:
     build:
       context: ../meca_contracts
     ports:
@@ -109,42 +107,42 @@ services:
       - access_token_key
       - refresh_token_key
   
-  payment:
-    build:
-      context: ./payment
-    ports:
-      - "7002:7002"
-    volumes: # volume mounts ignore dockerignore
-      - ./payment:/app
-      - ./full_node/common:/app/common
-    depends_on:
-      - did-verifier
-    secrets:
-      - wallet_private_key
-      - wallet_address
-      - access_token_key
-      - refresh_token_key
+  # payment:
+  #   build:
+  #     context: ./payment
+  #   ports:
+  #     - "7002:7002"
+  #   volumes: # volume mounts ignore dockerignore
+  #     - ./payment:/app
+  #     - ./full_node/common:/app/common
+  #   depends_on:
+  #     - did-verifier
+  #   secrets:
+  #     - wallet_private_key
+  #     - wallet_address
+  #     - access_token_key
+  #     - refresh_token_key
 
-  host:
-    build: 
-      context: ./server_host
-      dockerfile: Dockerfile.host
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      task-executor:
-        condition: service_started
-    restart: on-failure
-    secrets:
-      - server_host_name
+  # host:
+  #   build: 
+  #     context: ./server_host
+  #     dockerfile: Dockerfile.host
+  #   depends_on:
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     task-executor:
+  #       condition: service_started
+  #   restart: on-failure
+  #   secrets:
+  #     - server_host_name
 
-  task-executor:
-    build:
-      context: ../mec_anywhere_desktop/task_executor
-      dockerfile: docker/Dockerfile
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ../mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
+  # task-executor:
+  #   build:
+  #     context: ../mec_anywhere_desktop/task_executor
+  #     dockerfile: docker/Dockerfile
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ../mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
 
 networks:
   default:

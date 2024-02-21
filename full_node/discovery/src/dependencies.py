@@ -13,7 +13,6 @@ from contracts.tower_contract import TowerContract
 from services.cache import DCache
 from services.offloading_service import OffloadingService
 from services.message_queue.task_publisher import BasicTaskPublisher
-from services.transaction_service import TransactionService
 
 
 @lru_cache()
@@ -100,10 +99,3 @@ def get_offloading_service(
         config.get_server_host_did(),
         config.get_server_host_po_did(),
     )
-
-
-def get_transaction_service(
-    config: Config = Depends(get_config),
-    session: ClientSession = Depends(get_session),
-) -> TransactionService:
-    return TransactionService(config, session)

@@ -1,12 +1,12 @@
 from contextlib import asynccontextmanager
 import json
 from multiprocessing import Process
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers.authentication_router import authentication_router
 from services.message_queue.result_queue import ResultQueue
 from routers.offload_router import offload_router
-from dependencies import get_tower_contract, has_ca_access, get_config, get_cache
+from dependencies import get_tower_contract, get_config, get_cache
 
 
 result_queue = None
@@ -59,7 +59,7 @@ app.add_middleware(
     allow_origins=["*"],
 )
 app.include_router(authentication_router)
-app.include_router(offload_router, dependencies=[Depends(has_ca_access)])
+app.include_router(offload_router)
 
 with open("openapi.json", "w") as f:
     json.dump(app.openapi(), f)
