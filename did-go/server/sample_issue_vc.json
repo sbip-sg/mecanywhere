@@ -1,0 +1,16 @@
+{
+  "didAuth": {
+    "did": "did:meca:0x9038156f749D5cFd5a89E0E5Ac16808583E8594f",
+    "didPublicKeyId": "0x9038156f749D5cFd5a89E0E5Ac16808583E8594f",
+    "didPrivateKey": "b751ca3c38c91528ff87cb04c98eb85f78693f8eaab5e45300270a9dc18168db"
+  },
+  "vcArgs": {
+    "context": "https://www.w3.org/2018/credentials/v1",
+    "id": "234508ed-fc5b-4ea4-88ac-f04bc657f470",
+    "cptId": 1000,
+    "issuer": "did:meca:0x9038156f749D5cFd5a89E0E5Ac16808583E8594f",
+    "issuanceDate": "1680058078",
+    "expirationDate": "4833658078",
+    "claim": "{\"info\": \"Chai\",\"DID\":\"did:meca:0xf0b60768436Ec05dA6C959F5E5Cf78F1A5169f18\"}"
+  }
+}

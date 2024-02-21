@@ -1,0 +1,18 @@
+{
+  "issuerDID": "did:meca:0x9038156f749D5cFd5a89E0E5Ac16808583E8594f",
+  "vc": {
+    "context": "https://www.w3.org/2018/credentials/v1",
+    "id": "234508ed-fc5b-4ea4-88ac-f04bc657f470",
+    "cptId": 1000,
+    "issuer": "did:meca:0x9038156f749D5cFd5a89E0E5Ac16808583E8594f",
+    "issuance-date": "1680058078",
+    "expiration-date": "4833658078",
+    "claim": "{\"info\": \"Chai\",\"DID\":\"did:meca:0xf0b60768436Ec05dA6C959F5E5Cf78F1A5169f18\"}",
+    "proof": {
+      "type": "Secp256k1",
+      "creator": "0x9038156f749D5cFd5a89E0E5Ac16808583E8594f",
+      "signatureValue": "5SLbq2H+DlIEnm7XnWJZQLPod2hJlMYfSg0ZvUR/YrgylObedfUm+yHzVIZ6KArAKJrKUgoVN1hWtk+y40WurwA="
+    },
+    "type": ["VerifiableCredential"]
+  }
+}

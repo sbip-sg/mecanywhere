@@ -24,18 +24,18 @@ type VerifiableCredential struct {
 	ExpirationDate string   `json:"expiration-date"` // eg: "4797979660"
 	Claim          string   `json:"claim"`           // eg: "name:John Doe"
 	Proof          Proof    `json:"proof"`
-	Type           []string `json:"type"` // eg: "[\"VerifiableCredential\"]"
+	Type           []string `json:"type"` // eg: ["VerifiableCredential"]
 }
 
 type VerifiableCredentialArgs struct {
-	Context        string                  `json:"context"`        // eg: "https://www.w3.org/2018/credentials/v1"
-	Id             string                  `json:"id"`             // eg: "ae559160-c1bb-4f15-845e-af7d7912e07b"
-	CptId          int                     `json:"cptId"`          // eg: 1
-	Issuer         string                  `json:"issuer"`         // eg: "did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8"
-	IssuanceDate   string                  `json:"issuanceDate"`   // eg: 1644379660
-	ExpirationDate string                  `json:"expirationDate"` // eg: 4797979660
-	Claim          string                  `json:"claim"`          // eg: "name:John Doe"
-	Type           constant.CredentialType `json:"type"`           // eg: "ORIGINAL"
+	Context        string `json:"context"`        // eg: "https://www.w3.org/2018/credentials/v1"
+	Id             string `json:"id"`             // eg: "ae559160-c1bb-4f15-845e-af7d7912e07b"
+	CptId          int    `json:"cptId"`          // eg: 1
+	Issuer         string `json:"issuer"`         // eg: "did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8"
+	IssuanceDate   string `json:"issuanceDate"`   // eg: 1644379660
+	ExpirationDate string `json:"expirationDate"` // eg: 4797979660
+	Claim          string `json:"claim"`          // eg: "name:John Doe"
+	Type           constant.CredentialType
 }
 
 func NewVerifiableCredentialArgs() *VerifiableCredentialArgs {

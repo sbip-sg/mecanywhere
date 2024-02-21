@@ -11,9 +11,9 @@ import (
 )
 
 type TransactionInfo struct {
-	BlockNumber big.Int
-	TxHash      string
-	TxIndex     uint
+	BlockNumber big.Int `json:"blockNumber"`
+	TxHash      string  `json:"txHash"`
+	TxIndex     uint    `json:"txIndex"`
 }
 
 func (i *TransactionInfo) SetTxInfo(receipt *types.Receipt) {
@@ -23,9 +23,9 @@ func (i *TransactionInfo) SetTxInfo(receipt *types.Receipt) {
 }
 
 type ServiceResponseInfo struct {
-	ErrCode constant.ErrorCode
-	ErrMsg  string
-	TxInfo  TransactionInfo
+	ErrCode constant.ErrorCode `json:"errCode"`
+	ErrMsg  string             `json:"errMsg"`
+	TxInfo  TransactionInfo    `json:"txInfo"`
 }
 
 func IsCptJsonSchemaValid(cptJsonSchema string) bool {
