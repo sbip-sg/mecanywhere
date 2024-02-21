@@ -1,10 +1,12 @@
 package common
 
 import (
+	"encoding/json"
 	"math/big"
 	"meca_did/constant"
 	"strings"
 
+	ethcommon "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
@@ -14,10 +16,23 @@ type TransactionInfo struct {
 	TxIndex     uint
 }
 
+func (i *TransactionInfo) SetTxInfo(receipt *types.Receipt) {
+	i.BlockNumber = *receipt.BlockNumber
+	i.TxHash = receipt.TxHash.String()
+	i.TxIndex = receipt.TransactionIndex
+}
+
 type ServiceResponseInfo struct {
 	ErrCode constant.ErrorCode
 	ErrMsg  string
 	TxInfo  TransactionInfo
+}
+
+func IsCptJsonSchemaValid(cptJsonSchema string) bool {
+	if len(cptJsonSchema) == 0 || len(cptJsonSchema) > constant.JSON_SCHEMA_MAX_LENGTH {
+		return false
+	}
+	return json.Unmarshal([]byte(cptJsonSchema), &map[string]interface{}{}) == nil
 }
 
 type DIDAuthentication struct {
@@ -43,8 +58,6 @@ func ConvertAddressToDID(address string) string {
 	return constant.DID_PREFIX + address
 }
 
-func (i *TransactionInfo) SetTxInfo(receipt *types.Receipt) {
-	i.BlockNumber = *receipt.BlockNumber
-	i.TxHash = receipt.TxHash.String()
-	i.TxIndex = receipt.TransactionIndex
+func IsDidValid(did string) bool {
+	return len(did) > 0 && strings.HasPrefix(did, constant.DID_PREFIX) && ethcommon.IsHexAddress(did[len(constant.DID_PREFIX):])
 }

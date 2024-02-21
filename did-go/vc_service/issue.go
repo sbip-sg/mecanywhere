@@ -111,9 +111,7 @@ func CreateCredential(args *VerifiableCredentialArgs, didAuth common.DIDAuthenti
 	}
 	vc.Proof = Proof{
 		Type:           constant.CREDENTIAL_PROOF_TYPE_ECDSA,
-		Created:        time.Now().UnixMilli(),
 		Creator:        didAuth.DIDPublicKeyId,
-		Salt:           args.Claim,                                   // is it ok?
 		SignatureValue: base64.StdEncoding.EncodeToString(signature), // just use base64.StdEncoding.EncodeToString(signature)
 	}
 	resp.VC = vc

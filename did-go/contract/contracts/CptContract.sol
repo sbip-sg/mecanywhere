@@ -1,11 +1,17 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
 contract CptContract {
     address constant ZERO_ADDRESS = 0x0000000000000000000000000000000000000000;
-    uint public constant AUTHORITY_ISSUER_START_ID = 1000;
-    uint public constant NONE_AUTHORITY_ISSUER_START_ID = 2000000;
-    uint private authority_issuer_current_id = 1000;
-    uint private none_authority_issuer_current_id = 2000000;
+    uint public constant CPT_ISSUE_START_ID = 1000;
+    uint public constant CPT_ISSUE_MAX_ID = 999999999;
+    // Error codes
+    uint private constant CPT_NOT_EXIST = 500301;
+    uint private constant CPT_ISSUE_ID_REACHED_MAX = 500302;
+    // Default CPT version
+    int private constant CPT_DEFAULT_VERSION = 1;
+
+    uint private cpt_issue_next_id = 1000;
 
     struct Signature {
         uint8 v;
@@ -29,44 +35,28 @@ contract CptContract {
     mapping(uint => Cpt) private cptMap;
     uint[] private cptIdList;
 
-    // Error codes
-    uint private constant CPT_NOT_EXIST = 500301;
-    uint private constant AUTHORITY_ISSUER_CPT_ID_EXCEED_MAX = 500302;
-    uint private constant CPT_PUBLISHER_NOT_EXIST = 500303;
-    uint private constant CPT_ALREADY_EXIST = 500304;
-    uint private constant NO_PERMISSION = 500305;
-
-    // Default CPT version
-    int private constant CPT_DEFAULT_VERSION = 1;
-
-    address private cptDataStorageAddress;
-
     event RegisterCptRetLog(uint retCode, uint cptId, int cptVersion);
 
     event UpdateCptRetLog(uint retCode, uint cptId, int cptVersion);
 
     function isCptExist(uint cptId) public view returns (bool) {
-        // int[8] memory intArray = getCptIntArray(cptId);
-        // if (intArray[0] != 0) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
         return cptMap[cptId].publisher != ZERO_ADDRESS;
     }
 
-    function allocateCptId() public returns (uint cptId) {
-        while (isCptExist(none_authority_issuer_current_id)) {
-            none_authority_issuer_current_id++;
+    function allocateCptId() public returns (uint cptId, bool success) {
+        if (cpt_issue_next_id > CPT_ISSUE_MAX_ID) {
+            return (0, false);
+        } else {
+            cptId = cpt_issue_next_id++;
+            success = true;
         }
-        cptId = none_authority_issuer_current_id++;
     }
 
     function getCptIdFromIndex(uint index) public view returns (uint) {
         return cptIdList[index];
     }
 
-    function getDatasetLength() public view returns (uint) {
+    function getCptCounts() public view returns (uint) {
         return cptIdList.length;
     }
 
@@ -74,7 +64,7 @@ contract CptContract {
         uint startPos,
         uint num
     ) public view returns (uint[] memory) {
-        uint totalLength = getDatasetLength();
+        uint totalLength = getCptCounts();
         uint dataLength;
         if (totalLength < startPos) {
             return new uint[](1);
@@ -91,7 +81,7 @@ contract CptContract {
     }
 
     function getTotalCptId() public view returns (uint) {
-        return getDatasetLength();
+        return getCptCounts();
     }
 
     function putCpt(
@@ -123,10 +113,13 @@ contract CptContract {
         bytes32[32] memory jsonSchemaArray,
         uint8 v,
         bytes32 r,
-        bytes32 s,
-        address dataStorageAddress
+        bytes32 s
     ) private returns (bool) {
-        uint cptId = allocateCptId();
+        (uint cptId, bool success) = allocateCptId();
+        if (!success) {
+            emit RegisterCptRetLog(CPT_ISSUE_ID_REACHED_MAX, 0, 0);
+            return false;
+        }
 
         int cptVersion = CPT_DEFAULT_VERSION;
         intArray[0] = cptVersion;
@@ -162,8 +155,7 @@ contract CptContract {
                 jsonSchemaArray,
                 v,
                 r,
-                s,
-                cptDataStorageAddress
+                s
             );
     }
 
@@ -182,8 +174,7 @@ contract CptContract {
     }
 
     function getCptDynamicIntArray(
-        uint cptId,
-        address dataStorageAddress
+        uint cptId
     ) public view returns (int[] memory) {
         int[8] memory staticIntArray = getCptIntArray(cptId);
         int[] memory dynamicIntArray = new int[](8);
@@ -194,8 +185,7 @@ contract CptContract {
     }
 
     function getCptDynamicBytes32Array(
-        uint cptId,
-        address dataStorageAddress
+        uint cptId
     ) public view returns (bytes32[] memory) {
         Cpt memory cpt = cptMap[cptId];
         bytes32[8] memory staticBytes32Array = cpt.bytes32Array;
@@ -207,8 +197,7 @@ contract CptContract {
     }
 
     function getCptDynamicJsonSchemaArray(
-        uint cptId,
-        address dataStorageAddress
+        uint cptId
     ) public view returns (bytes32[] memory) {
         Cpt memory cpt = cptMap[cptId];
         bytes32[32] memory staticBytes32Array = cpt.jsonSchemaArray;
@@ -229,8 +218,7 @@ contract CptContract {
     }
 
     function queryCptInner(
-        uint cptId,
-        address dataStorageAddress
+        uint cptId
     )
         private
         view
@@ -245,12 +233,9 @@ contract CptContract {
         )
     {
         publisher = getCptPublisher(cptId);
-        intArray = getCptDynamicIntArray(cptId, dataStorageAddress);
-        bytes32Array = getCptDynamicBytes32Array(cptId, dataStorageAddress);
-        jsonSchemaArray = getCptDynamicJsonSchemaArray(
-            cptId,
-            dataStorageAddress
-        );
+        intArray = getCptDynamicIntArray(cptId);
+        bytes32Array = getCptDynamicBytes32Array(cptId);
+        jsonSchemaArray = getCptDynamicJsonSchemaArray(cptId);
         (v, r, s) = getCptSignature(cptId);
     }
 
@@ -269,7 +254,7 @@ contract CptContract {
             bytes32 s
         )
     {
-        return queryCptInner(cptId, cptDataStorageAddress);
+        return queryCptInner(cptId);
     }
 
     function updateCptInner(
@@ -280,8 +265,7 @@ contract CptContract {
         bytes32[32] memory jsonSchemaArray,
         uint8 v,
         bytes32 r,
-        bytes32 s,
-        address dataStorageAddress
+        bytes32 s
     ) private returns (bool) {
         if (isCptExist(cptId)) {
             int[8] memory cptIntArray = getCptIntArray(cptId);
@@ -326,8 +310,7 @@ contract CptContract {
                 jsonSchemaArray,
                 v,
                 r,
-                s,
-                cptDataStorageAddress
+                s
             );
     }
 }

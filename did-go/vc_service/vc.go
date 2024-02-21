@@ -11,9 +11,7 @@ import (
 
 type Proof struct {
 	Type           string `json:"type"`           // eg: "Secp256k1"
-	Created        int64  `json:"created"`        // eg: 1644379660
 	Creator        string `json:"creator"`        // eg: "did:meca:0xfd340b5a30de452ae4a14dd1b92a7006868a29c8"
-	Salt           string `json:"salt"`           //
 	SignatureValue string `json:"signatureValue"` // eg: "abVirKd3ZvGpJ20BR72SCkb18K/o4ZZT9BqDDU6W8lVv12ttuIfM3s9SAs5RbVJ4M3OrssB6DQ1Mj/YLi8Eq7Rw=""
 }
 
@@ -46,6 +44,7 @@ func NewVerifiableCredentialArgs() *VerifiableCredentialArgs {
 		Type:    constant.ORIGINAL_CREDENTIAL_TYPE,
 	}
 }
+
 func CheckVCExpirationDate(issurance, expiration string) constant.ErrorCode {
 	if len(issurance) == 0 || len(expiration) == 0 {
 		return constant.CREDENTIAL_EXPIRE_DATE_ILLEGAL
@@ -81,9 +80,6 @@ func IsProofValid(proof *Proof) constant.ErrorCode {
 	}
 	if len(proof.Type) == 0 || proof.Type != constant.CREDENTIAL_PROOF_TYPE_ECDSA {
 		return constant.CREDENTIAL_SIGNATURE_TYPE_ILLEGAL
-	}
-	if proof.Created <= 0 {
-		return constant.CREDENTIAL_ISSUANCE_DATE_ILLEGAL
 	}
 	if len(proof.Creator) == 0 {
 		return constant.CREDENTIAL_ISSUER_INVALID
