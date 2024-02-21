@@ -6,8 +6,3 @@ API
    :caption: Contents
    
    discovery-api
-   transaction-api
-   payment-api
-   po-api
-   did-issuer-api
-   did-verifier-api

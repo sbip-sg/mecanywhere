@@ -54,7 +54,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#list-of-keys">List of keys</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#contracts">Contracts</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#serving-on-sbip-servers">Serving on SBIP Servers</a></li>
 </ul>
 </li>
@@ -65,6 +64,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/services.html">Services</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -107,22 +107,7 @@
 </ul>
 <blockquote>
 <div><p>[!NOTE]
-Hot reload is enabled for the python services but not the java services.</p>
-</div></blockquote>
-<ol class="arabic simple" start="3">
-<li><p>Migrate the contracts onto your chosen blockchain.</p></li>
-</ol>
-<ul class="simple">
-<li><p>For development, run the commands in <a class="reference internal" href="#contracts"><span class="xref myst">Contracts</span></a> in the <code class="docutils literal notranslate"><span class="pre">did/contract</span></code> and <code class="docutils literal notranslate"><span class="pre">full_node/contract</span></code> folders to deploy those contracts to ganache that is launched with the docker compose group.</p></li>
-</ul>
-<blockquote>
-<div><p>Requirements: truffle</p>
-</div></blockquote>
-<ul class="simple">
-<li><p>OR run <code class="docutils literal notranslate"><span class="pre">load_po.bat</span></code> which automates migration of the contracts and loads a standard PO onto the blockchain.</p></li>
-</ul>
-<blockquote>
-<div><p>Requirements: truffle, python</p>
+Hot reload is enabled for the python services.</p>
 </div></blockquote>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
@@ -149,7 +134,7 @@ Hot reload is enabled for the python services but not the java services.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;environment&quot;:</span> <span class="pre">&quot;docker_testnet&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">config.json</span></code> for python services.</p></li>
 <li><p>For java services, include <code class="docutils literal notranslate"><span class="pre">docker_testnet</span></code> when activating the profile.</p></li>
-<li><p>You may comment out the ganache service in <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> since it is not used.</p></li>
+<li><p>You may comment out the blockchain service in <code class="docutils literal notranslate"><span class="pre">compose.yaml</span></code> since it is not used.</p></li>
 </ul>
 </li>
 </ul>
@@ -175,41 +160,14 @@ Hot reload is enabled for the python services but not the java services.</p>
 <section id="list-of-keys">
 <h4>List of keys<a class="headerlink" href="#list-of-keys" title="Link to this heading"></a></h4>
 <blockquote>
-<div><p>Format: <em>key: value</em>
-See compose files for the dependent services of each key.</p>
+<div><p>Format: <em>key: value</em></p>
+<p>See compose files for the dependent services of each key.</p>
 </div></blockquote>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">0x52c...</span></code>(DID of issuer for did-issuer service): private key</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">access_token_key.txt</span></code>: secret key for encoding the jwt access token</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">refresh_token_key.txt</span></code>: secret key for encoding the jwt refresh token</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">server_host_did.txt</span></code>: arbitrary string used as DID of the server host</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">server_host_name.txt</span></code>: arbitrary string used as name of the server host</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">server_host_po_did.txt</span></code>: arbitrary string used as DID of the server host’s PO</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">wallet_address.txt</span></code>: address of the wallet/account for services that calls the smart contracts</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">wallet_private_key.txt</span></code>: private key of the wallet/account for services that calls the smart contracts</p></li>
 </ul>
 </section>
-</section>
-<section id="contracts">
-<h3>Contracts<a class="headerlink" href="#contracts" title="Link to this heading"></a></h3>
-<p><a class="reference internal" href="#smart-contracts"><span class="xref myst">List of contracts</span></a></p>
-<ul>
-<li><p>For all configurations, you still <strong>need to truffle migrate</strong> the contracts to local ganache or sepolia testnet because I’m not able automate it on docker.</p></li>
-<li><p>Starting or restarting ganache will reset the blockchain so the smart contracts will need to be redeployed and their addresses should be the same, otherwise update the addresses in each config.</p></li>
-<li><p>For docker local:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">truffle</span> <span class="n">migrate</span> <span class="o">--</span><span class="n">network</span> <span class="n">development</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>Migrate the DID contracts first, then the full node contracts to correspond to the default config addresses.</p></li>
-</ul>
-</li>
-<li><p>For docker testnet:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">truffle</span> <span class="n">migrate</span> <span class="o">--</span><span class="n">network</span> <span class="n">sepolia</span>
-</pre></div>
-</div>
-</li>
-</ul>
 </section>
 <section id="serving-on-sbip-servers">
 <h3>Serving on SBIP Servers<a class="headerlink" href="#serving-on-sbip-servers" title="Link to this heading"></a></h3>
@@ -224,11 +182,6 @@ See compose files for the dependent services of each key.</p>
 </pre></div>
 </div>
 <p>and it is set to proxy services in node <code class="docutils literal notranslate"><span class="pre">worker-111</span></code>.</p>
-<p>Migrate the contracts to this ganache by running</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">truffle</span> <span class="n">migrate</span> <span class="o">--</span><span class="n">network</span> <span class="n">docker_sbip</span>
-</pre></div>
-</div>
-<p>in each contract folder. Basically do <code class="docutils literal notranslate"><span class="pre">load_po.bat</span></code> but with <code class="docutils literal notranslate"><span class="pre">docker_sbip</span></code> network configured in <code class="docutils literal notranslate"><span class="pre">truffle-config.js</span></code>.</p>
 </section>
 </section>
 </section>
