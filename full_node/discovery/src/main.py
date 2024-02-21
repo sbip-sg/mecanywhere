@@ -3,7 +3,6 @@ import json
 from multiprocessing import Process
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers.authentication_router import authentication_router
 from services.message_queue.result_queue import ResultQueue
 from routers.offload_router import offload_router
 from dependencies import get_tower_contract, get_config, get_cache
@@ -58,7 +57,6 @@ app.add_middleware(
     allow_headers=["*"],
     allow_origins=["*"],
 )
-app.include_router(authentication_router)
 app.include_router(offload_router)
 
 with open("openapi.json", "w") as f:

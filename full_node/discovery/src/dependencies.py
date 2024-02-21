@@ -4,10 +4,6 @@ import redis
 from aiohttp import ClientSession
 from config import Config
 from fastapi import Depends
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from common.middleware.credential_authentication import (
-    CredentialAuthenticationMiddleware,
-)
 from contracts.scheduler_contract import SchedulerContract
 from contracts.tower_contract import TowerContract
 from services.cache import DCache
@@ -35,42 +31,6 @@ def get_redis_client(config: Config = Depends(get_config)) -> redis.Redis:
         port=config.get_redis_port(),
         decode_responses=True,
     )
-
-
-def get_ca_middleware(
-    config: Config = Depends(get_config),
-    session: ClientSession = Depends(get_session),
-    redis: redis.Redis = Depends(get_redis_client),
-) -> CredentialAuthenticationMiddleware:
-    return CredentialAuthenticationMiddleware(config, session, redis)
-
-
-def get_did_from_token(
-    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
-    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
-) -> str:
-    return ca_middleware.get_did_from_token(authorization)
-
-
-def get_po_did_from_token(
-    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
-    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
-) -> str:
-    return ca_middleware.get_po_did_from_token(authorization)
-
-
-def get_token(
-    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
-    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
-) -> str:
-    return ca_middleware.get_token(authorization)
-
-
-async def has_ca_access(
-    ca_middleware: CredentialAuthenticationMiddleware = Depends(get_ca_middleware),
-    authorization: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
-) -> bool:
-    await ca_middleware.has_access(authorization)
 
 
 def get_rpc_task_publisher(config: Config = Depends(get_config)) -> BasicTaskPublisher:

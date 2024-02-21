@@ -1,11 +1,6 @@
-from common.models.credential import CredentialModel
 from models.task_result import Resources
 from models.did import DIDModel
 from pydantic import Field
-
-
-class AuthenticationRequest(CredentialModel, DIDModel):
-    pass
 
 
 class RegisterHostRequest(DIDModel):

@@ -38,8 +38,6 @@ services:
       - ./full_node/discovery:/app/discovery
       - ./full_node/common:/app/discovery/src/common
     depends_on:
-      did-verifier:
-        condition: service_started
       redis:
         condition: service_started
       rabbitmq:

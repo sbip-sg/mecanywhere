@@ -36,8 +36,6 @@ services:
     ports:
       - "11008:7000"
     depends_on:
-      did-verifier:
-        condition: service_started
       redis:
         condition: service_started
       rabbitmq:

@@ -67,35 +67,14 @@ class Config:
     def get_wallet_private_key(self) -> str:
         return self.secrets.wallet_private_key
 
-    def get_verify_vc_url(self) -> str:
-        return self.configuration["did"]["verify_credential"]
-
     def get_redis_host(self) -> str:
         return self.configuration["redis"]["host"]
 
     def get_redis_port(self) -> int:
         return self.configuration["redis"]["port"]
-
-    def get_access_token_key(self) -> str:
-        return self.secrets.access_token_key
-
-    def get_refresh_token_key(self) -> str:
-        return self.secrets.refresh_token_key
     
     def get_mq_url(self) -> str:
         return self.configuration["mq"]["url"]
-    
-    def get_server_host_name(self) -> str:
-        return self.secrets.server_host_name
-    
-    def get_transaction_service_url(self) -> str:
-        return self.configuration["transaction"]["url"]
-    
-    def get_server_host_did(self) -> str:
-        return self.secrets.server_host_did
-    
-    def get_server_host_po_did(self) -> str:
-        return self.secrets.server_host_po_did
 
     def get_tower_addr(self) -> str:
         return self.secrets.wallet_address
