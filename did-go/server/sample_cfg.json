@@ -1,0 +1,7 @@
+{
+  "blockChainAddr": "http://localhost:8545",
+	"didContract" : "0x00404F73C76BC75b0D86F8AdDA8500e987BF8232",
+	"didContractOwnerPrivateKey" : "b751ca3c38c91528ff87cb04c98eb85f78693f8eaab5e45300270a9dc18168db",
+	"cptContract" : "0xa1f89ddAD60FCA19a62a953a596C9FCF763396eE",
+  "port": 2592
+}
