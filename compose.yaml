@@ -1,14 +1,10 @@
 services:
   blockchain:
-  #   image:
-  #     trufflesuite/ganache-cli:latest
-  #   ports:
-  #     - "8545:8545"
-  #   command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
-    build:
-      context: ../meca_contracts
+    image:
+      trufflesuite/ganache-cli:latest
     ports:
       - "8545:8545"
+    command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 -s "123"
 
   redis:
     image:
