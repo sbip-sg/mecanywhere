@@ -1,0 +1,4207 @@
+{
+  "contractName": "MecaTaskAbstractContract",
+  "abi": [
+    {
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "inputs": [],
+      "name": "TASK_ADDITION_FEE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address payable",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    },
+    {
+      "inputs": [],
+      "name": "clear",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "computingType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "size",
+          "type": "uint256"
+        }
+      ],
+      "name": "addTask",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "newFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateTaskFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "updateTaskOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "newSize",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateTaskSize",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        }
+      ],
+      "name": "deleteTask",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getTaskFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getTaskSize",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getTaskComputingType",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "ipfsSha256",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getTaskOwner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTasks",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "ipfsSha256",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address payable",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "computingType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "size",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct MecaTaskAbstractContract.Task[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"TASK_ADDITION_FEE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"computingType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"size\",\"type\":\"uint256\"}],\"name\":\"addTask\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"clear\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"}],\"name\":\"deleteTask\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"}],\"name\":\"getTaskComputingType\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"}],\"name\":\"getTaskFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"}],\"name\":\"getTaskOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"}],\"name\":\"getTaskSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTasks\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"address payable\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"computingType\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"size\",\"type\":\"uint256\"}],\"internalType\":\"struct MecaTaskAbstractContract.Task[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"newFee\",\"type\":\"uint256\"}],\"name\":\"updateTaskFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"updateTaskOwner\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"newSize\",\"type\":\"uint256\"}],\"name\":\"updateTaskSize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"author\":\"Ciocirlan Stefan-Dan (sdcioc)\",\"details\":\"Give the Task structure and and external function for the Task contract\",\"kind\":\"dev\",\"methods\":{\"addTask(bytes32,uint256,uint8,uint256)\":{\"details\":\"This function is used to add a task to the contract The function is payable and the fee is sent to the contract and kept as a stake and it returns to the task owner when the task is deleted\",\"params\":{\"computingType\":\"The type of computing (0: cpu / 1: gpu)\",\"fee\":\"The fee of the task\",\"ipfsSha256\":\"The IPFS hash of the task\",\"size\":\"The i/o size of the task (in bytes)\"}},\"clear()\":{\"details\":\"This function is used to clear the contract\"},\"constructor\":{\"params\":{\"taskAdditionFee\":\"The fee for adding a task\"}},\"deleteTask(bytes32)\":{\"details\":\"Return the task fee to the owner\",\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\"}},\"getTaskComputingType(bytes32)\":{\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\"},\"returns\":{\"_0\":\"uint8 The computing type of the task\"}},\"getTaskFee(bytes32)\":{\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\"},\"returns\":{\"_0\":\"uint256 The fee of the task\"}},\"getTaskOwner(bytes32)\":{\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\"},\"returns\":{\"_0\":\"address The owner of the task\"}},\"getTaskSize(bytes32)\":{\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\"},\"returns\":{\"_0\":\"uint256 The i/o size of the task\"}},\"getTasks()\":{\"returns\":{\"_0\":\"task[] The tasks\"}},\"updateTaskFee(bytes32,uint256)\":{\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\",\"newFee\":\"The new fee of the task\"}},\"updateTaskOwner(bytes32,address)\":{\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\",\"newOwner\":\"The new owner of the task\"}},\"updateTaskSize(bytes32,uint256)\":{\"params\":{\"ipfsSha256\":\"The IPFS hash of the task\",\"newSize\":\"The new i/o size of the task\"}}},\"title\":\"MecaTaskAbstractContract\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"addTask(bytes32,uint256,uint8,uint256)\":{\"notice\":\"The addTask function\"},\"clear()\":{\"notice\":\"The clear function\"},\"constructor\":{\"notice\":\"The constructor\"},\"deleteTask(bytes32)\":{\"notice\":\"Deletes a task\"},\"getTaskComputingType(bytes32)\":{\"notice\":\"Get the task computing type for the task\"},\"getTaskFee(bytes32)\":{\"notice\":\"Get the task fee for the task developer\"},\"getTaskOwner(bytes32)\":{\"notice\":\"Get the task owner for the task\"},\"getTaskSize(bytes32)\":{\"notice\":\"Get the task i/o size for the task\"},\"getTasks()\":{\"notice\":\"Get all the tasks\"},\"owner()\":{\"notice\":\"The owner of the contract\"},\"updateTaskFee(bytes32,uint256)\":{\"notice\":\"Updates the task fee\"},\"updateTaskOwner(bytes32,address)\":{\"notice\":\"Updates the task owner\"},\"updateTaskSize(bytes32,uint256)\":{\"notice\":\"Updates the task i/o size\"}},\"notice\":\"The Task abstract contract for the MECA ecosystem\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/TaskAbstract.sol\":\"MecaTaskAbstractContract\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[],\"viaIR\":true},\"sources\":{\"project:/contracts/TaskAbstract.sol\":{\"keccak256\":\"0x411101c02863ca7fba0ee21b4e22b5bdf24c7dc21cb79b71920cdb388e079037\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9f5789eadd0c104e5c1bb0a6ccf37ce7ef2248c9808b60e30b319aa1ec99c584\",\"dweb:/ipfs/QmVWeZ1hJheJi1vT7Z1HqDJxREn3PH6XMACKmwbWTcD83r\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT \r\n/*\r\n\r\nName: MecaTaskAbstractContract\r\nDescription: An on-chain  abstract Task contract for MECA ecosystem\r\nAuthor: Ciocirlan Stefan-Dan (sdcioc)\r\nDate: Feb 2024\r\n\r\nMIT License\r\n\r\n*/\r\n\r\npragma solidity ^0.8.17;\r\n\r\n\r\n/**\r\n* @title MecaTaskAbstractContract\r\n* @author Ciocirlan Stefan-Dan (sdcioc)\r\n* @notice The Task abstract contract for the MECA ecosystem\r\n* @dev Give the Task structure and and\r\n* external function for the Task contract\r\n*/\r\nabstract contract MecaTaskAbstractContract\r\n{\r\n    /// The owner of the contract\r\n    address payable public owner;\r\n    uint256 public TASK_ADDITION_FEE;\r\n\r\n    /**\r\n    * @notice The Task structure\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param owner The owner of the task\r\n    * @param fee The fee of the task\r\n    * @param computingType The type of computing (0: cpu / 1: gpu)\r\n    * @param size The i/o size of the task (in bytes)\r\n    */\r\n    struct Task {\r\n        bytes32 ipfsSha256;\r\n        address payable owner;\r\n        uint256 fee;\r\n        uint8 computingType;\r\n        uint256 size;\r\n    }\r\n\r\n    // custom modifiers\r\n    /**\r\n    * @notice The onlyOwner modifier\r\n    */\r\n    modifier onlyOwner() {\r\n        require(msg.sender == owner, \"Owner only\");\r\n        _;\r\n    }\r\n    /**\r\n    * @notice The onlyTaskOwner modifier\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    */\r\n    modifier onlyTaskOwner(bytes32 ipfsSha256) {\r\n        require(\r\n            msg.sender == _getTask(ipfsSha256).owner,\r\n            \"Task owner only\"\r\n        );\r\n        _;\r\n    }\r\n\r\n    /**\r\n    * @notice The hasFee modifier\r\n    */\r\n    modifier hasFee() {\r\n        require(msg.value == TASK_ADDITION_FEE, \"Fee required\");\r\n        _;\r\n    }\r\n\r\n    /**\r\n    * @notice The constructor\r\n    * @param taskAdditionFee The fee for adding a task\r\n    */\r\n    constructor(uint256 taskAdditionFee) \r\n    {\r\n        owner = payable(tx.origin);\r\n        TASK_ADDITION_FEE = taskAdditionFee;\r\n    }\r\n\r\n    /**\r\n    * @notice The receive function\r\n    */\r\n    receive() external payable {\r\n        revert();\r\n    }\r\n\r\n    /**\r\n    * @notice The fallback function\r\n    */\r\n    fallback() external payable {\r\n        revert();\r\n    }\r\n\r\n    /**\r\n    * @notice The clear function\r\n    * @dev This function is used to clear the contract\r\n    */\r\n    function clear() external onlyOwner {\r\n        _clear();\r\n    }\r\n\r\n    // External functions\r\n    /**\r\n    * @notice The addTask function\r\n    * @dev This function is used to add a task to the contract\r\n    * The function is payable and the fee is sent to the contract\r\n    * and kept as a stake and it returns to the task owner when\r\n    * the task is deleted\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param fee The fee of the task\r\n    * @param computingType The type of computing (0: cpu / 1: gpu)\r\n    * @param size The i/o size of the task (in bytes)\r\n    */\r\n    function addTask(\r\n        bytes32 ipfsSha256,\r\n        uint256 fee,\r\n        uint8 computingType,\r\n        uint256 size\r\n    )\r\n        external\r\n        payable\r\n        hasFee\r\n    {\r\n        _addTask(\r\n            Task({\r\n                ipfsSha256: ipfsSha256,\r\n                owner: payable(msg.sender),\r\n                fee: fee,\r\n                computingType: computingType,\r\n                size: size\r\n            })\r\n        );\r\n    }\r\n\r\n    /**\r\n    * @notice Updates the task fee\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param newFee The new fee of the task\r\n    */\r\n    function updateTaskFee(\r\n        bytes32 ipfsSha256,\r\n        uint256 newFee\r\n    )\r\n        external\r\n        onlyTaskOwner(ipfsSha256)\r\n    {\r\n        _updateTaskFee(ipfsSha256, newFee);\r\n    }\r\n\r\n    /**\r\n    * @notice Updates the task owner\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param newOwner The new owner of the task\r\n    */\r\n    function updateTaskOwner(\r\n        bytes32 ipfsSha256,\r\n        address newOwner\r\n    )\r\n        external\r\n        onlyTaskOwner(ipfsSha256)\r\n    {\r\n        _updateTaskOwner(ipfsSha256, newOwner);\r\n    }\r\n\r\n    /**\r\n    * @notice Updates the task i/o size\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param newSize The new i/o size of the task\r\n    */\r\n    function updateTaskSize(\r\n        bytes32 ipfsSha256,\r\n        uint256 newSize\r\n    )\r\n        external\r\n        onlyTaskOwner(ipfsSha256)\r\n    {\r\n        _updateTaskSize(ipfsSha256, newSize);\r\n    }\r\n\r\n    /**\r\n    * @notice Deletes a task\r\n    * @dev Return the task fee to the owner\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    */\r\n    function deleteTask(\r\n        bytes32 ipfsSha256\r\n    )\r\n        external\r\n        onlyTaskOwner(ipfsSha256)\r\n    {\r\n        _deleteTask(ipfsSha256);\r\n        _getTask(ipfsSha256).owner.transfer(TASK_ADDITION_FEE);\r\n    }\r\n\r\n    // View External functions\r\n    /**\r\n    * @notice Get the task fee for the task developer\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @return uint256 The fee of the task\r\n    */\r\n    function getTaskFee(\r\n        bytes32 ipfsSha256\r\n    )\r\n        external\r\n        view\r\n        returns (uint256)\r\n    {\r\n        return _getTask(ipfsSha256).fee;\r\n    }\r\n\r\n    /**\r\n    * @notice Get the task i/o size for the task\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @return uint256 The i/o size of the task\r\n    */\r\n    function getTaskSize(\r\n        bytes32 ipfsSha256\r\n    )\r\n        external\r\n        view\r\n        returns (uint256)\r\n    {\r\n        return _getTask(ipfsSha256).size;\r\n    }\r\n\r\n    /**\r\n    * @notice Get the task computing type for the task\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @return uint8 The computing type of the task\r\n    */\r\n    function getTaskComputingType(\r\n        bytes32 ipfsSha256\r\n    )\r\n        external\r\n        view\r\n        returns (uint8)\r\n    {\r\n        return _getTask(ipfsSha256).computingType;\r\n    }\r\n\r\n    /**\r\n    * @notice Get the task owner for the task\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @return address The owner of the task\r\n    */\r\n    function getTaskOwner(\r\n        bytes32 ipfsSha256\r\n    )\r\n        external\r\n        view\r\n        returns (address)\r\n    {\r\n        return _getTask(ipfsSha256).owner;\r\n    }\r\n\r\n    /**\r\n    * @notice Get all the tasks\r\n    * @return task[] The tasks\r\n    */\r\n    function getTasks() external view virtual returns (Task[] memory);\r\n\r\n    // Pure External functions\r\n\r\n    // Public functions\r\n\r\n    // Internal functions\r\n\r\n    /**\r\n    * @notice The _clear function\r\n    * @dev This function is used to clear the contract storage\r\n    */\r\n    function _clear() internal virtual;\r\n\r\n    /**\r\n    * @notice The _addTask function\r\n    * @dev This function is used to add a task to the contract\r\n    * @param task The task to be added\r\n    */\r\n    function _addTask(\r\n        Task memory task\r\n    ) internal virtual;\r\n\r\n    /**\r\n    * @notice Updates the task fee\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param newFee The new fee of the task\r\n    */\r\n    function _updateTaskFee(\r\n        bytes32 ipfsSha256,\r\n        uint256 newFee\r\n    ) internal virtual;\r\n\r\n    /**\r\n    * @notice Updates the task owner\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param newOwner The new owner of the task\r\n    */\r\n    function _updateTaskOwner(\r\n        bytes32 ipfsSha256,\r\n        address newOwner\r\n    ) internal virtual;\r\n\r\n    /**\r\n    * @notice Updates the task i/o size\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @param newSize The new i/o size of the task\r\n    */\r\n    function _updateTaskSize(\r\n        bytes32 ipfsSha256,\r\n        uint256 newSize\r\n    ) internal virtual;\r\n\r\n    /**\r\n    * @notice Deletes a task\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    */\r\n    function _deleteTask(\r\n        bytes32 ipfsSha256\r\n    ) internal virtual;\r\n\r\n    /**\r\n    * @notice get the task given the ipfs hash\r\n    * @param ipfsSha256 The IPFS hash of the task\r\n    * @return Task The task\r\n    */\r\n    function _getTask(\r\n        bytes32 ipfsSha256\r\n    )\r\n        internal\r\n        view\r\n        virtual\r\n        returns (Task memory);\r\n\r\n    // Private functions\r\n\r\n}",
+  "sourcePath": "C:\\Users\\jxlim\\repos\\meca_contracts\\src\\contracts\\TaskAbstract.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/TaskAbstract.sol",
+    "exportedSymbols": {
+      "MecaTaskAbstractContract": [
+        2218
+      ]
+    },
+    "id": 2219,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1895,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".17"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "219:24:5"
+      },
+      {
+        "abstract": true,
+        "baseContracts": [],
+        "canonicalName": "MecaTaskAbstractContract",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 1896,
+          "nodeType": "StructuredDocumentation",
+          "src": "249:227:5",
+          "text": " @title MecaTaskAbstractContract\n @author Ciocirlan Stefan-Dan (sdcioc)\n @notice The Task abstract contract for the MECA ecosystem\n @dev Give the Task structure and and\n external function for the Task contract"
+        },
+        "fullyImplemented": false,
+        "id": 2218,
+        "linearizedBaseContracts": [
+          2218
+        ],
+        "name": "MecaTaskAbstractContract",
+        "nameLocation": "496:24:5",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "documentation": {
+              "id": 1897,
+              "nodeType": "StructuredDocumentation",
+              "src": "529:29:5",
+              "text": "The owner of the contract"
+            },
+            "functionSelector": "8da5cb5b",
+            "id": 1899,
+            "mutability": "mutable",
+            "name": "owner",
+            "nameLocation": "587:5:5",
+            "nodeType": "VariableDeclaration",
+            "scope": 2218,
+            "src": "564:28:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_address_payable",
+              "typeString": "address payable"
+            },
+            "typeName": {
+              "id": 1898,
+              "name": "address",
+              "nodeType": "ElementaryTypeName",
+              "src": "564:15:5",
+              "stateMutability": "payable",
+              "typeDescriptions": {
+                "typeIdentifier": "t_address_payable",
+                "typeString": "address payable"
+              }
+            },
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "functionSelector": "269a4482",
+            "id": 1901,
+            "mutability": "mutable",
+            "name": "TASK_ADDITION_FEE",
+            "nameLocation": "614:17:5",
+            "nodeType": "VariableDeclaration",
+            "scope": 2218,
+            "src": "599:32:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 1900,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "599:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "MecaTaskAbstractContract.Task",
+            "id": 1912,
+            "members": [
+              {
+                "constant": false,
+                "id": 1903,
+                "mutability": "mutable",
+                "name": "ipfsSha256",
+                "nameLocation": "976:10:5",
+                "nodeType": "VariableDeclaration",
+                "scope": 1912,
+                "src": "968:18:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes32",
+                  "typeString": "bytes32"
+                },
+                "typeName": {
+                  "id": 1902,
+                  "name": "bytes32",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "968:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 1905,
+                "mutability": "mutable",
+                "name": "owner",
+                "nameLocation": "1013:5:5",
+                "nodeType": "VariableDeclaration",
+                "scope": 1912,
+                "src": "997:21:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address_payable",
+                  "typeString": "address payable"
+                },
+                "typeName": {
+                  "id": 1904,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "997:15:5",
+                  "stateMutability": "payable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address_payable",
+                    "typeString": "address payable"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 1907,
+                "mutability": "mutable",
+                "name": "fee",
+                "nameLocation": "1037:3:5",
+                "nodeType": "VariableDeclaration",
+                "scope": 1912,
+                "src": "1029:11:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 1906,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1029:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 1909,
+                "mutability": "mutable",
+                "name": "computingType",
+                "nameLocation": "1057:13:5",
+                "nodeType": "VariableDeclaration",
+                "scope": 1912,
+                "src": "1051:19:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint8",
+                  "typeString": "uint8"
+                },
+                "typeName": {
+                  "id": 1908,
+                  "name": "uint8",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1051:5:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 1911,
+                "mutability": "mutable",
+                "name": "size",
+                "nameLocation": "1089:4:5",
+                "nodeType": "VariableDeclaration",
+                "scope": 1912,
+                "src": "1081:12:5",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 1910,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1081:7:5",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "Task",
+            "nameLocation": "952:4:5",
+            "nodeType": "StructDefinition",
+            "scope": 2218,
+            "src": "945:156:5",
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1924,
+              "nodeType": "Block",
+              "src": "1210:73:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1919,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "expression": {
+                            "id": 1916,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967281,
+                            "src": "1229:3:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 1917,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "1233:6:5",
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "src": "1229:10:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "id": 1918,
+                          "name": "owner",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1899,
+                          "src": "1243:5:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "1229:19:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "hexValue": "4f776e6572206f6e6c79",
+                        "id": 1920,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1250:12:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_94c77a0c4952204a6690451c523dcb4250e583c51dee28a84cc81b969b4dee48",
+                          "typeString": "literal_string \"Owner only\""
+                        },
+                        "value": "Owner only"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_94c77a0c4952204a6690451c523dcb4250e583c51dee28a84cc81b969b4dee48",
+                          "typeString": "literal_string \"Owner only\""
+                        }
+                      ],
+                      "id": 1915,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
+                      "referencedDeclaration": 4294967278,
+                      "src": "1221:7:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 1921,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1221:42:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1922,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1221:42:5"
+                },
+                {
+                  "id": 1923,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "1274:1:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1913,
+              "nodeType": "StructuredDocumentation",
+              "src": "1134:49:5",
+              "text": " @notice The onlyOwner modifier"
+            },
+            "id": 1925,
+            "name": "onlyOwner",
+            "nameLocation": "1198:9:5",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 1914,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1207:2:5"
+            },
+            "src": "1189:94:5",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1942,
+              "nodeType": "Block",
+              "src": "1442:136:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1937,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "expression": {
+                            "id": 1931,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967281,
+                            "src": "1475:3:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 1932,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "1479:6:5",
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "src": "1475:10:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "expression": {
+                            "arguments": [
+                              {
+                                "id": 1934,
+                                "name": "ipfsSha256",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 1928,
+                                "src": "1498:10:5",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_bytes32",
+                                  "typeString": "bytes32"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bytes32",
+                                  "typeString": "bytes32"
+                                }
+                              ],
+                              "id": 1933,
+                              "name": "_getTask",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 2217,
+                              "src": "1489:8:5",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_function_internal_view$_t_bytes32_$returns$_t_struct$_Task_$1912_memory_ptr_$",
+                                "typeString": "function (bytes32) view returns (struct MecaTaskAbstractContract.Task memory)"
+                              }
+                            },
+                            "id": 1935,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "functionCall",
+                            "lValueRequested": false,
+                            "nameLocations": [],
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "1489:20:5",
+                            "tryCall": false,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                              "typeString": "struct MecaTaskAbstractContract.Task memory"
+                            }
+                          },
+                          "id": 1936,
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "1510:5:5",
+                          "memberName": "owner",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 1905,
+                          "src": "1489:26:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address_payable",
+                            "typeString": "address payable"
+                          }
+                        },
+                        "src": "1475:40:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "hexValue": "5461736b206f776e6572206f6e6c79",
+                        "id": 1938,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1530:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_1d0e5e91ab5b94c30878aa009ac89bf6236164956cf813ca06afd2c94a2ceea6",
+                          "typeString": "literal_string \"Task owner only\""
+                        },
+                        "value": "Task owner only"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_1d0e5e91ab5b94c30878aa009ac89bf6236164956cf813ca06afd2c94a2ceea6",
+                          "typeString": "literal_string \"Task owner only\""
+                        }
+                      ],
+                      "id": 1930,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
+                      "referencedDeclaration": 4294967278,
+                      "src": "1453:7:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 1939,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1453:105:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1940,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1453:105:5"
+                },
+                {
+                  "id": 1941,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "1569:1:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1926,
+              "nodeType": "StructuredDocumentation",
+              "src": "1289:104:5",
+              "text": " @notice The onlyTaskOwner modifier\n @param ipfsSha256 The IPFS hash of the task"
+            },
+            "id": 1943,
+            "name": "onlyTaskOwner",
+            "nameLocation": "1408:13:5",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 1929,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1928,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "1430:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1943,
+                  "src": "1422:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 1927,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1422:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1421:20:5"
+            },
+            "src": "1399:179:5",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1955,
+              "nodeType": "Block",
+              "src": "1656:86:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 1950,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "expression": {
+                            "id": 1947,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967281,
+                            "src": "1675:3:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 1948,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "1679:5:5",
+                          "memberName": "value",
+                          "nodeType": "MemberAccess",
+                          "src": "1675:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "id": 1949,
+                          "name": "TASK_ADDITION_FEE",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1901,
+                          "src": "1688:17:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "1675:30:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "hexValue": "466565207265717569726564",
+                        "id": 1951,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1707:14:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_de16f84f455abb230e1a373e94065ffb18b4a65a389f6a1da708211bb3fcf061",
+                          "typeString": "literal_string \"Fee required\""
+                        },
+                        "value": "Fee required"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_de16f84f455abb230e1a373e94065ffb18b4a65a389f6a1da708211bb3fcf061",
+                          "typeString": "literal_string \"Fee required\""
+                        }
+                      ],
+                      "id": 1946,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
+                      "referencedDeclaration": 4294967278,
+                      "src": "1667:7:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 1952,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1667:55:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1953,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1667:55:5"
+                },
+                {
+                  "id": 1954,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "1733:1:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1944,
+              "nodeType": "StructuredDocumentation",
+              "src": "1586:46:5",
+              "text": " @notice The hasFee modifier"
+            },
+            "id": 1956,
+            "name": "hasFee",
+            "nameLocation": "1647:6:5",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 1945,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1653:2:5"
+            },
+            "src": "1638:104:5",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1974,
+              "nodeType": "Block",
+              "src": "1897:91:5",
+              "statements": [
+                {
+                  "expression": {
+                    "id": 1968,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 1962,
+                      "name": "owner",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1899,
+                      "src": "1908:5:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "arguments": [
+                        {
+                          "expression": {
+                            "id": 1965,
+                            "name": "tx",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967270,
+                            "src": "1924:2:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_transaction",
+                              "typeString": "tx"
+                            }
+                          },
+                          "id": 1966,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberLocation": "1927:6:5",
+                          "memberName": "origin",
+                          "nodeType": "MemberAccess",
+                          "src": "1924:9:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        ],
+                        "id": 1964,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "lValueRequested": false,
+                        "nodeType": "ElementaryTypeNameExpression",
+                        "src": "1916:8:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_address_payable_$",
+                          "typeString": "type(address payable)"
+                        },
+                        "typeName": {
+                          "id": 1963,
+                          "name": "address",
+                          "nodeType": "ElementaryTypeName",
+                          "src": "1916:8:5",
+                          "stateMutability": "payable",
+                          "typeDescriptions": {}
+                        }
+                      },
+                      "id": 1967,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "typeConversion",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "1916:18:5",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address_payable",
+                        "typeString": "address payable"
+                      }
+                    },
+                    "src": "1908:26:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "id": 1969,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1908:26:5"
+                },
+                {
+                  "expression": {
+                    "id": 1972,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "id": 1970,
+                      "name": "TASK_ADDITION_FEE",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1901,
+                      "src": "1945:17:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "id": 1971,
+                      "name": "taskAdditionFee",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 1959,
+                      "src": "1965:15:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1945:35:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 1973,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1945:35:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1957,
+              "nodeType": "StructuredDocumentation",
+              "src": "1750:98:5",
+              "text": " @notice The constructor\n @param taskAdditionFee The fee for adding a task"
+            },
+            "id": 1975,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1960,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1959,
+                  "mutability": "mutable",
+                  "name": "taskAdditionFee",
+                  "nameLocation": "1874:15:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1975,
+                  "src": "1866:23:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1958,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1866:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1865:25:5"
+            },
+            "returnParameters": {
+              "id": 1961,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1897:0:5"
+            },
+            "scope": 2218,
+            "src": "1854:134:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 1982,
+              "nodeType": "Block",
+              "src": "2076:27:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 1979,
+                      "name": "revert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        4294967277,
+                        4294967277
+                      ],
+                      "referencedDeclaration": 4294967277,
+                      "src": "2087:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_revert_pure$__$returns$__$",
+                        "typeString": "function () pure"
+                      }
+                    },
+                    "id": 1980,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2087:8:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1981,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2087:8:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1976,
+              "nodeType": "StructuredDocumentation",
+              "src": "1996:47:5",
+              "text": " @notice The receive function"
+            },
+            "id": 1983,
+            "implemented": true,
+            "kind": "receive",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1977,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2056:2:5"
+            },
+            "returnParameters": {
+              "id": 1978,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2076:0:5"
+            },
+            "scope": 2218,
+            "src": "2049:54:5",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 1990,
+              "nodeType": "Block",
+              "src": "2193:27:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 1987,
+                      "name": "revert",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        4294967277,
+                        4294967277
+                      ],
+                      "referencedDeclaration": 4294967277,
+                      "src": "2204:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_revert_pure$__$returns$__$",
+                        "typeString": "function () pure"
+                      }
+                    },
+                    "id": 1988,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2204:8:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1989,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2204:8:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1984,
+              "nodeType": "StructuredDocumentation",
+              "src": "2111:48:5",
+              "text": " @notice The fallback function"
+            },
+            "id": 1991,
+            "implemented": true,
+            "kind": "fallback",
+            "modifiers": [],
+            "name": "",
+            "nameLocation": "-1:-1:-1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1985,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2173:2:5"
+            },
+            "returnParameters": {
+              "id": 1986,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2193:0:5"
+            },
+            "scope": 2218,
+            "src": "2165:55:5",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2000,
+              "nodeType": "Block",
+              "src": "2371:27:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 1997,
+                      "name": "_clear",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2171,
+                      "src": "2382:6:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
+                        "typeString": "function ()"
+                      }
+                    },
+                    "id": 1998,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "2382:8:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1999,
+                  "nodeType": "ExpressionStatement",
+                  "src": "2382:8:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 1992,
+              "nodeType": "StructuredDocumentation",
+              "src": "2228:101:5",
+              "text": " @notice The clear function\n @dev This function is used to clear the contract"
+            },
+            "functionSelector": "52efea6e",
+            "id": 2001,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "id": 1995,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 1994,
+                  "name": "onlyOwner",
+                  "nameLocations": [
+                    "2361:9:5"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1925,
+                  "src": "2361:9:5"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "2361:9:5"
+              }
+            ],
+            "name": "clear",
+            "nameLocation": "2344:5:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1993,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2349:2:5"
+            },
+            "returnParameters": {
+              "id": 1996,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2371:0:5"
+            },
+            "scope": 2218,
+            "src": "2335:63:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2029,
+              "nodeType": "Block",
+              "src": "3105:263:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "id": 2017,
+                            "name": "ipfsSha256",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2004,
+                            "src": "3175:10:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          },
+                          {
+                            "arguments": [
+                              {
+                                "expression": {
+                                  "id": 2020,
+                                  "name": "msg",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 4294967281,
+                                  "src": "3219:3:5",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_magic_message",
+                                    "typeString": "msg"
+                                  }
+                                },
+                                "id": 2021,
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "memberLocation": "3223:6:5",
+                                "memberName": "sender",
+                                "nodeType": "MemberAccess",
+                                "src": "3219:10:5",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              }
+                            ],
+                            "expression": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_address",
+                                  "typeString": "address"
+                                }
+                              ],
+                              "id": 2019,
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "nodeType": "ElementaryTypeNameExpression",
+                              "src": "3211:8:5",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_address_payable_$",
+                                "typeString": "type(address payable)"
+                              },
+                              "typeName": {
+                                "id": 2018,
+                                "name": "address",
+                                "nodeType": "ElementaryTypeName",
+                                "src": "3211:8:5",
+                                "stateMutability": "payable",
+                                "typeDescriptions": {}
+                              }
+                            },
+                            "id": 2022,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "kind": "typeConversion",
+                            "lValueRequested": false,
+                            "nameLocations": [],
+                            "names": [],
+                            "nodeType": "FunctionCall",
+                            "src": "3211:19:5",
+                            "tryCall": false,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            }
+                          },
+                          {
+                            "id": 2023,
+                            "name": "fee",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2006,
+                            "src": "3254:3:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          {
+                            "id": 2024,
+                            "name": "computingType",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2008,
+                            "src": "3291:13:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint8",
+                              "typeString": "uint8"
+                            }
+                          },
+                          {
+                            "id": 2025,
+                            "name": "size",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2010,
+                            "src": "3329:4:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            },
+                            {
+                              "typeIdentifier": "t_address_payable",
+                              "typeString": "address payable"
+                            },
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            },
+                            {
+                              "typeIdentifier": "t_uint8",
+                              "typeString": "uint8"
+                            },
+                            {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          ],
+                          "id": 2016,
+                          "name": "Task",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1912,
+                          "src": "3139:4:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_type$_t_struct$_Task_$1912_storage_ptr_$",
+                            "typeString": "type(struct MecaTaskAbstractContract.Task storage pointer)"
+                          }
+                        },
+                        "id": 2026,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "structConstructorCall",
+                        "lValueRequested": false,
+                        "nameLocations": [
+                          "3163:10:5",
+                          "3204:5:5",
+                          "3249:3:5",
+                          "3276:13:5",
+                          "3323:4:5"
+                        ],
+                        "names": [
+                          "ipfsSha256",
+                          "owner",
+                          "fee",
+                          "computingType",
+                          "size"
+                        ],
+                        "nodeType": "FunctionCall",
+                        "src": "3139:210:5",
+                        "tryCall": false,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                          "typeString": "struct MecaTaskAbstractContract.Task memory"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                          "typeString": "struct MecaTaskAbstractContract.Task memory"
+                        }
+                      ],
+                      "id": 2015,
+                      "name": "_addTask",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2178,
+                      "src": "3116:8:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_struct$_Task_$1912_memory_ptr_$returns$__$",
+                        "typeString": "function (struct MecaTaskAbstractContract.Task memory)"
+                      }
+                    },
+                    "id": 2027,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "3116:244:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 2028,
+                  "nodeType": "ExpressionStatement",
+                  "src": "3116:244:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2002,
+              "nodeType": "StructuredDocumentation",
+              "src": "2433:482:5",
+              "text": " @notice The addTask function\n @dev This function is used to add a task to the contract\n The function is payable and the fee is sent to the contract\n and kept as a stake and it returns to the task owner when\n the task is deleted\n @param ipfsSha256 The IPFS hash of the task\n @param fee The fee of the task\n @param computingType The type of computing (0: cpu / 1: gpu)\n @param size The i/o size of the task (in bytes)"
+            },
+            "functionSelector": "43e201c0",
+            "id": 2030,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "id": 2013,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 2012,
+                  "name": "hasFee",
+                  "nameLocations": [
+                    "3093:6:5"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1956,
+                  "src": "3093:6:5"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "3093:6:5"
+              }
+            ],
+            "name": "addTask",
+            "nameLocation": "2930:7:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2011,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2004,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "2956:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2030,
+                  "src": "2948:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2003,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2948:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2006,
+                  "mutability": "mutable",
+                  "name": "fee",
+                  "nameLocation": "2985:3:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2030,
+                  "src": "2977:11:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2005,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2977:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2008,
+                  "mutability": "mutable",
+                  "name": "computingType",
+                  "nameLocation": "3005:13:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2030,
+                  "src": "2999:19:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2007,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2999:5:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2010,
+                  "mutability": "mutable",
+                  "name": "size",
+                  "nameLocation": "3037:4:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2030,
+                  "src": "3029:12:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2009,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3029:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2937:111:5"
+            },
+            "returnParameters": {
+              "id": 2014,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3105:0:5"
+            },
+            "scope": 2218,
+            "src": "2921:447:5",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2046,
+              "nodeType": "Block",
+              "src": "3667:53:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "id": 2042,
+                        "name": "ipfsSha256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2033,
+                        "src": "3693:10:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      {
+                        "id": 2043,
+                        "name": "newFee",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2035,
+                        "src": "3705:6:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 2041,
+                      "name": "_updateTaskFee",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2186,
+                      "src": "3678:14:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_bytes32_$_t_uint256_$returns$__$",
+                        "typeString": "function (bytes32,uint256)"
+                      }
+                    },
+                    "id": 2044,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "3678:34:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 2045,
+                  "nodeType": "ExpressionStatement",
+                  "src": "3678:34:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2031,
+              "nodeType": "StructuredDocumentation",
+              "src": "3376:143:5",
+              "text": " @notice Updates the task fee\n @param ipfsSha256 The IPFS hash of the task\n @param newFee The new fee of the task"
+            },
+            "functionSelector": "58f64498",
+            "id": 2047,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "id": 2038,
+                    "name": "ipfsSha256",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 2033,
+                    "src": "3650:10:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  }
+                ],
+                "id": 2039,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 2037,
+                  "name": "onlyTaskOwner",
+                  "nameLocations": [
+                    "3636:13:5"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1943,
+                  "src": "3636:13:5"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "3636:25:5"
+              }
+            ],
+            "name": "updateTaskFee",
+            "nameLocation": "3534:13:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2036,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2033,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "3566:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2047,
+                  "src": "3558:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2032,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3558:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2035,
+                  "mutability": "mutable",
+                  "name": "newFee",
+                  "nameLocation": "3595:6:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2047,
+                  "src": "3587:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2034,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3587:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3547:61:5"
+            },
+            "returnParameters": {
+              "id": 2040,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3667:0:5"
+            },
+            "scope": 2218,
+            "src": "3525:195:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2063,
+              "nodeType": "Block",
+              "src": "4029:57:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "id": 2059,
+                        "name": "ipfsSha256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2050,
+                        "src": "4057:10:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      {
+                        "id": 2060,
+                        "name": "newOwner",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2052,
+                        "src": "4069:8:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 2058,
+                      "name": "_updateTaskOwner",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2194,
+                      "src": "4040:16:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address)"
+                      }
+                    },
+                    "id": 2061,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "4040:38:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 2062,
+                  "nodeType": "ExpressionStatement",
+                  "src": "4040:38:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2048,
+              "nodeType": "StructuredDocumentation",
+              "src": "3728:149:5",
+              "text": " @notice Updates the task owner\n @param ipfsSha256 The IPFS hash of the task\n @param newOwner The new owner of the task"
+            },
+            "functionSelector": "4723218d",
+            "id": 2064,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "id": 2055,
+                    "name": "ipfsSha256",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 2050,
+                    "src": "4012:10:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  }
+                ],
+                "id": 2056,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 2054,
+                  "name": "onlyTaskOwner",
+                  "nameLocations": [
+                    "3998:13:5"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1943,
+                  "src": "3998:13:5"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "3998:25:5"
+              }
+            ],
+            "name": "updateTaskOwner",
+            "nameLocation": "3892:15:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2053,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2050,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "3926:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2064,
+                  "src": "3918:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2049,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3918:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2052,
+                  "mutability": "mutable",
+                  "name": "newOwner",
+                  "nameLocation": "3955:8:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2064,
+                  "src": "3947:16:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2051,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3947:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3907:63:5"
+            },
+            "returnParameters": {
+              "id": 2057,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4029:0:5"
+            },
+            "scope": 2218,
+            "src": "3883:203:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2080,
+              "nodeType": "Block",
+              "src": "4398:55:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "id": 2076,
+                        "name": "ipfsSha256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2067,
+                        "src": "4425:10:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      },
+                      {
+                        "id": 2077,
+                        "name": "newSize",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2069,
+                        "src": "4437:7:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "id": 2075,
+                      "name": "_updateTaskSize",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2202,
+                      "src": "4409:15:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_bytes32_$_t_uint256_$returns$__$",
+                        "typeString": "function (bytes32,uint256)"
+                      }
+                    },
+                    "id": 2078,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "4409:36:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 2079,
+                  "nodeType": "ExpressionStatement",
+                  "src": "4409:36:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2065,
+              "nodeType": "StructuredDocumentation",
+              "src": "4094:154:5",
+              "text": " @notice Updates the task i/o size\n @param ipfsSha256 The IPFS hash of the task\n @param newSize The new i/o size of the task"
+            },
+            "functionSelector": "4b093f9c",
+            "id": 2081,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "id": 2072,
+                    "name": "ipfsSha256",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 2067,
+                    "src": "4381:10:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  }
+                ],
+                "id": 2073,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 2071,
+                  "name": "onlyTaskOwner",
+                  "nameLocations": [
+                    "4367:13:5"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1943,
+                  "src": "4367:13:5"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "4367:25:5"
+              }
+            ],
+            "name": "updateTaskSize",
+            "nameLocation": "4263:14:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2070,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2067,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "4296:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "4288:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2066,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4288:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2069,
+                  "mutability": "mutable",
+                  "name": "newSize",
+                  "nameLocation": "4325:7:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2081,
+                  "src": "4317:15:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2068,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4317:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4277:62:5"
+            },
+            "returnParameters": {
+              "id": 2074,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4398:0:5"
+            },
+            "scope": 2218,
+            "src": "4254:199:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2102,
+              "nodeType": "Block",
+              "src": "4718:107:5",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "id": 2091,
+                        "name": "ipfsSha256",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2084,
+                        "src": "4741:10:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bytes32",
+                          "typeString": "bytes32"
+                        }
+                      ],
+                      "id": 2090,
+                      "name": "_deleteTask",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2208,
+                      "src": "4729:11:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_bytes32_$returns$__$",
+                        "typeString": "function (bytes32)"
+                      }
+                    },
+                    "id": 2092,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "4729:23:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 2093,
+                  "nodeType": "ExpressionStatement",
+                  "src": "4729:23:5"
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "id": 2099,
+                        "name": "TASK_ADDITION_FEE",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1901,
+                        "src": "4799:17:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "id": 2095,
+                              "name": "ipfsSha256",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 2084,
+                              "src": "4772:10:5",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_bytes32",
+                                "typeString": "bytes32"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_bytes32",
+                                "typeString": "bytes32"
+                              }
+                            ],
+                            "id": 2094,
+                            "name": "_getTask",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2217,
+                            "src": "4763:8:5",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_function_internal_view$_t_bytes32_$returns$_t_struct$_Task_$1912_memory_ptr_$",
+                              "typeString": "function (bytes32) view returns (struct MecaTaskAbstractContract.Task memory)"
+                            }
+                          },
+                          "id": 2096,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "functionCall",
+                          "lValueRequested": false,
+                          "nameLocations": [],
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "4763:20:5",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                            "typeString": "struct MecaTaskAbstractContract.Task memory"
+                          }
+                        },
+                        "id": 2097,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberLocation": "4784:5:5",
+                        "memberName": "owner",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 1905,
+                        "src": "4763:26:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address_payable",
+                          "typeString": "address payable"
+                        }
+                      },
+                      "id": 2098,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberLocation": "4790:8:5",
+                      "memberName": "transfer",
+                      "nodeType": "MemberAccess",
+                      "src": "4763:35:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 2100,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "nameLocations": [],
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "4763:54:5",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 2101,
+                  "nodeType": "ExpressionStatement",
+                  "src": "4763:54:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2082,
+              "nodeType": "StructuredDocumentation",
+              "src": "4461:137:5",
+              "text": " @notice Deletes a task\n @dev Return the task fee to the owner\n @param ipfsSha256 The IPFS hash of the task"
+            },
+            "functionSelector": "e64f15a2",
+            "id": 2103,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "id": 2087,
+                    "name": "ipfsSha256",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 2084,
+                    "src": "4701:10:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  }
+                ],
+                "id": 2088,
+                "kind": "modifierInvocation",
+                "modifierName": {
+                  "id": 2086,
+                  "name": "onlyTaskOwner",
+                  "nameLocations": [
+                    "4687:13:5"
+                  ],
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 1943,
+                  "src": "4687:13:5"
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "4687:25:5"
+              }
+            ],
+            "name": "deleteTask",
+            "nameLocation": "4613:10:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2085,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2084,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "4642:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2103,
+                  "src": "4634:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2083,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4634:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4623:36:5"
+            },
+            "returnParameters": {
+              "id": 2089,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4718:0:5"
+            },
+            "scope": 2218,
+            "src": "4604:221:5",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2116,
+              "nodeType": "Block",
+              "src": "5151:50:5",
+              "statements": [
+                {
+                  "expression": {
+                    "expression": {
+                      "arguments": [
+                        {
+                          "id": 2112,
+                          "name": "ipfsSha256",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2106,
+                          "src": "5178:10:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 2111,
+                        "name": "_getTask",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2217,
+                        "src": "5169:8:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_view$_t_bytes32_$returns$_t_struct$_Task_$1912_memory_ptr_$",
+                          "typeString": "function (bytes32) view returns (struct MecaTaskAbstractContract.Task memory)"
+                        }
+                      },
+                      "id": 2113,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "5169:20:5",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                        "typeString": "struct MecaTaskAbstractContract.Task memory"
+                      }
+                    },
+                    "id": 2114,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberLocation": "5190:3:5",
+                    "memberName": "fee",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 1907,
+                    "src": "5169:24:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 2110,
+                  "id": 2115,
+                  "nodeType": "Return",
+                  "src": "5162:31:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2104,
+              "nodeType": "StructuredDocumentation",
+              "src": "4865:160:5",
+              "text": " @notice Get the task fee for the task developer\n @param ipfsSha256 The IPFS hash of the task\n @return uint256 The fee of the task"
+            },
+            "functionSelector": "d004eade",
+            "id": 2117,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTaskFee",
+            "nameLocation": "5040:10:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2107,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2106,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "5069:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2117,
+                  "src": "5061:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2105,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5061:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5050:36:5"
+            },
+            "returnParameters": {
+              "id": 2110,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2109,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2117,
+                  "src": "5137:7:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2108,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5137:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5136:9:5"
+            },
+            "scope": 2218,
+            "src": "5031:170:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2130,
+              "nodeType": "Block",
+              "src": "5496:51:5",
+              "statements": [
+                {
+                  "expression": {
+                    "expression": {
+                      "arguments": [
+                        {
+                          "id": 2126,
+                          "name": "ipfsSha256",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2120,
+                          "src": "5523:10:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 2125,
+                        "name": "_getTask",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2217,
+                        "src": "5514:8:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_view$_t_bytes32_$returns$_t_struct$_Task_$1912_memory_ptr_$",
+                          "typeString": "function (bytes32) view returns (struct MecaTaskAbstractContract.Task memory)"
+                        }
+                      },
+                      "id": 2127,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "5514:20:5",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                        "typeString": "struct MecaTaskAbstractContract.Task memory"
+                      }
+                    },
+                    "id": 2128,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberLocation": "5535:4:5",
+                    "memberName": "size",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 1911,
+                    "src": "5514:25:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 2124,
+                  "id": 2129,
+                  "nodeType": "Return",
+                  "src": "5507:32:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2118,
+              "nodeType": "StructuredDocumentation",
+              "src": "5209:160:5",
+              "text": " @notice Get the task i/o size for the task\n @param ipfsSha256 The IPFS hash of the task\n @return uint256 The i/o size of the task"
+            },
+            "functionSelector": "8b90363b",
+            "id": 2131,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTaskSize",
+            "nameLocation": "5384:11:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2121,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2120,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "5414:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2131,
+                  "src": "5406:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2119,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5406:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5395:36:5"
+            },
+            "returnParameters": {
+              "id": 2124,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2123,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2131,
+                  "src": "5482:7:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2122,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5482:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5481:9:5"
+            },
+            "scope": 2218,
+            "src": "5375:172:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2144,
+              "nodeType": "Block",
+              "src": "5859:60:5",
+              "statements": [
+                {
+                  "expression": {
+                    "expression": {
+                      "arguments": [
+                        {
+                          "id": 2140,
+                          "name": "ipfsSha256",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2134,
+                          "src": "5886:10:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 2139,
+                        "name": "_getTask",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2217,
+                        "src": "5877:8:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_view$_t_bytes32_$returns$_t_struct$_Task_$1912_memory_ptr_$",
+                          "typeString": "function (bytes32) view returns (struct MecaTaskAbstractContract.Task memory)"
+                        }
+                      },
+                      "id": 2141,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "5877:20:5",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                        "typeString": "struct MecaTaskAbstractContract.Task memory"
+                      }
+                    },
+                    "id": 2142,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberLocation": "5898:13:5",
+                    "memberName": "computingType",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 1909,
+                    "src": "5877:34:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "functionReturnParameters": 2138,
+                  "id": 2143,
+                  "nodeType": "Return",
+                  "src": "5870:41:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2132,
+              "nodeType": "StructuredDocumentation",
+              "src": "5555:170:5",
+              "text": " @notice Get the task computing type for the task\n @param ipfsSha256 The IPFS hash of the task\n @return uint8 The computing type of the task"
+            },
+            "functionSelector": "33490116",
+            "id": 2145,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTaskComputingType",
+            "nameLocation": "5740:20:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2135,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2134,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "5779:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2145,
+                  "src": "5771:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2133,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5771:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5760:36:5"
+            },
+            "returnParameters": {
+              "id": 2138,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2137,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2145,
+                  "src": "5847:5:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2136,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "5847:5:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "5846:7:5"
+            },
+            "scope": 2218,
+            "src": "5731:188:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": {
+              "id": 2158,
+              "nodeType": "Block",
+              "src": "6209:52:5",
+              "statements": [
+                {
+                  "expression": {
+                    "expression": {
+                      "arguments": [
+                        {
+                          "id": 2154,
+                          "name": "ipfsSha256",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2148,
+                          "src": "6236:10:5",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": [
+                          {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        ],
+                        "id": 2153,
+                        "name": "_getTask",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 2217,
+                        "src": "6227:8:5",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_function_internal_view$_t_bytes32_$returns$_t_struct$_Task_$1912_memory_ptr_$",
+                          "typeString": "function (bytes32) view returns (struct MecaTaskAbstractContract.Task memory)"
+                        }
+                      },
+                      "id": 2155,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "functionCall",
+                      "lValueRequested": false,
+                      "nameLocations": [],
+                      "names": [],
+                      "nodeType": "FunctionCall",
+                      "src": "6227:20:5",
+                      "tryCall": false,
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                        "typeString": "struct MecaTaskAbstractContract.Task memory"
+                      }
+                    },
+                    "id": 2156,
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "memberLocation": "6248:5:5",
+                    "memberName": "owner",
+                    "nodeType": "MemberAccess",
+                    "referencedDeclaration": 1905,
+                    "src": "6227:26:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address_payable",
+                      "typeString": "address payable"
+                    }
+                  },
+                  "functionReturnParameters": 2152,
+                  "id": 2157,
+                  "nodeType": "Return",
+                  "src": "6220:33:5"
+                }
+              ]
+            },
+            "documentation": {
+              "id": 2146,
+              "nodeType": "StructuredDocumentation",
+              "src": "5927:154:5",
+              "text": " @notice Get the task owner for the task\n @param ipfsSha256 The IPFS hash of the task\n @return address The owner of the task"
+            },
+            "functionSelector": "f5108acf",
+            "id": 2159,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTaskOwner",
+            "nameLocation": "6096:12:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2149,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2148,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "6127:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2159,
+                  "src": "6119:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2147,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6119:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6108:36:5"
+            },
+            "returnParameters": {
+              "id": 2152,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2151,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2159,
+                  "src": "6195:7:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2150,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "6195:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6194:9:5"
+            },
+            "scope": 2218,
+            "src": "6087:174:5",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2160,
+              "nodeType": "StructuredDocumentation",
+              "src": "6269:76:5",
+              "text": " @notice Get all the tasks\n @return task[] The tasks"
+            },
+            "functionSelector": "04a87e38",
+            "id": 2167,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTasks",
+            "nameLocation": "6360:8:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2161,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6368:2:5"
+            },
+            "returnParameters": {
+              "id": 2166,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2165,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2167,
+                  "src": "6402:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Task_$1912_memory_ptr_$dyn_memory_ptr",
+                    "typeString": "struct MecaTaskAbstractContract.Task[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2163,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 2162,
+                        "name": "Task",
+                        "nameLocations": [
+                          "6402:4:5"
+                        ],
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 1912,
+                        "src": "6402:4:5"
+                      },
+                      "referencedDeclaration": 1912,
+                      "src": "6402:4:5",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Task_$1912_storage_ptr",
+                        "typeString": "struct MecaTaskAbstractContract.Task"
+                      }
+                    },
+                    "id": 2164,
+                    "nodeType": "ArrayTypeName",
+                    "src": "6402:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Task_$1912_storage_$dyn_storage_ptr",
+                      "typeString": "struct MecaTaskAbstractContract.Task[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6401:15:5"
+            },
+            "scope": 2218,
+            "src": "6351:66:5",
+            "stateMutability": "view",
+            "virtual": true,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2168,
+              "nodeType": "StructuredDocumentation",
+              "src": "6515:110:5",
+              "text": " @notice The _clear function\n @dev This function is used to clear the contract storage"
+            },
+            "id": 2171,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_clear",
+            "nameLocation": "6640:6:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2169,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6646:2:5"
+            },
+            "returnParameters": {
+              "id": 2170,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6665:0:5"
+            },
+            "scope": 2218,
+            "src": "6631:35:5",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "internal"
+          },
+          {
+            "documentation": {
+              "id": 2172,
+              "nodeType": "StructuredDocumentation",
+              "src": "6674:152:5",
+              "text": " @notice The _addTask function\n @dev This function is used to add a task to the contract\n @param task The task to be added"
+            },
+            "id": 2178,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_addTask",
+            "nameLocation": "6841:8:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2176,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2175,
+                  "mutability": "mutable",
+                  "name": "task",
+                  "nameLocation": "6872:4:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2178,
+                  "src": "6860:16:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                    "typeString": "struct MecaTaskAbstractContract.Task"
+                  },
+                  "typeName": {
+                    "id": 2174,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 2173,
+                      "name": "Task",
+                      "nameLocations": [
+                        "6860:4:5"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 1912,
+                      "src": "6860:4:5"
+                    },
+                    "referencedDeclaration": 1912,
+                    "src": "6860:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Task_$1912_storage_ptr",
+                      "typeString": "struct MecaTaskAbstractContract.Task"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "6849:34:5"
+            },
+            "returnParameters": {
+              "id": 2177,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "6900:0:5"
+            },
+            "scope": 2218,
+            "src": "6832:69:5",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "internal"
+          },
+          {
+            "documentation": {
+              "id": 2179,
+              "nodeType": "StructuredDocumentation",
+              "src": "6909:143:5",
+              "text": " @notice Updates the task fee\n @param ipfsSha256 The IPFS hash of the task\n @param newFee The new fee of the task"
+            },
+            "id": 2186,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_updateTaskFee",
+            "nameLocation": "7067:14:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2184,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2181,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "7100:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2186,
+                  "src": "7092:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2180,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7092:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2183,
+                  "mutability": "mutable",
+                  "name": "newFee",
+                  "nameLocation": "7129:6:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2186,
+                  "src": "7121:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2182,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7121:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7081:61:5"
+            },
+            "returnParameters": {
+              "id": 2185,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "7159:0:5"
+            },
+            "scope": 2218,
+            "src": "7058:102:5",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "internal"
+          },
+          {
+            "documentation": {
+              "id": 2187,
+              "nodeType": "StructuredDocumentation",
+              "src": "7168:149:5",
+              "text": " @notice Updates the task owner\n @param ipfsSha256 The IPFS hash of the task\n @param newOwner The new owner of the task"
+            },
+            "id": 2194,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_updateTaskOwner",
+            "nameLocation": "7332:16:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2192,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2189,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "7367:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2194,
+                  "src": "7359:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2188,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7359:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2191,
+                  "mutability": "mutable",
+                  "name": "newOwner",
+                  "nameLocation": "7396:8:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2194,
+                  "src": "7388:16:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2190,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7388:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7348:63:5"
+            },
+            "returnParameters": {
+              "id": 2193,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "7428:0:5"
+            },
+            "scope": 2218,
+            "src": "7323:106:5",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "internal"
+          },
+          {
+            "documentation": {
+              "id": 2195,
+              "nodeType": "StructuredDocumentation",
+              "src": "7437:154:5",
+              "text": " @notice Updates the task i/o size\n @param ipfsSha256 The IPFS hash of the task\n @param newSize The new i/o size of the task"
+            },
+            "id": 2202,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_updateTaskSize",
+            "nameLocation": "7606:15:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2200,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2197,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "7640:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2202,
+                  "src": "7632:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2196,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7632:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2199,
+                  "mutability": "mutable",
+                  "name": "newSize",
+                  "nameLocation": "7669:7:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2202,
+                  "src": "7661:15:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2198,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7661:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7621:62:5"
+            },
+            "returnParameters": {
+              "id": 2201,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "7700:0:5"
+            },
+            "scope": 2218,
+            "src": "7597:104:5",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "internal"
+          },
+          {
+            "documentation": {
+              "id": 2203,
+              "nodeType": "StructuredDocumentation",
+              "src": "7709:92:5",
+              "text": " @notice Deletes a task\n @param ipfsSha256 The IPFS hash of the task"
+            },
+            "id": 2208,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_deleteTask",
+            "nameLocation": "7816:11:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2206,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2205,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "7846:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2208,
+                  "src": "7838:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2204,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "7838:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "7827:36:5"
+            },
+            "returnParameters": {
+              "id": 2207,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "7880:0:5"
+            },
+            "scope": 2218,
+            "src": "7807:74:5",
+            "stateMutability": "nonpayable",
+            "virtual": true,
+            "visibility": "internal"
+          },
+          {
+            "documentation": {
+              "id": 2209,
+              "nodeType": "StructuredDocumentation",
+              "src": "7889:139:5",
+              "text": " @notice get the task given the ipfs hash\n @param ipfsSha256 The IPFS hash of the task\n @return Task The task"
+            },
+            "id": 2217,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "_getTask",
+            "nameLocation": "8043:8:5",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2212,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2211,
+                  "mutability": "mutable",
+                  "name": "ipfsSha256",
+                  "nameLocation": "8070:10:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2217,
+                  "src": "8062:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 2210,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "8062:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "8051:36:5"
+            },
+            "returnParameters": {
+              "id": 2216,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2215,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2217,
+                  "src": "8155:11:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Task_$1912_memory_ptr",
+                    "typeString": "struct MecaTaskAbstractContract.Task"
+                  },
+                  "typeName": {
+                    "id": 2214,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 2213,
+                      "name": "Task",
+                      "nameLocations": [
+                        "8155:4:5"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 1912,
+                      "src": "8155:4:5"
+                    },
+                    "referencedDeclaration": 1912,
+                    "src": "8155:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Task_$1912_storage_ptr",
+                      "typeString": "struct MecaTaskAbstractContract.Task"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "8154:13:5"
+            },
+            "scope": 2218,
+            "src": "8034:134:5",
+            "stateMutability": "view",
+            "virtual": true,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 2219,
+        "src": "478:7723:5",
+        "usedErrors": []
+      }
+    ],
+    "src": "219:7982:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.17+commit.8df45f5f.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.12",
+  "updatedAt": "2024-02-26T02:39:08.452Z",
+  "devdoc": {
+    "author": "Ciocirlan Stefan-Dan (sdcioc)",
+    "details": "Give the Task structure and and external function for the Task contract",
+    "kind": "dev",
+    "methods": {
+      "addTask(bytes32,uint256,uint8,uint256)": {
+        "details": "This function is used to add a task to the contract The function is payable and the fee is sent to the contract and kept as a stake and it returns to the task owner when the task is deleted",
+        "params": {
+          "computingType": "The type of computing (0: cpu / 1: gpu)",
+          "fee": "The fee of the task",
+          "ipfsSha256": "The IPFS hash of the task",
+          "size": "The i/o size of the task (in bytes)"
+        }
+      },
+      "clear()": {
+        "details": "This function is used to clear the contract"
+      },
+      "constructor": {
+        "params": {
+          "taskAdditionFee": "The fee for adding a task"
+        }
+      },
+      "deleteTask(bytes32)": {
+        "details": "Return the task fee to the owner",
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task"
+        }
+      },
+      "getTaskComputingType(bytes32)": {
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task"
+        },
+        "returns": {
+          "_0": "uint8 The computing type of the task"
+        }
+      },
+      "getTaskFee(bytes32)": {
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task"
+        },
+        "returns": {
+          "_0": "uint256 The fee of the task"
+        }
+      },
+      "getTaskOwner(bytes32)": {
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task"
+        },
+        "returns": {
+          "_0": "address The owner of the task"
+        }
+      },
+      "getTaskSize(bytes32)": {
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task"
+        },
+        "returns": {
+          "_0": "uint256 The i/o size of the task"
+        }
+      },
+      "getTasks()": {
+        "returns": {
+          "_0": "task[] The tasks"
+        }
+      },
+      "updateTaskFee(bytes32,uint256)": {
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task",
+          "newFee": "The new fee of the task"
+        }
+      },
+      "updateTaskOwner(bytes32,address)": {
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task",
+          "newOwner": "The new owner of the task"
+        }
+      },
+      "updateTaskSize(bytes32,uint256)": {
+        "params": {
+          "ipfsSha256": "The IPFS hash of the task",
+          "newSize": "The new i/o size of the task"
+        }
+      }
+    },
+    "title": "MecaTaskAbstractContract",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "addTask(bytes32,uint256,uint8,uint256)": {
+        "notice": "The addTask function"
+      },
+      "clear()": {
+        "notice": "The clear function"
+      },
+      "constructor": {
+        "notice": "The constructor"
+      },
+      "deleteTask(bytes32)": {
+        "notice": "Deletes a task"
+      },
+      "getTaskComputingType(bytes32)": {
+        "notice": "Get the task computing type for the task"
+      },
+      "getTaskFee(bytes32)": {
+        "notice": "Get the task fee for the task developer"
+      },
+      "getTaskOwner(bytes32)": {
+        "notice": "Get the task owner for the task"
+      },
+      "getTaskSize(bytes32)": {
+        "notice": "Get the task i/o size for the task"
+      },
+      "getTasks()": {
+        "notice": "Get all the tasks"
+      },
+      "owner()": {
+        "notice": "The owner of the contract"
+      },
+      "updateTaskFee(bytes32,uint256)": {
+        "notice": "Updates the task fee"
+      },
+      "updateTaskOwner(bytes32,address)": {
+        "notice": "Updates the task owner"
+      },
+      "updateTaskSize(bytes32,uint256)": {
+        "notice": "Updates the task i/o size"
+      }
+    },
+    "notice": "The Task abstract contract for the MECA ecosystem",
+    "version": 1
+  }
+}
