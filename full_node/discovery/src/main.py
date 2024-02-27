@@ -29,7 +29,7 @@ async def start_up():
     queue_process.start()
 
     contract = get_tower_contract(get_config())
-    contract.registerTower(100, "http://localhost:7000", 100, 0)    
+    contract.registerTower(100, "http://localhost:7000", 100, 0, 10)    
 
 
 async def shut_down():
@@ -38,6 +38,9 @@ async def shut_down():
         result_queue.stop()
     if queue_process is not None:
         queue_process.join()
+    
+    contract = get_tower_contract(get_config())
+    contract.deleteTower()
 
 
 @asynccontextmanager
