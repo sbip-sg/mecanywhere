@@ -1,10 +1,20 @@
 services:
   blockchain:
-    image:
-      trufflesuite/ganache-cli:latest
+    build:
+      context: deps/meca_contracts/src
+    # image:
+    #   trufflesuite/ganache-cli:latest
     ports:
       - "8545:8545"
-    command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 -s "123"
+    # command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 -s "123"
+
+  did:
+    build:
+      context: ./did-go
+    ports:
+      - "2592:2592"
+    depends_on:
+      - blockchain
 
   redis:
     image:
