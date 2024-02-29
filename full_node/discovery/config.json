@@ -23,11 +23,11 @@
     "docker_local": {
         "contract": {
             "scheduler": {
-                "contract_address": "0xB409FCd95b4aDeB57fE653200B04ea2b9a7a64e4",
+                "contract_address": "0x956Db525f215Ae7377Eaa353EFC4F3a482F0Bd04",
                 "abi_path": "../../contract/build/contracts/MecaSchedulerContract.json"
             },
             "tower": {
-                "contract_address": "0xa1f89ddAD60FCA19a62a953a596C9FCF763396eE",
+                "contract_address": "0xE6dC2c8d5F4FC50fB88a36bffcC864C60c0b5c0D",
                 "abi_path": "../../contract/build/contracts/MecaTowerContract.json"
             },
             "url": "http://blockchain:8545/"

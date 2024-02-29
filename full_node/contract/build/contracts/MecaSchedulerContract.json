@@ -13,8 +13,28 @@
       "type": "constructor"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "taskId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        }
+      ],
+      "name": "TaskSent",
+      "type": "event"
+    },
+    {
       "stateMutability": "payable",
-      "type": "fallback"
+      "type": "fallback",
+      "payable": true
     },
     {
       "inputs": [],
@@ -27,7 +47,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -60,7 +81,102 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "taskId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getRunningTask",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "ipfsSha256",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "inputHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "towerAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "hostAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "startBlock",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "blockTimeout",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "tower",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "host",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "scheduler",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "task",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "insurance",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct MecaSchedulerAbstractContract.RunningTaskFee",
+              "name": "fee",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct MecaSchedulerAbstractContract.RunningTask",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -73,7 +189,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -86,7 +203,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -105,7 +223,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -118,7 +237,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -204,7 +324,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -217,7 +338,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -230,7 +352,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -258,7 +381,8 @@
       "name": "sendTask",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [
@@ -329,11 +453,13 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "stateMutability": "payable",
-      "type": "receive"
+      "type": "receive",
+      "payable": true
     },
     {
       "inputs": [
@@ -352,7 +478,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -371,59 +498,60 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"schedulerFee\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"SCHEDULER_FEE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"clear\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"taskId\",\"type\":\"bytes32\"}],\"name\":\"finishTask\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getHostContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"hostAddress\",\"type\":\"address\"}],\"name\":\"getHostFirstAvailableBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTaskContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTowerContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"towerAddress\",\"type\":\"address\"}],\"name\":\"getTowerCurrentSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"hostsEndBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"runningTasks\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"inputHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"size\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"towerAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"hostAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"blockTimeout\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tower\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"host\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"scheduler\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"task\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"insurance\",\"type\":\"uint256\"}],\"internalType\":\"struct MecaSchedulerAbstractContract.RunningTaskFee\",\"name\":\"fee\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"schedulerFlag\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"schedulerNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"towerAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"hostAddress\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"inputHash\",\"type\":\"bytes32\"}],\"name\":\"sendTask\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newHostContract\",\"type\":\"address\"}],\"name\":\"setHostContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"newSchedulerFlag\",\"type\":\"bool\"}],\"name\":\"setSchedulerFlag\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newTaskContract\",\"type\":\"address\"}],\"name\":\"setTaskContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newTowerContract\",\"type\":\"address\"}],\"name\":\"setTowerContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"towersSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"clear()\":{\"details\":\"This function is used to clear the contract\"},\"finishTask(bytes32)\":{\"params\":{\"taskId\":\"The ID of the task\"}},\"getHostFirstAvailableBlock(address)\":{\"params\":{\"hostAddress\":\"The address of the host\"},\"returns\":{\"_0\":\"uint256 The first available block\"}},\"getTowerCurrentSize(address)\":{\"params\":{\"towerAddress\":\"The address of the tower\"},\"returns\":{\"_0\":\"uint256 The current size of the tower\"}},\"sendTask(address,address,bytes32,bytes32)\":{\"params\":{\"hostAddress\":\"The address of the host\",\"inputHash\":\"The hash of the input\",\"ipfsSha256\":\"The IPFS hash of the task\",\"towerAddress\":\"The address of the tower\"}},\"setHostContract(address)\":{\"params\":{\"newHostContract\":\"The new host contract\"}},\"setSchedulerFlag(bool)\":{\"params\":{\"newSchedulerFlag\":\"The new scheduler flag\"}},\"setTaskContract(address)\":{\"params\":{\"newTaskContract\":\"The new task contract\"}},\"setTowerContract(address)\":{\"params\":{\"newTowerContract\":\"The new tower contract\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"SCHEDULER_FEE()\":{\"notice\":\"The scheduler fee\"},\"clear()\":{\"notice\":\"The clear function\"},\"finishTask(bytes32)\":{\"notice\":\"Finish a task\"},\"getHostContract()\":{\"notice\":\"Get the host contract\"},\"getHostFirstAvailableBlock(address)\":{\"notice\":\"Get the host first available block\"},\"getTaskContract()\":{\"notice\":\"Get the task contract\"},\"getTowerContract()\":{\"notice\":\"Get the tower contract\"},\"getTowerCurrentSize(address)\":{\"notice\":\"Get the tower current size\"},\"hostsEndBlock(address)\":{\"notice\":\"The end block of the hosts map of hostAddress to endBlock\"},\"owner()\":{\"notice\":\"The owner of the contract\"},\"runningTasks(bytes32)\":{\"notice\":\"The running tasks map of taskId to running task\"},\"schedulerFlag()\":{\"notice\":\"The scheduler flag\"},\"schedulerNonce()\":{\"notice\":\"The scheduler nonce\"},\"sendTask(address,address,bytes32,bytes32)\":{\"notice\":\"Send a task to the scheduler\"},\"setHostContract(address)\":{\"notice\":\"The setHostContract function\"},\"setSchedulerFlag(bool)\":{\"notice\":\"The setSchedulerFlag function\"},\"setTaskContract(address)\":{\"notice\":\"The setTaskContract function\"},\"setTowerContract(address)\":{\"notice\":\"The setTowerContract function\"},\"towersSize(address)\":{\"notice\":\"The Tower size map of towerAddress to size\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/SchedulerContract.sol\":\"MecaSchedulerContract\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[],\"viaIR\":true},\"sources\":{\"project:/contracts/HostAbstract.sol\":{\"keccak256\":\"0xa9783c350c1bfddd335bca97bacceb5cefbea2326d04319c0c7dc49e7f887661\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0bf1e1b03dd6fecd22eeb3791d9256fbed458189fde4dd77f5d55bb5134c7bc3\",\"dweb:/ipfs/Qmf82BGNnQWaEwAESHvxxt7jz3bEtYpzZZAec6eVhbo4w1\"]},\"project:/contracts/SchedulerAbstract.sol\":{\"keccak256\":\"0x1ad1e60075aa3213352062f429eb25cd13623b4e18555604fc8c4f4edabcca1e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://328f4a42bad3fcfc53dc2d2a2c0c5875e82ef243b4283cfb5f9cec8583da318c\",\"dweb:/ipfs/QmVqiHEgffMxu8R52VJoMDX3Wj4sHft7jH2wHhKzhPHRwf\"]},\"project:/contracts/SchedulerContract.sol\":{\"keccak256\":\"0x82c30a9b30e8485b1290206bec92158d994b3e149044e6032136843b3189ada7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e62548a41b07f4f665a8cf362fdc0cd2dc52dd0bf9756e55fdb3b4854d96fad2\",\"dweb:/ipfs/QmTq1epgYJrmhbF5V5rPHWBn9C5kwariRGUYty5pCeknqh\"]},\"project:/contracts/TaskAbstract.sol\":{\"keccak256\":\"0x411101c02863ca7fba0ee21b4e22b5bdf24c7dc21cb79b71920cdb388e079037\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9f5789eadd0c104e5c1bb0a6ccf37ce7ef2248c9808b60e30b319aa1ec99c584\",\"dweb:/ipfs/QmVWeZ1hJheJi1vT7Z1HqDJxREn3PH6XMACKmwbWTcD83r\"]},\"project:/contracts/TowerAbstract.sol\":{\"keccak256\":\"0xa15139cee1819438ee54cc3d78564a796574b4db0146435d0133a20eb2ad05ce\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b09029fab60e86c057d387d16ef329c20a3bf9d252c21baeb870b03db37882c9\",\"dweb:/ipfs/QmU3z1a9aYqAqphSTE2s1JCarXHTKQmTKcQt1TcKAc4a8K\"]}},\"version\":1}",
-  "bytecode": "0x60a0346100a157601f61112438819003918201601f19168301916001600160401b038311848410176100a6578084926020946040528339810103126100a1575160018060a01b031990328260005416176000556080528060015416600155806002541660025560035416600355600060045560ff196005541660055560405161106790816100bd823960805181818161062c015281816109050152610a860152f35b600080fd5b634e487b7160e01b600052604160045260246000fdfe6080806040526004361015610020575b50361561001b57600080fd5b600080fd5b60003560e01c90816277285b14610ec9575080630182d79e14610e8f5780630efda04f14610e66578063191a1fa514610e435780631b1fb71b1461076b5780632e926915146107315780634b95fb06146106e857806352efea6e146106c057806357de12a81461067a57806366041a731461064f5780636735f2d614610614578063781d102a146102ed5780638c57c521146102a45780638da5cb5b1461027b578063a074f11e14610252578063abc1e7eb1461018d578063b5c0ca5a14610164578063b64d963d1461011b5763dce83940146100fd573861000f565b3461001b57600036600319011261001b576020600454604051908152f35b3461001b57602036600319011261001b57610134610eff565b6000546001600160a01b03919061014e9083163314610fa9565b1660018060a01b03196003541617600355600080f35b3461001b57600036600319011261001b576001546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b5760043560005260066020526101a060406000206080815491600181015490600281015460018060a01b0380600384015416908060048501541690600585015416916006850154936101f6600860078801549701610f6d565b96604051998a5260208a0152604089015260608801528587015260a086015260c085015260e084015280516101008401526020810151610120840152604081015161014084015260608101516101608401520151610180820152f35b3461001b57600036600319011261001b576002546040516001600160a01b039091168152602090f35b3461001b57600036600319011261001b576000546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b576102bd610eff565b6000546001600160a01b0391906102d79083163314610fa9565b1660018060a01b03196002541617600255600080f35b3461001b5760208060031936011261001b5760043560405161030e81610f30565b60008152600083820152600060408201526000606082015260006080820152600060a0820152600060c0820152600060e082015260405161034e81610f15565b600081526000848201526000604082015260006060820152600060808201526101008092015281600052600683526040600020906040519161038f83610f30565b805483526001810154858401526002810154604084015260018060a01b03938460038301541660608501908152858060048501541693608087019485526103fa6008836005840154169260a08a01938452600681015460c08b0152600781015460e08b015201610f6d565b958701958652511633036105c45781600052600687526002604060002001549186600360406000200154166000526007885260406000209283549081039081116105ae578760009493859493859493859455835260068b5282600c6040822082815582600182015582600282015582600382015582600482015582600582015582600682015582600782015582600882015582600982015582600a82015582600b82015501555116865151908282156105a5575bf1156105415760008080868194511688865101519082821561059c575bf115610541576000808080608085510151818115610593575b3390f11561054157838360025416925160246040518095819363f5108acf60e01b835260048301525afa91821561054157600092610557575b50600093508392839260608493510151918391831561054d575b1690f11561054157005b6040513d6000823e3d90fd5b6108fc9250610537565b8092508491943d831161058c575b61056f8183610f4c565b8101031261001b575191818316830361001b57600092908361051d565b503d610565565b506108fc6104e4565b506108fc6104cb565b506108fc6104ae565b634e487b7160e01b600052601160045260246000fd5b60405162461bcd60e51b815260048101889052602260248201527f4f6e6c7920746865206f776e65722063616e2066696e69736820746865207461604482015261736b60f01b6064820152608490fd5b3461001b57600036600319011261001b5760206040517f00000000000000000000000000000000000000000000000000000000000000008152f35b3461001b57602036600319011261001b57602061067261066d610eff565b61100a565b604051908152f35b3461001b57602036600319011261001b5760043580151580910361001b576106ad60018060a01b03600054163314610fa9565b60ff801960055416911617600555600080f35b3461001b57600036600319011261001b576106e660018060a01b03600054163314610fa9565b005b3461001b57602036600319011261001b57610701610eff565b6000546001600160a01b03919061071b9083163314610fa9565b1660018060a01b03196001541617600155600080f35b3461001b57602036600319011261001b576001600160a01b03610752610eff565b1660005260086020526020604060002054604051908152f35b608036600319011261001b5761077f610eff565b6024356001600160a01b038116900361001b5760ff6005541615610e0757600254604051636802756f60e11b8152604435600482015291906001600160a01b0316602083602481845afa92831561054157600093610dd2575b5091602060249360405194858092638b90363b60e01b825260443560048301525afa92831561054157600093610d9e575b50600154604051639e89c6f360e01b81526001600160a01b0390911691906020818061083d60443560243560048401610fe2565b0381865afa90811561054157600091610d6c575b50600354604051636daed56f60e11b81526001600160a01b03868116600483015260248201889052604482018490529095911690602086606481855afa95861561054157600096610d38575b50604051631f1d38bb60e21b815290602082806108c260443560243560048401610fe2565b0381895afa91821561054157600092610d04575b50600a6108ec886108e78589610ffd565b610ffd565b049561092a876108e76109038b6108e7888c610ffd565b7f000000000000000000000000000000000000000000000000000000000000000090610ffd565b3403610cd157604051630917c3e560e31b81526001600160a01b038316600482015293602090859060249082905afa93841561054157600094610c9c575b5060405163e24edcab60e01b8152602480356001600160a01b03166004830152909491602091869182905afa93841561054157600094610c68575b506109af60243561100a565b936109c46109bd8787610ffd565b9143610ffd565b10610c195760018060a01b03821660005260076020526109e989604060002054610ffd565b11610bd8576004546040516001600160601b0319606084811b82166020840152602435901b16603482015260443560488201526064356068820152608880820183905281529096909560c087018088116001600160401b0390911117610bc25760c0870160405286516020880120936001890189116105ae57600c99600160809a01600455610a7a60c08a01610f15565b60c089015260e08801527f000000000000000000000000000000000000000000000000000000000000000061010088015261012087015261014086015260405197610ac489610f30565b604435895260643560208a015260408901908152606089019160018060a01b031682528689019060018060a01b0360243516825260a08a019333855260c08b0195865260e08b0196875260c06101008c01980188526000526006602052602060406000209a80518c55015160018b01555160028a0155600389019160018060a01b039051169160018060a01b03199283825416179055600489019060018060a01b0390511682825416179055600588019160018060a01b03905116908254161790555160068601555160078501555180516008850155602081015160098501556040810151600a8501556060810151600b8501550151910155600080f35b634e487b7160e01b600052604160045260246000fd5b60405162461bcd60e51b8152602060048201526019602482015278151bddd95c881cda5e99481b1a5b5a5d08195e18d959591959603a1b6044820152606490fd5b60405162461bcd60e51b815260206004820152602160248201527f486f737420626c6f636b2074696d656f7574206c696d697420657863656564656044820152601960fa1b6064820152608490fd5b9093506020813d602011610c94575b81610c8460209383610f4c565b8101031261001b575192896109a3565b3d9150610c77565b93506020843d602011610cc9575b81610cb760209383610f4c565b8101031261001b579251926020610968565b3d9150610caa565b60405162461bcd60e51b815260206004820152600b60248201526a57726f6e672066756e647360a81b6044820152606490fd5b9091506020813d602011610d30575b81610d2060209383610f4c565b8101031261001b575190886108d6565b3d9150610d13565b9095506020813d602011610d64575b81610d5460209383610f4c565b8101031261001b5751948761089d565b3d9150610d47565b90506020813d602011610d96575b81610d8760209383610f4c565b8101031261001b575185610851565b3d9150610d7a565b9092506020813d602011610dca575b81610dba60209383610f4c565b8101031261001b57519183610809565b3d9150610dad565b92506020833d602011610dff575b81610ded60209383610f4c565b8101031261001b5791519160206107d8565b3d9150610de0565b60405162461bcd60e51b81526020600482015260146024820152735363686564756c6572206e6f742061637469766560601b6044820152606490fd5b3461001b57600036600319011261001b57602060ff600554166040519015158152f35b3461001b57600036600319011261001b576003546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b576001600160a01b03610eb0610eff565b1660005260076020526020604060002054604051908152f35b3461001b57602036600319011261001b576020906001600160a01b03610eed610eff565b16600052600782526040600020548152f35b600435906001600160a01b038216820361001b57565b60a081019081106001600160401b03821117610bc257604052565b61012081019081106001600160401b03821117610bc257604052565b90601f801991011681019081106001600160401b03821117610bc257604052565b90604051610f7a81610f15565b608060048294805484526001810154602085015260028101546040850152600381015460608501520154910152565b15610fb057565b60405162461bcd60e51b815260206004820152600a6024820152694f776e6572206f6e6c7960b01b6044820152606490fd5b6001600160a01b039091168152602081019190915260400190565b919082018092116105ae57565b6001600160a01b031660009081526008602052604090205443811061102c5790565b50439056fea2646970667358221220615d865d1d32362793d0622add9eb7e7beb9d679b1886db90bfe59d99068aa7b64736f6c63430008110033",
-  "deployedBytecode": "0x6080806040526004361015610020575b50361561001b57600080fd5b600080fd5b60003560e01c90816277285b14610ec9575080630182d79e14610e8f5780630efda04f14610e66578063191a1fa514610e435780631b1fb71b1461076b5780632e926915146107315780634b95fb06146106e857806352efea6e146106c057806357de12a81461067a57806366041a731461064f5780636735f2d614610614578063781d102a146102ed5780638c57c521146102a45780638da5cb5b1461027b578063a074f11e14610252578063abc1e7eb1461018d578063b5c0ca5a14610164578063b64d963d1461011b5763dce83940146100fd573861000f565b3461001b57600036600319011261001b576020600454604051908152f35b3461001b57602036600319011261001b57610134610eff565b6000546001600160a01b03919061014e9083163314610fa9565b1660018060a01b03196003541617600355600080f35b3461001b57600036600319011261001b576001546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b5760043560005260066020526101a060406000206080815491600181015490600281015460018060a01b0380600384015416908060048501541690600585015416916006850154936101f6600860078801549701610f6d565b96604051998a5260208a0152604089015260608801528587015260a086015260c085015260e084015280516101008401526020810151610120840152604081015161014084015260608101516101608401520151610180820152f35b3461001b57600036600319011261001b576002546040516001600160a01b039091168152602090f35b3461001b57600036600319011261001b576000546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b576102bd610eff565b6000546001600160a01b0391906102d79083163314610fa9565b1660018060a01b03196002541617600255600080f35b3461001b5760208060031936011261001b5760043560405161030e81610f30565b60008152600083820152600060408201526000606082015260006080820152600060a0820152600060c0820152600060e082015260405161034e81610f15565b600081526000848201526000604082015260006060820152600060808201526101008092015281600052600683526040600020906040519161038f83610f30565b805483526001810154858401526002810154604084015260018060a01b03938460038301541660608501908152858060048501541693608087019485526103fa6008836005840154169260a08a01938452600681015460c08b0152600781015460e08b015201610f6d565b958701958652511633036105c45781600052600687526002604060002001549186600360406000200154166000526007885260406000209283549081039081116105ae578760009493859493859493859455835260068b5282600c6040822082815582600182015582600282015582600382015582600482015582600582015582600682015582600782015582600882015582600982015582600a82015582600b82015501555116865151908282156105a5575bf1156105415760008080868194511688865101519082821561059c575bf115610541576000808080608085510151818115610593575b3390f11561054157838360025416925160246040518095819363f5108acf60e01b835260048301525afa91821561054157600092610557575b50600093508392839260608493510151918391831561054d575b1690f11561054157005b6040513d6000823e3d90fd5b6108fc9250610537565b8092508491943d831161058c575b61056f8183610f4c565b8101031261001b575191818316830361001b57600092908361051d565b503d610565565b506108fc6104e4565b506108fc6104cb565b506108fc6104ae565b634e487b7160e01b600052601160045260246000fd5b60405162461bcd60e51b815260048101889052602260248201527f4f6e6c7920746865206f776e65722063616e2066696e69736820746865207461604482015261736b60f01b6064820152608490fd5b3461001b57600036600319011261001b5760206040517f00000000000000000000000000000000000000000000000000000000000000008152f35b3461001b57602036600319011261001b57602061067261066d610eff565b61100a565b604051908152f35b3461001b57602036600319011261001b5760043580151580910361001b576106ad60018060a01b03600054163314610fa9565b60ff801960055416911617600555600080f35b3461001b57600036600319011261001b576106e660018060a01b03600054163314610fa9565b005b3461001b57602036600319011261001b57610701610eff565b6000546001600160a01b03919061071b9083163314610fa9565b1660018060a01b03196001541617600155600080f35b3461001b57602036600319011261001b576001600160a01b03610752610eff565b1660005260086020526020604060002054604051908152f35b608036600319011261001b5761077f610eff565b6024356001600160a01b038116900361001b5760ff6005541615610e0757600254604051636802756f60e11b8152604435600482015291906001600160a01b0316602083602481845afa92831561054157600093610dd2575b5091602060249360405194858092638b90363b60e01b825260443560048301525afa92831561054157600093610d9e575b50600154604051639e89c6f360e01b81526001600160a01b0390911691906020818061083d60443560243560048401610fe2565b0381865afa90811561054157600091610d6c575b50600354604051636daed56f60e11b81526001600160a01b03868116600483015260248201889052604482018490529095911690602086606481855afa95861561054157600096610d38575b50604051631f1d38bb60e21b815290602082806108c260443560243560048401610fe2565b0381895afa91821561054157600092610d04575b50600a6108ec886108e78589610ffd565b610ffd565b049561092a876108e76109038b6108e7888c610ffd565b7f000000000000000000000000000000000000000000000000000000000000000090610ffd565b3403610cd157604051630917c3e560e31b81526001600160a01b038316600482015293602090859060249082905afa93841561054157600094610c9c575b5060405163e24edcab60e01b8152602480356001600160a01b03166004830152909491602091869182905afa93841561054157600094610c68575b506109af60243561100a565b936109c46109bd8787610ffd565b9143610ffd565b10610c195760018060a01b03821660005260076020526109e989604060002054610ffd565b11610bd8576004546040516001600160601b0319606084811b82166020840152602435901b16603482015260443560488201526064356068820152608880820183905281529096909560c087018088116001600160401b0390911117610bc25760c0870160405286516020880120936001890189116105ae57600c99600160809a01600455610a7a60c08a01610f15565b60c089015260e08801527f000000000000000000000000000000000000000000000000000000000000000061010088015261012087015261014086015260405197610ac489610f30565b604435895260643560208a015260408901908152606089019160018060a01b031682528689019060018060a01b0360243516825260a08a019333855260c08b0195865260e08b0196875260c06101008c01980188526000526006602052602060406000209a80518c55015160018b01555160028a0155600389019160018060a01b039051169160018060a01b03199283825416179055600489019060018060a01b0390511682825416179055600588019160018060a01b03905116908254161790555160068601555160078501555180516008850155602081015160098501556040810151600a8501556060810151600b8501550151910155600080f35b634e487b7160e01b600052604160045260246000fd5b60405162461bcd60e51b8152602060048201526019602482015278151bddd95c881cda5e99481b1a5b5a5d08195e18d959591959603a1b6044820152606490fd5b60405162461bcd60e51b815260206004820152602160248201527f486f737420626c6f636b2074696d656f7574206c696d697420657863656564656044820152601960fa1b6064820152608490fd5b9093506020813d602011610c94575b81610c8460209383610f4c565b8101031261001b575192896109a3565b3d9150610c77565b93506020843d602011610cc9575b81610cb760209383610f4c565b8101031261001b579251926020610968565b3d9150610caa565b60405162461bcd60e51b815260206004820152600b60248201526a57726f6e672066756e647360a81b6044820152606490fd5b9091506020813d602011610d30575b81610d2060209383610f4c565b8101031261001b575190886108d6565b3d9150610d13565b9095506020813d602011610d64575b81610d5460209383610f4c565b8101031261001b5751948761089d565b3d9150610d47565b90506020813d602011610d96575b81610d8760209383610f4c565b8101031261001b575185610851565b3d9150610d7a565b9092506020813d602011610dca575b81610dba60209383610f4c565b8101031261001b57519183610809565b3d9150610dad565b92506020833d602011610dff575b81610ded60209383610f4c565b8101031261001b5791519160206107d8565b3d9150610de0565b60405162461bcd60e51b81526020600482015260146024820152735363686564756c6572206e6f742061637469766560601b6044820152606490fd5b3461001b57600036600319011261001b57602060ff600554166040519015158152f35b3461001b57600036600319011261001b576003546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b576001600160a01b03610eb0610eff565b1660005260076020526020604060002054604051908152f35b3461001b57602036600319011261001b576020906001600160a01b03610eed610eff565b16600052600782526040600020548152f35b600435906001600160a01b038216820361001b57565b60a081019081106001600160401b03821117610bc257604052565b61012081019081106001600160401b03821117610bc257604052565b90601f801991011681019081106001600160401b03821117610bc257604052565b90604051610f7a81610f15565b608060048294805484526001810154602085015260028101546040850152600381015460608501520154910152565b15610fb057565b60405162461bcd60e51b815260206004820152600a6024820152694f776e6572206f6e6c7960b01b6044820152606490fd5b6001600160a01b039091168152602081019190915260400190565b919082018092116105ae57565b6001600160a01b031660009081526008602052604090205443811061102c5790565b50439056fea2646970667358221220615d865d1d32362793d0622add9eb7e7beb9d679b1886db90bfe59d99068aa7b64736f6c63430008110033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"schedulerFee\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"taskId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"TaskSent\",\"type\":\"event\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"SCHEDULER_FEE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"clear\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"taskId\",\"type\":\"bytes32\"}],\"name\":\"finishTask\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getHostContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"hostAddress\",\"type\":\"address\"}],\"name\":\"getHostFirstAvailableBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"taskId\",\"type\":\"bytes32\"}],\"name\":\"getRunningTask\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"inputHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"size\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"towerAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"hostAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"blockTimeout\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tower\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"host\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"scheduler\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"task\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"insurance\",\"type\":\"uint256\"}],\"internalType\":\"struct MecaSchedulerAbstractContract.RunningTaskFee\",\"name\":\"fee\",\"type\":\"tuple\"}],\"internalType\":\"struct MecaSchedulerAbstractContract.RunningTask\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTaskContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getTowerContract\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"towerAddress\",\"type\":\"address\"}],\"name\":\"getTowerCurrentSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"hostsEndBlock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"runningTasks\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"inputHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"size\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"towerAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"hostAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"startBlock\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"blockTimeout\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tower\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"host\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"scheduler\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"task\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"insurance\",\"type\":\"uint256\"}],\"internalType\":\"struct MecaSchedulerAbstractContract.RunningTaskFee\",\"name\":\"fee\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"schedulerFlag\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"schedulerNonce\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"towerAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"hostAddress\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"ipfsSha256\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"inputHash\",\"type\":\"bytes32\"}],\"name\":\"sendTask\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newHostContract\",\"type\":\"address\"}],\"name\":\"setHostContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"newSchedulerFlag\",\"type\":\"bool\"}],\"name\":\"setSchedulerFlag\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newTaskContract\",\"type\":\"address\"}],\"name\":\"setTaskContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newTowerContract\",\"type\":\"address\"}],\"name\":\"setTowerContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"towersSize\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"clear()\":{\"details\":\"This function is used to clear the contract\"},\"finishTask(bytes32)\":{\"params\":{\"taskId\":\"The ID of the task\"}},\"getHostFirstAvailableBlock(address)\":{\"params\":{\"hostAddress\":\"The address of the host\"},\"returns\":{\"_0\":\"uint256 The first available block\"}},\"getRunningTask(bytes32)\":{\"params\":{\"taskId\":\"The ID of the task\"},\"returns\":{\"_0\":\"RunningTask The running task\"}},\"getTowerCurrentSize(address)\":{\"params\":{\"towerAddress\":\"The address of the tower\"},\"returns\":{\"_0\":\"uint256 The current size of the tower\"}},\"sendTask(address,address,bytes32,bytes32)\":{\"params\":{\"hostAddress\":\"The address of the host\",\"inputHash\":\"The hash of the input\",\"ipfsSha256\":\"The IPFS hash of the task\",\"towerAddress\":\"The address of the tower\"}},\"setHostContract(address)\":{\"params\":{\"newHostContract\":\"The new host contract\"}},\"setSchedulerFlag(bool)\":{\"params\":{\"newSchedulerFlag\":\"The new scheduler flag\"}},\"setTaskContract(address)\":{\"params\":{\"newTaskContract\":\"The new task contract\"}},\"setTowerContract(address)\":{\"params\":{\"newTowerContract\":\"The new tower contract\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"SCHEDULER_FEE()\":{\"notice\":\"The scheduler fee\"},\"clear()\":{\"notice\":\"The clear function\"},\"finishTask(bytes32)\":{\"notice\":\"Finish a task\"},\"getHostContract()\":{\"notice\":\"Get the host contract\"},\"getHostFirstAvailableBlock(address)\":{\"notice\":\"Get the host first available block\"},\"getRunningTask(bytes32)\":{\"notice\":\"Get the running task\"},\"getTaskContract()\":{\"notice\":\"Get the task contract\"},\"getTowerContract()\":{\"notice\":\"Get the tower contract\"},\"getTowerCurrentSize(address)\":{\"notice\":\"Get the tower current size\"},\"hostsEndBlock(address)\":{\"notice\":\"The end block of the hosts map of hostAddress to endBlock\"},\"owner()\":{\"notice\":\"The owner of the contract\"},\"runningTasks(bytes32)\":{\"notice\":\"The running tasks map of taskId to running task\"},\"schedulerFlag()\":{\"notice\":\"The scheduler flag\"},\"schedulerNonce()\":{\"notice\":\"The scheduler nonce\"},\"sendTask(address,address,bytes32,bytes32)\":{\"notice\":\"Send a task to the scheduler\"},\"setHostContract(address)\":{\"notice\":\"The setHostContract function\"},\"setSchedulerFlag(bool)\":{\"notice\":\"The setSchedulerFlag function\"},\"setTaskContract(address)\":{\"notice\":\"The setTaskContract function\"},\"setTowerContract(address)\":{\"notice\":\"The setTowerContract function\"},\"towersSize(address)\":{\"notice\":\"The Tower size map of towerAddress to size\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/SchedulerContract.sol\":\"MecaSchedulerContract\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20},\"remappings\":[],\"viaIR\":true},\"sources\":{\"project:/contracts/HostAbstract.sol\":{\"keccak256\":\"0xdd86a0a5588f8b94537597309dde103bdc2a30d40de730df02efb20bfc00cbec\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f1f69e7cc1999db7b869464f177aaa1f3c356ee5e5ec369caced80db7a5cf3eb\",\"dweb:/ipfs/QmbdcPGLABgSeCoV78J3CJTtKwGDovyhvEmH6FRPX3AoHw\"]},\"project:/contracts/SchedulerAbstract.sol\":{\"keccak256\":\"0xbcf6291d232a520124bfea321f7fc8d32f0952b167e40cb9628dad069e7cb123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://666aac561e576c8f46dae3290094d1ef3745094186347ba07e5c09a4ccfbb974\",\"dweb:/ipfs/QmSThfgHnJhoqsQJTfStg2gz6fLhzLHK6QDSqmXEtxbBe4\"]},\"project:/contracts/SchedulerContract.sol\":{\"keccak256\":\"0x998924c7df2d12a9f54e02277fb2a02b0842650028361f71b75e522d48caf3da\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e3ac1af621e75614883b23001e16f8cb290bb6f4d6e5e5d70c05f67762a26a1d\",\"dweb:/ipfs/QmTQgihmGnCuqQtaTPovHPL4hAn2GJF8mJwSnqXHJB3e4L\"]},\"project:/contracts/TaskAbstract.sol\":{\"keccak256\":\"0x539d8b7b8336d50cd6e5af04552e3a9b0d47cf91ace4a2922fdec62e1654883d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://49ccf9c8bf2ad2d3c82460e8f0ceaacbf15df5422646b57e8d0f2b54494e0ca2\",\"dweb:/ipfs/QmWDdzHQT9Qa4sL47LbSqgM4Hb7WRWsomDE4L6hL58BB2V\"]},\"project:/contracts/TowerAbstract.sol\":{\"keccak256\":\"0xb8e634bf0b06fb07d3b146d90eefbaf01f759b91104baeaa24b2a89d8ec10363\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d2c67926c71f71fb35031041067999b80b8ed1d85a9c42c99eef717af8e15eb5\",\"dweb:/ipfs/QmWsqBTs88ACHx4bqnyvmTctE39howPCKhLQMBtD7yYvrR\"]}},\"version\":1}",
+  "bytecode": "0x60a0346100a157601f61125938819003918201601f19168301916001600160401b038311848410176100a6578084926020946040528339810103126100a1575160018060a01b031990328260005416176000556080528060015416600155806002541660025560035416600355600060045560ff196005541660055560405161119c90816100bd82396080518181816105c8015281816108ab01526108f10152f35b600080fd5b634e487b7160e01b600052604160045260246000fdfe6080806040526004361015610020575b50361561001b57600080fd5b600080fd5b60003560e01c90816277285b14610ecb575080630182d79e14610e915780630efda04f14610e68578063191a1fa514610e455780631b1fb71b146107075780632e926915146106cd5780634b95fb061461068457806352efea6e1461065c57806357de12a81461061657806366041a73146105eb5780636735f2d6146105b0578063781d102a146103695780638c57c521146103205780638da5cb5b146102f7578063a074f11e146102ce578063abc1e7eb1461022f578063b5c0ca5a14610206578063b64d963d146101bd578063dce839401461019f5763f1caea5a14610108573861000f565b3461001b57602036600319011261001b57610121611064565b506101a06101306004356110d7565b61019d6040519180518352602081015160208401526040810151604084015260018060a01b0380606083015116606085015280608083015116608085015260a08201511660a084015260c081015160c084015260e081015160e08401526101008091015190830190610fab565bf35b3461001b57600036600319011261001b576020600454604051908152f35b3461001b57602036600319011261001b576101d6610f01565b6000546001600160a01b0391906101f09083163314610fd8565b1660018060a01b03196003541617600355600080f35b3461001b57600036600319011261001b576001546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b5760043560005260066020526101a0604060002061019d815491600181015490600281015460018060a01b038060038401541690806004850154169060058501541691600685015493610299600860078801549701610f6f565b96604051998a5260208a015260408901526060880152608087015260a086015260c085015260e0840152610100830190610fab565b3461001b57600036600319011261001b576002546040516001600160a01b039091168152602090f35b3461001b57600036600319011261001b576000546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b57610339610f01565b6000546001600160a01b0391906103539083163314610fd8565b1660018060a01b03196002541617600255600080f35b3461001b5760208060031936011261001b57600435610387816110d7565b60a08101516001600160a01b039290831633036105605780600052600684526002604060002001548360036040600020015416600052600785526040600020805491820391821161054a5755600052600683526000600c6040822082815582600182015582600282015582600382015582600482015582600582015582600682015582600782015582600882015582600982015582600a82015582600b820155015581606082015116600080808061010086019485515190828215610541575bf1156104dd57600080808086608087015116888651015190828215610538575bf1156104dd57600080808060808551015181811561052f575b3390f1156104dd57838360025416925160246040518095819363f5108acf60e01b835260048301525afa9182156104dd576000926104f3575b5060009350839283926060849351015191839183156104e9575b1690f1156104dd57005b6040513d6000823e3d90fd5b6108fc92506104d3565b8092508491943d8311610528575b61050b8183610f4e565b8101031261001b575191818316830361001b5760009290836104b9565b503d610501565b506108fc610480565b506108fc610467565b506108fc610447565b634e487b7160e01b600052601160045260246000fd5b60405162461bcd60e51b815260048101859052602260248201527f4f6e6c7920746865206f776e65722063616e2066696e69736820746865207461604482015261736b60f01b6064820152608490fd5b3461001b57600036600319011261001b5760206040517f00000000000000000000000000000000000000000000000000000000000000008152f35b3461001b57602036600319011261001b57602061060e610609610f01565b6110b0565b604051908152f35b3461001b57602036600319011261001b5760043580151580910361001b5761064960018060a01b03600054163314610fd8565b60ff801960055416911617600555600080f35b3461001b57600036600319011261001b5761068260018060a01b03600054163314610fd8565b005b3461001b57602036600319011261001b5761069d610f01565b6000546001600160a01b0391906106b79083163314610fd8565b1660018060a01b03196001541617600155600080f35b3461001b57602036600319011261001b576001600160a01b036106ee610f01565b1660005260086020526020604060002054604051908152f35b608036600319011261001b5761071b610f01565b6024356001600160a01b038116900361001b5760ff6005541615610e0957600254604051638b90363b60e01b815260443560048201526001600160a01b0390911691602082602481865afa9182156104dd57600092610dd5575b50600154604051639e89c6f360e01b8152916001600160a01b0390911690602083806107a960443560243560048401611011565b0381855afa9283156104dd57600093610d9e575b5060206024956107cb611039565b50604051636802756f60e11b8152604435600482015296879182905afa9485156104dd57600095610d6a575b50600354604051636daed56f60e11b81526001600160a01b038381166004830152602482018790526044820186905290939116602084606481845afa9384156104dd57600094610d36575b50604051631f1d38bb60e21b8152906020828061086760443560243560048401611011565b0381865afa9182156104dd57600092610d02575b50816108d08961089b6108a98961089b600a6108a08361089b8a8961102c565b61102c565b0496879561102c565b7f00000000000000000000000000000000000000000000000000000000000000009061102c565b3403610ccf57602498602093604051976108e989610f17565b8852848801527f000000000000000000000000000000000000000000000000000000000000000060408801526060870152608086015260405197888092630917c3e560e31b825260018060a01b03871660048301525afa9586156104dd57600096610c9a575b5060405163e24edcab60e01b8152602480356001600160a01b03166004830152909691602091889182905afa9586156104dd57600096610c66575b506109966024356110b0565b956109ab6109a4868961102c565b914361102c565b10610c175760018060a01b03821660005260076020526109d08560406000205461102c565b11610bd657600454604051926020840160018060601b0319808560601b16825260243560601b16603486015260443560488601526064356068860152826088860152608885528460c08101106001600160401b0360c087011117610bc05760c08501604052845190209460018301831161054a577fcfe6437cbca63a8c29f041708629c403575f4d257f1e9d25d95aa07cbd9400b497604097600c95600160809601600455610a8160c08901610f32565b60443560c089015260e08801916064358352610100890190815261012089019160018060a01b0316825261014089019060018060a01b036024351682526101608a01933385526101808b019586526101a08b019687526101c08b019788528b600052600660205260c08d6000209b01518b555160018b01555160028a0155600389019160018060a01b039051169160018060a01b03199283825416179055600489019060018060a01b0390511682825416179055600588019160018060a01b039051169082541617905551600686015551600785015551805160088501556020810151600985015585810151600a8501556060810151600b8501550151910155600282600020015460018060a01b036003846000200154166000526007602052610bb08360002091825461102c565b90558151908152336020820152a1005b634e487b7160e01b600052604160045260246000fd5b60405162461bcd60e51b8152602060048201526019602482015278151bddd95c881cda5e99481b1a5b5a5d08195e18d959591959603a1b6044820152606490fd5b60405162461bcd60e51b815260206004820152602160248201527f486f737420626c6f636b2074696d656f7574206c696d697420657863656564656044820152601960fa1b6064820152608490fd5b9095506020813d602011610c92575b81610c8260209383610f4e565b8101031261001b5751948661098a565b3d9150610c75565b95506020863d602011610cc7575b81610cb560209383610f4e565b8101031261001b57945194602061094f565b3d9150610ca8565b60405162461bcd60e51b815260206004820152600b60248201526a57726f6e672066756e647360a81b6044820152606490fd5b9091506020813d602011610d2e575b81610d1e60209383610f4e565b8101031261001b5751908861087b565b3d9150610d11565b9093506020813d602011610d62575b81610d5260209383610f4e565b8101031261001b57519287610842565b3d9150610d45565b9094506020813d602011610d96575b81610d8660209383610f4e565b8101031261001b575193856107f7565b3d9150610d79565b9492506020853d602011610dcd575b81610dba60209383610f4e565b8101031261001b579351919360206107bd565b3d9150610dad565b9091506020813d602011610e01575b81610df160209383610f4e565b8101031261001b57519083610775565b3d9150610de4565b60405162461bcd60e51b81526020600482015260146024820152735363686564756c6572206e6f742061637469766560601b6044820152606490fd5b3461001b57600036600319011261001b57602060ff600554166040519015158152f35b3461001b57600036600319011261001b576003546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b576001600160a01b03610eb2610f01565b1660005260076020526020604060002054604051908152f35b3461001b57602036600319011261001b576020906001600160a01b03610eef610f01565b16600052600782526040600020548152f35b600435906001600160a01b038216820361001b57565b60a081019081106001600160401b03821117610bc057604052565b61012081019081106001600160401b03821117610bc057604052565b90601f801991011681019081106001600160401b03821117610bc057604052565b90604051610f7c81610f17565b608060048294805484526001810154602085015260028101546040850152600381015460608501520154910152565b60808091805184526020810151602085015260408101516040850152606081015160608501520151910152565b15610fdf57565b60405162461bcd60e51b815260206004820152600a6024820152694f776e6572206f6e6c7960b01b6044820152606490fd5b6001600160a01b039091168152602081019190915260400190565b9190820180921161054a57565b6040519061104682610f17565b60006080838281528260208201528260408201528260608201520152565b6040519061107182610f32565b8160008082528060208301528060408301528060608301528060808301528060a08301528060c083015260e08201526101006110ab611039565b910152565b6001600160a01b03166000908152600860205260409020544381106110d25790565b504390565b6110df611064565b506000526006602052604060002061115d6008604051926110ff84610f32565b80548452600181015460208501526002810154604085015260038101546001600160a01b03908116606086015260048201548116608086015260058201541660a0850152600681015460c0850152600781015460e085015201610f6f565b6101008201529056fea2646970667358221220a91cfee7596788ef73ba61cef157caab77bfee73eb6ae9362e2e8351dc47791464736f6c63430008110033",
+  "deployedBytecode": "0x6080806040526004361015610020575b50361561001b57600080fd5b600080fd5b60003560e01c90816277285b14610ecb575080630182d79e14610e915780630efda04f14610e68578063191a1fa514610e455780631b1fb71b146107075780632e926915146106cd5780634b95fb061461068457806352efea6e1461065c57806357de12a81461061657806366041a73146105eb5780636735f2d6146105b0578063781d102a146103695780638c57c521146103205780638da5cb5b146102f7578063a074f11e146102ce578063abc1e7eb1461022f578063b5c0ca5a14610206578063b64d963d146101bd578063dce839401461019f5763f1caea5a14610108573861000f565b3461001b57602036600319011261001b57610121611064565b506101a06101306004356110d7565b61019d6040519180518352602081015160208401526040810151604084015260018060a01b0380606083015116606085015280608083015116608085015260a08201511660a084015260c081015160c084015260e081015160e08401526101008091015190830190610fab565bf35b3461001b57600036600319011261001b576020600454604051908152f35b3461001b57602036600319011261001b576101d6610f01565b6000546001600160a01b0391906101f09083163314610fd8565b1660018060a01b03196003541617600355600080f35b3461001b57600036600319011261001b576001546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b5760043560005260066020526101a0604060002061019d815491600181015490600281015460018060a01b038060038401541690806004850154169060058501541691600685015493610299600860078801549701610f6f565b96604051998a5260208a015260408901526060880152608087015260a086015260c085015260e0840152610100830190610fab565b3461001b57600036600319011261001b576002546040516001600160a01b039091168152602090f35b3461001b57600036600319011261001b576000546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b57610339610f01565b6000546001600160a01b0391906103539083163314610fd8565b1660018060a01b03196002541617600255600080f35b3461001b5760208060031936011261001b57600435610387816110d7565b60a08101516001600160a01b039290831633036105605780600052600684526002604060002001548360036040600020015416600052600785526040600020805491820391821161054a5755600052600683526000600c6040822082815582600182015582600282015582600382015582600482015582600582015582600682015582600782015582600882015582600982015582600a82015582600b820155015581606082015116600080808061010086019485515190828215610541575bf1156104dd57600080808086608087015116888651015190828215610538575bf1156104dd57600080808060808551015181811561052f575b3390f1156104dd57838360025416925160246040518095819363f5108acf60e01b835260048301525afa9182156104dd576000926104f3575b5060009350839283926060849351015191839183156104e9575b1690f1156104dd57005b6040513d6000823e3d90fd5b6108fc92506104d3565b8092508491943d8311610528575b61050b8183610f4e565b8101031261001b575191818316830361001b5760009290836104b9565b503d610501565b506108fc610480565b506108fc610467565b506108fc610447565b634e487b7160e01b600052601160045260246000fd5b60405162461bcd60e51b815260048101859052602260248201527f4f6e6c7920746865206f776e65722063616e2066696e69736820746865207461604482015261736b60f01b6064820152608490fd5b3461001b57600036600319011261001b5760206040517f00000000000000000000000000000000000000000000000000000000000000008152f35b3461001b57602036600319011261001b57602061060e610609610f01565b6110b0565b604051908152f35b3461001b57602036600319011261001b5760043580151580910361001b5761064960018060a01b03600054163314610fd8565b60ff801960055416911617600555600080f35b3461001b57600036600319011261001b5761068260018060a01b03600054163314610fd8565b005b3461001b57602036600319011261001b5761069d610f01565b6000546001600160a01b0391906106b79083163314610fd8565b1660018060a01b03196001541617600155600080f35b3461001b57602036600319011261001b576001600160a01b036106ee610f01565b1660005260086020526020604060002054604051908152f35b608036600319011261001b5761071b610f01565b6024356001600160a01b038116900361001b5760ff6005541615610e0957600254604051638b90363b60e01b815260443560048201526001600160a01b0390911691602082602481865afa9182156104dd57600092610dd5575b50600154604051639e89c6f360e01b8152916001600160a01b0390911690602083806107a960443560243560048401611011565b0381855afa9283156104dd57600093610d9e575b5060206024956107cb611039565b50604051636802756f60e11b8152604435600482015296879182905afa9485156104dd57600095610d6a575b50600354604051636daed56f60e11b81526001600160a01b038381166004830152602482018790526044820186905290939116602084606481845afa9384156104dd57600094610d36575b50604051631f1d38bb60e21b8152906020828061086760443560243560048401611011565b0381865afa9182156104dd57600092610d02575b50816108d08961089b6108a98961089b600a6108a08361089b8a8961102c565b61102c565b0496879561102c565b7f00000000000000000000000000000000000000000000000000000000000000009061102c565b3403610ccf57602498602093604051976108e989610f17565b8852848801527f000000000000000000000000000000000000000000000000000000000000000060408801526060870152608086015260405197888092630917c3e560e31b825260018060a01b03871660048301525afa9586156104dd57600096610c9a575b5060405163e24edcab60e01b8152602480356001600160a01b03166004830152909691602091889182905afa9586156104dd57600096610c66575b506109966024356110b0565b956109ab6109a4868961102c565b914361102c565b10610c175760018060a01b03821660005260076020526109d08560406000205461102c565b11610bd657600454604051926020840160018060601b0319808560601b16825260243560601b16603486015260443560488601526064356068860152826088860152608885528460c08101106001600160401b0360c087011117610bc05760c08501604052845190209460018301831161054a577fcfe6437cbca63a8c29f041708629c403575f4d257f1e9d25d95aa07cbd9400b497604097600c95600160809601600455610a8160c08901610f32565b60443560c089015260e08801916064358352610100890190815261012089019160018060a01b0316825261014089019060018060a01b036024351682526101608a01933385526101808b019586526101a08b019687526101c08b019788528b600052600660205260c08d6000209b01518b555160018b01555160028a0155600389019160018060a01b039051169160018060a01b03199283825416179055600489019060018060a01b0390511682825416179055600588019160018060a01b039051169082541617905551600686015551600785015551805160088501556020810151600985015585810151600a8501556060810151600b8501550151910155600282600020015460018060a01b036003846000200154166000526007602052610bb08360002091825461102c565b90558151908152336020820152a1005b634e487b7160e01b600052604160045260246000fd5b60405162461bcd60e51b8152602060048201526019602482015278151bddd95c881cda5e99481b1a5b5a5d08195e18d959591959603a1b6044820152606490fd5b60405162461bcd60e51b815260206004820152602160248201527f486f737420626c6f636b2074696d656f7574206c696d697420657863656564656044820152601960fa1b6064820152608490fd5b9095506020813d602011610c92575b81610c8260209383610f4e565b8101031261001b5751948661098a565b3d9150610c75565b95506020863d602011610cc7575b81610cb560209383610f4e565b8101031261001b57945194602061094f565b3d9150610ca8565b60405162461bcd60e51b815260206004820152600b60248201526a57726f6e672066756e647360a81b6044820152606490fd5b9091506020813d602011610d2e575b81610d1e60209383610f4e565b8101031261001b5751908861087b565b3d9150610d11565b9093506020813d602011610d62575b81610d5260209383610f4e565b8101031261001b57519287610842565b3d9150610d45565b9094506020813d602011610d96575b81610d8660209383610f4e565b8101031261001b575193856107f7565b3d9150610d79565b9492506020853d602011610dcd575b81610dba60209383610f4e565b8101031261001b579351919360206107bd565b3d9150610dad565b9091506020813d602011610e01575b81610df160209383610f4e565b8101031261001b57519083610775565b3d9150610de4565b60405162461bcd60e51b81526020600482015260146024820152735363686564756c6572206e6f742061637469766560601b6044820152606490fd5b3461001b57600036600319011261001b57602060ff600554166040519015158152f35b3461001b57600036600319011261001b576003546040516001600160a01b039091168152602090f35b3461001b57602036600319011261001b576001600160a01b03610eb2610f01565b1660005260076020526020604060002054604051908152f35b3461001b57602036600319011261001b576020906001600160a01b03610eef610f01565b16600052600782526040600020548152f35b600435906001600160a01b038216820361001b57565b60a081019081106001600160401b03821117610bc057604052565b61012081019081106001600160401b03821117610bc057604052565b90601f801991011681019081106001600160401b03821117610bc057604052565b90604051610f7c81610f17565b608060048294805484526001810154602085015260028101546040850152600381015460608501520154910152565b60808091805184526020810151602085015260408101516040850152606081015160608501520151910152565b15610fdf57565b60405162461bcd60e51b815260206004820152600a6024820152694f776e6572206f6e6c7960b01b6044820152606490fd5b6001600160a01b039091168152602081019190915260400190565b9190820180921161054a57565b6040519061104682610f17565b60006080838281528260208201528260408201528260608201520152565b6040519061107182610f32565b8160008082528060208301528060408301528060608301528060808301528060a08301528060c083015260e08201526101006110ab611039565b910152565b6001600160a01b03166000908152600860205260409020544381106110d25790565b504390565b6110df611064565b506000526006602052604060002061115d6008604051926110ff84610f32565b80548452600181015460208501526002810154604085015260038101546001600160a01b03908116606086015260048201548116608086015260058201541660a0850152600681015460c0850152600781015460e085015201610f6f565b6101008201529056fea2646970667358221220a91cfee7596788ef73ba61cef157caab77bfee73eb6ae9362e2e8351dc47791464736f6c63430008110033",
   "immutableReferences": {
-    "1188": [
+    "1281": [
       {
         "length": 32,
-        "start": 1580
+        "start": 1480
       },
       {
         "length": 32,
-        "start": 2309
+        "start": 2219
       },
       {
         "length": 32,
-        "start": 2694
+        "start": 2289
       }
     ]
   },
   "generatedSources": [],
   "deployedGeneratedSources": [],
-  "sourceMap": "276:1982:4:-:0;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2807:9:3;;276:1982:4;-1:-1:-1;276:1982:4;;;-1:-1:-1;276:1982:4;2828:28:3;;276:1982:4;;;;;;;2938:60:3;276:1982:4;;2938:60:3;276:1982:4;3009:62:3;276:1982:4;;3009:62:3;276:1982:4;-1:-1:-1;3082:18:3;276:1982:4;;;3111:21:3;276:1982:4;;3111:21:3;276:1982:4;;;;;;;;;2828:28:3;276:1982:4;;;;;;;;;;;;;;;;;-1:-1:-1;276:1982:4;;;;;;-1:-1:-1;276:1982:4;;;;;-1:-1:-1;276:1982:4",
-  "deployedSourceMap": "276:1982:4:-:0;;;;;;;;;;-1:-1:-1;276:1982:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:1982:4;;2226:42:3;;276:1982:4;;2234:10:3;:19;2226:42;:::i;:::-;276:1982:4;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;;405:51;276:1982;;;;;;;;;405:51;276:1982;405:51;;276:1982;405:51;;;;276:1982;;;;;;405:51;276:1982;405:51;;276:1982;;405:51;;276:1982;405:51;;276:1982;;405:51;;;;276:1982;;405:51;;;;276:1982;405:51;;;;;;276:1982;405:51;;;:::i;:::-;276:1982;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;8912:12:3;276:1982:4;;;-1:-1:-1;;;;;276:1982:4;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:1982:4;;2226:42:3;;276:1982:4;;2234:10:3;:19;2226:42;:::i;:::-;276:1982:4;;;;;;;4187:65:3;276:1982:4;;;4187:65:3;276:1982:4;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2197:12;276:1982;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2197:12;276:1982;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;8055:10:3;:31;276:1982:4;;;;;2197:12;276:1982;;;;;;1943:25;276:1982;;;;;;;1905:33;276:1982;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2197:12;276:1982;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2197:12;276:1982;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8239:15:3;;276:1982:4;8196:65:3;;;;;;276:1982:4;8196:65:3;;;;276:1982:4;;;;;;;;8314:15:3;;;:20;276:1982:4;8272:63:3;;;;;;276:1982:4;8272:63:3;;;;276:1982:4;8375:15:3;;;276:1982:4;8375:15:3;;:25;276:1982:4;8346:55:3;;;;;276:1982:4;8055:10:3;8346:55;;;;;276:1982:4;;;;;;;;;;;;;;;;;8432:49:3;;276:1982:4;8432:49:3;;276:1982:4;8432:49:3;;;;;;;276:1982:4;8432:49:3;;;276:1982:4;8520:15:3;276:1982:4;8520:15:3;;;;;;276:1982:4;8520:15:3;;;:20;276:1982:4;8492:49:3;;;;;;;276:1982:4;;8492:49:3;;;;;276:1982:4;8492:49:3;276:1982:4;;;;;;;;;8492:49:3;;;-1:-1:-1;8492:49:3;;8432;;;;;;;;;;;;;;;;;:::i;:::-;;;276:1982:4;;;;;;;;;;;;;;;8432:49:3;276:1982:4;8432:49:3;;;;;;;8346:55;;;;;8272:63;;;;;8196:65;;;;;276:1982:4;;;;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;505:38:3;276:1982:4;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;;;;;;;;2226:42:3;276:1982:4;;;;;;;;2234:10:3;:19;2226:42;:::i;:::-;276:1982:4;;;4823:32:3;276:1982:4;;;;;4823:32:3;276:1982:4;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;2226:42:3;276:1982:4;;;;;;;;2234:10:3;:19;2226:42;:::i;:::-;276:1982:4;;;;;;;-1:-1:-1;;276:1982:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:1982:4;;2226:42:3;;276:1982:4;;2234:10:3;:19;2226:42;:::i;:::-;276:1982:4;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;-1:-1:-1;;;;;276:1982:4;;:::i;:::-;;;;634:48;276:1982;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:1982:4;;;;;;;2563:13:3;276:1982:4;;;;;5368:12:3;276:1982:4;;;-1:-1:-1;;;5368:35:3;;276:1982:4;;;5368:35:3;;276:1982:4;;;-1:-1:-1;;;;;276:1982:4;;;;;;5368:35:3;;;;;;;276:1982:4;5368:35:3;;;276:1982:4;;;;;;;;;;;;;;;5433:36:3;;276:1982:4;;;5433:36:3;;276:1982:4;5433:36:3;;;;;;;276:1982:4;5433:36:3;;;276:1982:4;-1:-1:-1;276:1982:4;;;;-1:-1:-1;;;5507:94:3;;-1:-1:-1;;;;;276:1982:4;;;;;;;;5507:94:3;276:1982:4;;;;;5507:94:3;;;:::i;:::-;;;;;;;;;;;276:1982:4;5507:94:3;;;276:1982:4;-1:-1:-1;276:1982:4;;;;-1:-1:-1;;;5631:117:3;;-1:-1:-1;;;;;276:1982:4;;;;5631:117:3;;276:1982:4;;;;;;;;;;;;;;;;;;;;;;;5631:117:3;;;;;;;276:1982:4;5631:117:3;;;276:1982:4;-1:-1:-1;276:1982:4;;-1:-1:-1;;;5777:85:3;;276:1982:4;;;;5777:85:3;276:1982:4;;;;;5777:85:3;;;:::i;:::-;;;;;;;;;;;276:1982:4;5777:85:3;;;276:1982:4;5897:17:3;5929:2;5897:28;:17;;;;;:::i;:::-;:28;:::i;:::-;276:1982:4;5961:17:3;:59;:17;:44;:28;:17;;;;;:::i;:28::-;5992:13;5961:44;;:::i;:59::-;6039:9;:21;276:1982:4;;;;-1:-1:-1;;;6114:69:3;;-1:-1:-1;;;;;276:1982:4;;;6114:69:3;;276:1982:4;;;;;;;;;;6114:69:3;;;;;;;276:1982:4;6114:69:3;;;276:1982:4;-1:-1:-1;276:1982:4;;-1:-1:-1;;;6226:74:3;;276:1982:4;;;-1:-1:-1;;;;;276:1982:4;;6226:74:3;;276:1982:4;;;;;;;;;;6226:74:3;;;;;;;276:1982:4;6226:74:3;;;276:1982:4;;6347:63:3;276:1982:4;;6347:63:3;:::i;:::-;6446:42;6494:36;6446:42;;;;:::i;:::-;6494:12;;:36;:::i;:::-;-1:-1:-1;276:1982:4;;;;;;;;;;;1492:10;276:1982;;6698:24:3;276:1982:4;;;;;6698:24:3;:::i;:::-;6697:44;276:1982:4;;;;;;-1:-1:-1;;;;;;276:1982:4;;;;;;;6848:182:3;;276:1982:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;6848:182:3;;276:1982:4;;;;;;;-1:-1:-1;;;;;;;;276:1982:4;;;;;;;;;;;;;;6848:182:3;;6824:217;276:1982:4;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;7513:238:3;;276:1982:4;5992:13:3;7513:238;;;276:1982:4;7513:238:3;;;276:1982:4;7513:238:3;;;276:1982:4;;;;;;;:::i;:::-;;;;;;;;7137:630:3;;276:1982:4;;7137:630:3;;276:1982:4;;;;7137:630:3;;276:1982:4;;;;;;;;;7137:630:3;;;276:1982:4;;;;;;;;;;;;7137:630:3;;7376:10;;276:1982:4;;;7137:630:3;;276:1982:4;;;;7137:630:3;;276:1982:4;;;;7513:238:3;7137:630;;276:1982:4;;;;;;1750:12;276:1982;;;;;;;;;;;7137:630:3;276:1982:4;;;;;;5368:12:3;276:1982:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2563:13:3;276:1982:4;;;;;;;;;;;;;;;;;;;1750:12;276:1982;;;;1492:10;276:1982;;;;;;;;;;;;;;;;;;;;;;5929:2:3;276:1982:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;6226:74:3;;;;276:1982:4;6226:74:3;;276:1982:4;6226:74:3;;;;;;276:1982:4;6226:74:3;;;:::i;:::-;;;276:1982:4;;;;;6226:74:3;;;;;;;-1:-1:-1;6226:74:3;;6114:69;;;276:1982:4;6114:69:3;;276:1982:4;6114:69:3;;;;;;276:1982:4;6114:69:3;;;:::i;:::-;;;276:1982:4;;;;;;;;6114:69:3;;;;;-1:-1:-1;6114:69:3;;276:1982:4;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;5777:85:3;;;;276:1982:4;5777:85:3;;276:1982:4;5777:85:3;;;;;;276:1982:4;5777:85:3;;;:::i;:::-;;;276:1982:4;;;;;5777:85:3;;;;;;;-1:-1:-1;5777:85:3;;5631:117;;;;276:1982:4;5631:117:3;;276:1982:4;5631:117:3;;;;;;276:1982:4;5631:117:3;;;:::i;:::-;;;276:1982:4;;;;;5631:117:3;;;;;;;-1:-1:-1;5631:117:3;;5507:94;;;276:1982:4;5507:94:3;;276:1982:4;5507:94:3;;;;;;276:1982:4;5507:94:3;;;:::i;:::-;;;276:1982:4;;;;;5507:94:3;;;;;;-1:-1:-1;5507:94:3;;5433:36;;;;276:1982:4;5433:36:3;;276:1982:4;5433:36:3;;;;;;276:1982:4;5433:36:3;;;:::i;:::-;;;276:1982:4;;;;;5433:36:3;;;;;;;-1:-1:-1;5433:36:3;;5368:35;;;276:1982:4;5368:35:3;;276:1982:4;5368:35:3;;;;;;276:1982:4;5368:35:3;;;:::i;:::-;;;276:1982:4;;;;;;;;5368:35:3;;;;;-1:-1:-1;5368:35:3;;276:1982:4;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;886:25:3;276:1982:4;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;-1:-1:-1;;;;;276:1982:4;;:::i;:::-;;;;1492:10;276:1982;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:1982:4;;;;;;-1:-1:-1;;;;;276:1982:4;;:::i;:::-;;;;515:45;276:1982;;;;;;;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;:::o;:::-;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;:::o;:::-;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;:::o;:::-;;;;;;;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;:::o;:::-;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;:::o;:::-;;;-1:-1:-1;;;276:1982:4;;;;;;;;;;;;-1:-1:-1;;;276:1982:4;;;;;;;;-1:-1:-1;;;;;276:1982:4;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;:::o;999:356::-;-1:-1:-1;;;;;276:1982:4;-1:-1:-1;276:1982:4;;;1161:13;276:1982;;;;;;1228:12;1202:38;;1198:109;;999:356;:::o;1198:109::-;1228:12;;999:356;:::o",
-  "source": "// SPDX-License-Identifier: MIT \r\n/*\r\n\r\nName: MecaSchedulerContract\r\nDescription: An on-chain Scheduler contract for MECA ecosystem\r\nAuthor: Ciocirlan Stefan-Dan (sdcioc)\r\nDate: Feb 2024\r\n\r\nMIT License\r\n\r\n*/\r\n\r\npragma solidity ^0.8.17;\r\n\r\nimport \"./SchedulerAbstract.sol\";\r\n\r\ncontract MecaSchedulerContract is MecaSchedulerAbstractContract\r\n{\r\n    /// The running tasks map of taskId to running task\r\n    mapping(bytes32 => RunningTask) public runningTasks;\r\n    /// The Tower size map of towerAddress to size\r\n    mapping(address => uint256) public towersSize;\r\n    /// The end block of the hosts map of hostAddress to endBlock\r\n    mapping(address => uint256) public hostsEndBlock;\r\n\r\n    // custom modifiers\r\n\r\n    // constructor\r\n    constructor(\r\n        uint256 schedulerFee\r\n    ) MecaSchedulerAbstractContract(schedulerFee)\r\n    {\r\n    }\r\n\r\n    // External functions\r\n\r\n    // External functions that are view\r\n    \r\n    // External functions that are pure\r\n\r\n    // Public functions\r\n\r\n    function getHostFirstAvailableBlock(\r\n        address hostAddress\r\n    ) public view override returns (uint256)\r\n    {\r\n        uint256 hostFirstAvailableBlock = hostsEndBlock[hostAddress];\r\n        if (hostFirstAvailableBlock < block.number) {\r\n            hostFirstAvailableBlock = block.number;\r\n        }\r\n        return hostFirstAvailableBlock;\r\n    }\r\n\r\n    function getTowerCurrentSize(\r\n        address towerAddress\r\n    ) public view override returns (uint256)\r\n    {\r\n        return towersSize[towerAddress];\r\n    }\r\n\r\n    // Internal functions\r\n\r\n    function _clear() internal override\r\n    {\r\n    }\r\n\r\n    function _addRunningTask(\r\n        bytes32 taskId,\r\n        RunningTask memory runningTask\r\n    ) internal override\r\n    {\r\n        runningTasks[taskId] = runningTask;\r\n    }\r\n\r\n    function _deleteRunningTask(\r\n        bytes32 taskId\r\n    ) internal override\r\n    {\r\n        towersSize[runningTasks[taskId].towerAddress] -= runningTasks[taskId].size;\r\n        delete runningTasks[taskId];\r\n    }\r\n\r\n    // Internal functions that are view\r\n\r\n    function _getRunningTask(\r\n        bytes32 taskId\r\n    ) internal view override returns (RunningTask memory)\r\n    {\r\n        return runningTasks[taskId];\r\n    }\r\n\r\n    // Private functions\r\n\r\n}",
+  "sourceMap": "276:2067:4:-:0;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2936:9:3;;276:2067:4;-1:-1:-1;276:2067:4;;;-1:-1:-1;276:2067:4;2957:28:3;;276:2067:4;;;;;;;3067:60:3;276:2067:4;;3067:60:3;276:2067:4;3138:62:3;276:2067:4;;3138:62:3;276:2067:4;-1:-1:-1;3211:18:3;276:2067:4;;;3240:21:3;276:2067:4;;3240:21:3;276:2067:4;;;;;;;;;2957:28:3;276:2067:4;;;;;;;;;;;;;;;;;-1:-1:-1;276:2067:4;;;;;;-1:-1:-1;276:2067:4;;;;;-1:-1:-1;276:2067:4",
+  "deployedSourceMap": "276:2067:4:-:0;;;;;;;;;;-1:-1:-1;276:2067:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;:::i;:::-;;;9087:23:3;276:2067:4;;9087:23:3;:::i;:::-;276:2067:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:2067:4;;2306:42:3;;276:2067:4;;2314:10:3;:19;2306:42;:::i;:::-;276:2067:4;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;;405:51;276:2067;;;;;;;;;405:51;276:2067;405:51;;276:2067;405:51;;;;276:2067;;;;;;405:51;276:2067;405:51;;276:2067;;405:51;;276:2067;405:51;;276:2067;;405:51;;;;276:2067;;405:51;;;;276:2067;405:51;;;;;;276:2067;405:51;;;:::i;:::-;276:2067;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;-1:-1:-1;;276:2067:4;;;;8601:12:3;276:2067:4;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:2067:4;;2306:42:3;;276:2067:4;;2314:10:3;:19;2306:42;:::i;:::-;276:2067:4;;;;;;;4316:65:3;276:2067:4;;;4316:65:3;276:2067:4;;;;;;;;;;;;;;;;;;;7688:23:3;;;:::i;:::-;276:2067:4;7758:17:3;;276:2067:4;-1:-1:-1;;;;;276:2067:4;7758:17:3;276:2067:4;;7744:10:3;:31;276:2067:4;;;;;2028:12;276:2067;;2028:25;276:2067;;;2028:25;276:2067;;;;;;1990:33;276:2067;;;;1979:10;276:2067;;;;;;;;;;;;;;;;;;2028:12;276:2067;;;;;;;;;;;;;;;;2028:25;276:2067;;;;;;;;;;;;;;;;;;;2028:12;276:2067;;;;1979:10;276:2067;;;;;;;;;;;;;;;;;;;;;;;;;7893:24:3;;;;276:2067:4;;;7928:15:3;;;;;;;;;276:2067:4;7885:65:3;;;;;;276:2067:4;7885:65:3;;;;276:2067:4;7969:23:3;;;;;;;276:2067:4;;8003:15:3;;;:20;276:2067:4;7961:63:3;;;;;;276:2067:4;7961:63:3;;;;276:2067:4;8064:15:3;;;7969:23;8064:15;;:25;276:2067:4;8035:55:3;;;;;276:2067:4;7744:10:3;8035:55;;;;;276:2067:4;;2028:25;276:2067;;;;;;;;;;;;;;8121:49:3;;276:2067:4;8121:49:3;;276:2067:4;8121:49:3;;;;;;;276:2067:4;8121:49:3;;;276:2067:4;8209:15:3;276:2067:4;8209:15:3;;;;;;7893:24;8209:15;;;:20;276:2067:4;8181:49:3;;;;;;;276:2067:4;;8181:49:3;;;;;276:2067:4;8181:49:3;276:2067:4;;;;;;;;;8181:49:3;;;-1:-1:-1;8181:49:3;;8121;;;;;;;;;;;;;;;;;:::i;:::-;;;276:2067:4;;;;;;;;;;;;;;;8121:49:3;276:2067:4;8121:49:3;;;;;;;8035:55;;;;;7961:63;;;;;7885:65;;;;;276:2067:4;;;;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;505:38:3;276:2067:4;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;;;;;;;;2306:42:3;276:2067:4;;;;;;;;2314:10:3;:19;2306:42;:::i;:::-;276:2067:4;;;4952:32:3;276:2067:4;;;;;4952:32:3;276:2067:4;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;2306:42:3;276:2067:4;;;;;;;;2314:10:3;:19;2306:42;:::i;:::-;276:2067:4;;;;;;;-1:-1:-1;;276:2067:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:2067:4;;2306:42:3;;276:2067:4;;2314:10:3;:19;2306:42;:::i;:::-;276:2067:4;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;-1:-1:-1;;;;;276:2067:4;;:::i;:::-;;;;634:48;276:2067;;;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;:::i;:::-;;;-1:-1:-1;;;;;276:2067:4;;;;;;;2643:13:3;276:2067:4;;;;;5508:12:3;276:2067:4;;;-1:-1:-1;;;5508:36:3;;276:2067:4;;;5508:36:3;;276:2067:4;-1:-1:-1;;;;;276:2067:4;;;;;;;;;5508:36:3;;;;;;;276:2067:4;5508:36:3;;;276:2067:4;-1:-1:-1;276:2067:4;;;;-1:-1:-1;;;5582:94:3;;276:2067:4;-1:-1:-1;;;;;276:2067:4;;;;;;;5582:94:3;276:2067:4;;;;;5582:94:3;;;:::i;:::-;;;;;;;;;;;276:2067:4;5582:94:3;;;276:2067:4;;;;;;;:::i;:::-;-1:-1:-1;276:2067:4;;-1:-1:-1;;;10604:35:3;;276:2067:4;;;10604:35:3;;276:2067:4;;;;;;10604:35:3;;;;;;;276:2067:4;10604:35:3;;;276:2067:4;-1:-1:-1;276:2067:4;;;;-1:-1:-1;;;10669:117:3;;-1:-1:-1;;;;;276:2067:4;;;;10669:117:3;;276:2067:4;;;;;;;;;;;;;;;;;;;;;;10669:117:3;;;;;;;276:2067:4;10669:117:3;;;276:2067:4;-1:-1:-1;276:2067:4;;-1:-1:-1;;;10815:85:3;;276:2067:4;;;;10815:85:3;276:2067:4;;;;;10815:85:3;;;:::i;:::-;;;;;;;;;;;276:2067:4;10815:85:3;;;276:2067:4;10935:17:3;;10999:59;10935:17;10999:44;:28;10935:17;10999;10967:2;10935:28;:17;;;;;:::i;:::-;:28;:::i;:::-;276:2067:4;10999:17:3;;;;:::i;:28::-;11030:13;10999:44;;:::i;:59::-;11077:9;:21;276:2067:4;;;;;;;;;;;;:::i;:::-;;;11166:190:3;;;276:2067:4;11030:13:3;276:2067:4;11166:190:3;;276:2067:4;;11166:190:3;;276:2067:4;;11166:190:3;;276:2067:4;;;;;;;;;;5927:69:3;;276:2067:4;;;;;;;;5927:69:3;;276:2067:4;5927:69:3;;;;;;;276:2067:4;5927:69:3;;;276:2067:4;-1:-1:-1;276:2067:4;;-1:-1:-1;;;6039:74:3;;276:2067:4;;;-1:-1:-1;;;;;276:2067:4;;6039:74:3;;276:2067:4;;;;;;;;;;6039:74:3;;;;;;;276:2067:4;6039:74:3;;;276:2067:4;;6160:63:3;276:2067:4;;6160:63:3;:::i;:::-;6259:42;6307:36;6259:42;;;;:::i;:::-;6307:12;;:36;:::i;:::-;-1:-1:-1;276:2067:4;;;;;;;;;;;1492:10;276:2067;;6511:24:3;276:2067:4;;;;;6511:24:3;:::i;:::-;6510:44;276:2067:4;;;;;;6661:182:3;276:2067:4;6661:182:3;;276:2067:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;6661:182:3;;276:2067:4;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;6637:217:3;;276:2067:4;;;;;;;;7402:65:3;276:2067:4;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;6932:366:3;;276:2067:4;;;;;6932:366:3;;;276:2067:4;;;6932:366:3;;;276:2067:4;;;;;;;;;6932:366:3;;;276:2067:4;;;;;;;;;;;6932:366:3;;;7147:10;;276:2067:4;;6932:366:3;;;276:2067:4;;;6932:366:3;;;276:2067:4;;;6932:366:3;;;276:2067:4;;;;;;1750:12;276:2067;;;;;;;;;;;;;;;;;5508:12:3;276:2067:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2643:13:3;276:2067:4;;;;;;;;;;;;;;;;;;;1750:12;276:2067;;;;1492:10;276:2067;;;;;;;;;;;;;;;;;;;;;;10967:2:3;276:2067:4;;;;;;;;;;;;;;;;5508:12:3;276:2067:4;;;1844:25;276:2067;;;;;;;;;;1806:33;276:2067;;;;1492:10;276:2067;;1795:74;276:2067;;;;;;1795:74;:::i;:::-;276:2067;;;;;;;7147:10:3;276:2067:4;;;;7402:65:3;276:2067:4;;;;;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;6039:74:3;;;;276:2067:4;6039:74:3;;276:2067:4;6039:74:3;;;;;;276:2067:4;6039:74:3;;;:::i;:::-;;;276:2067:4;;;;;6039:74:3;;;;;;;-1:-1:-1;6039:74:3;;5927:69;;;276:2067:4;5927:69:3;;276:2067:4;5927:69:3;;;;;;276:2067:4;5927:69:3;;;:::i;:::-;;;276:2067:4;;;;;;;;5927:69:3;;;;;-1:-1:-1;5927:69:3;;276:2067:4;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;10815:85:3;;;;276:2067:4;10815:85:3;;276:2067:4;10815:85:3;;;;;;276:2067:4;10815:85:3;;;:::i;:::-;;;276:2067:4;;;;;10815:85:3;;;;;;;-1:-1:-1;10815:85:3;;10669:117;;;;276:2067:4;10669:117:3;;276:2067:4;10669:117:3;;;;;;276:2067:4;10669:117:3;;;:::i;:::-;;;276:2067:4;;;;;10669:117:3;;;;;;;-1:-1:-1;10669:117:3;;10604:35;;;;276:2067:4;10604:35:3;;276:2067:4;10604:35:3;;;;;;276:2067:4;10604:35:3;;;:::i;:::-;;;276:2067:4;;;;;10604:35:3;;;;;;;-1:-1:-1;10604:35:3;;5582:94;;;;276:2067:4;5582:94:3;;276:2067:4;5582:94:3;;;;;;276:2067:4;5582:94:3;;;:::i;:::-;;;276:2067:4;;;;;;5582:94:3;;276:2067:4;5582:94:3;;;;;-1:-1:-1;5582:94:3;;5508:36;;;;276:2067:4;5508:36:3;;276:2067:4;5508:36:3;;;;;;276:2067:4;5508:36:3;;;:::i;:::-;;;276:2067:4;;;;;5508:36:3;;;;;;;-1:-1:-1;5508:36:3;;276:2067:4;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;886:25:3;276:2067:4;;;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;-1:-1:-1;;;;;276:2067:4;;:::i;:::-;;;;1492:10;276:2067;;;;;;;;;;;;;;;;;;;-1:-1:-1;;276:2067:4;;;;;;-1:-1:-1;;;;;276:2067:4;;:::i;:::-;;;;515:45;276:2067;;;;;;;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;:::o;:::-;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;:::o;:::-;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;:::o;:::-;;;;;;;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;:::o;:::-;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;:::o;:::-;;;-1:-1:-1;;;276:2067:4;;;;;;;;;;;;-1:-1:-1;;;276:2067:4;;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;:::o;:::-;;;;;;;:::i;:::-;-1:-1:-1;276:2067:4;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;:::i;:::-;;-1:-1:-1;276:2067:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;:::o;999:356::-;-1:-1:-1;;;;;276:2067:4;-1:-1:-1;276:2067:4;;;1161:13;276:2067;;;;;;1228:12;1202:38;;1198:109;;999:356;:::o;1198:109::-;1228:12;;999:356;:::o;2150:160::-;276:2067;;:::i;:::-;;-1:-1:-1;276:2067:4;2282:12;276:2067;;;-1:-1:-1;276:2067:4;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;276:2067:4;;;;;;;;;;;;;;;;;;;;;;;;;;2282:12;276:2067;;;;;;;;;;;;;;;;;:::i;:::-;;;;;2150:160;:::o",
+  "source": "// SPDX-License-Identifier: MIT \r\n/*\r\n\r\nName: MecaSchedulerContract\r\nDescription: An on-chain Scheduler contract for MECA ecosystem\r\nAuthor: Ciocirlan Stefan-Dan (sdcioc)\r\nDate: Feb 2024\r\n\r\nMIT License\r\n\r\n*/\r\n\r\npragma solidity ^0.8.17;\r\n\r\nimport \"./SchedulerAbstract.sol\";\r\n\r\ncontract MecaSchedulerContract is MecaSchedulerAbstractContract\r\n{\r\n    /// The running tasks map of taskId to running task\r\n    mapping(bytes32 => RunningTask) public runningTasks;\r\n    /// The Tower size map of towerAddress to size\r\n    mapping(address => uint256) public towersSize;\r\n    /// The end block of the hosts map of hostAddress to endBlock\r\n    mapping(address => uint256) public hostsEndBlock;\r\n\r\n    // custom modifiers\r\n\r\n    // constructor\r\n    constructor(\r\n        uint256 schedulerFee\r\n    ) MecaSchedulerAbstractContract(schedulerFee)\r\n    {\r\n    }\r\n\r\n    // External functions\r\n\r\n    // External functions that are view\r\n    \r\n    // External functions that are pure\r\n\r\n    // Public functions\r\n\r\n    function getHostFirstAvailableBlock(\r\n        address hostAddress\r\n    ) public view override returns (uint256)\r\n    {\r\n        uint256 hostFirstAvailableBlock = hostsEndBlock[hostAddress];\r\n        if (hostFirstAvailableBlock < block.number) {\r\n            hostFirstAvailableBlock = block.number;\r\n        }\r\n        return hostFirstAvailableBlock;\r\n    }\r\n\r\n    function getTowerCurrentSize(\r\n        address towerAddress\r\n    ) public view override returns (uint256)\r\n    {\r\n        return towersSize[towerAddress];\r\n    }\r\n\r\n    // Internal functions\r\n\r\n    function _clear() internal override\r\n    {\r\n    }\r\n\r\n    function _addRunningTask(\r\n        bytes32 taskId,\r\n        RunningTask memory runningTask\r\n    ) internal override\r\n    {\r\n        runningTasks[taskId] = runningTask;\r\n        towersSize[runningTasks[taskId].towerAddress] += runningTasks[taskId].size;\r\n    }\r\n\r\n    function _deleteRunningTask(\r\n        bytes32 taskId\r\n    ) internal override\r\n    {\r\n        towersSize[runningTasks[taskId].towerAddress] -= runningTasks[taskId].size;\r\n        delete runningTasks[taskId];\r\n    }\r\n\r\n    // Internal functions that are view\r\n\r\n    function _getRunningTask(\r\n        bytes32 taskId\r\n    ) internal view override returns (RunningTask memory)\r\n    {\r\n        return runningTasks[taskId];\r\n    }\r\n\r\n    // Private functions\r\n\r\n}",
   "sourcePath": "C:\\Users\\jxlim\\repos\\meca_contracts\\src\\contracts\\SchedulerContract.sol",
   "ast": {
     "absolutePath": "project:/contracts/SchedulerContract.sol",
     "exportedSymbols": {
       "MecaHostAbstractContract": [
-        644
+        698
       ],
       "MecaSchedulerAbstractContract": [
-        1762
+        1922
       ],
       "MecaSchedulerContract": [
-        1893
+        2065
       ],
       "MecaTaskAbstractContract": [
-        2218
+        2412
       ],
       "MecaTowerAbstractContract": [
-        3186
+        3398
       ]
     },
-    "id": 1894,
+    "id": 2066,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1764,
+        "id": 1924,
         "literals": [
           "solidity",
           "^",
@@ -436,11 +564,11 @@
       {
         "absolutePath": "project:/contracts/SchedulerAbstract.sol",
         "file": "./SchedulerAbstract.sol",
-        "id": 1765,
+        "id": 1925,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 1894,
-        "sourceUnit": 1763,
+        "scope": 2066,
+        "sourceUnit": 1923,
         "src": "239:33:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -450,16 +578,16 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 1766,
+              "id": 1926,
               "name": "MecaSchedulerAbstractContract",
               "nameLocations": [
                 "310:29:4"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1762,
+              "referencedDeclaration": 1922,
               "src": "310:29:4"
             },
-            "id": 1767,
+            "id": 1927,
             "nodeType": "InheritanceSpecifier",
             "src": "310:29:4"
           }
@@ -468,10 +596,10 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": true,
-        "id": 1893,
+        "id": 2065,
         "linearizedBaseContracts": [
-          1893,
-          1762
+          2065,
+          1922
         ],
         "name": "MecaSchedulerContract",
         "nameLocation": "285:21:4",
@@ -480,29 +608,29 @@
           {
             "constant": false,
             "documentation": {
-              "id": 1768,
+              "id": 1928,
               "nodeType": "StructuredDocumentation",
               "src": "348:51:4",
               "text": "The running tasks map of taskId to running task"
             },
             "functionSelector": "abc1e7eb",
-            "id": 1773,
+            "id": 1933,
             "mutability": "mutable",
             "name": "runningTasks",
             "nameLocation": "444:12:4",
             "nodeType": "VariableDeclaration",
-            "scope": 1893,
+            "scope": 2065,
             "src": "405:51:4",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1237_storage_$",
+              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
               "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask)"
             },
             "typeName": {
-              "id": 1772,
+              "id": 1932,
               "keyType": {
-                "id": 1769,
+                "id": 1929,
                 "name": "bytes32",
                 "nodeType": "ElementaryTypeName",
                 "src": "413:7:4",
@@ -514,26 +642,26 @@
               "nodeType": "Mapping",
               "src": "405:31:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1237_storage_$",
+                "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
                 "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask)"
               },
               "valueType": {
-                "id": 1771,
+                "id": 1931,
                 "nodeType": "UserDefinedTypeName",
                 "pathNode": {
-                  "id": 1770,
+                  "id": 1930,
                   "name": "RunningTask",
                   "nameLocations": [
                     "424:11:4"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1237,
+                  "referencedDeclaration": 1330,
                   "src": "424:11:4"
                 },
-                "referencedDeclaration": 1237,
+                "referencedDeclaration": 1330,
                 "src": "424:11:4",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_RunningTask_$1237_storage_ptr",
+                  "typeIdentifier": "t_struct$_RunningTask_$1330_storage_ptr",
                   "typeString": "struct MecaSchedulerAbstractContract.RunningTask"
                 }
               }
@@ -543,18 +671,18 @@
           {
             "constant": false,
             "documentation": {
-              "id": 1774,
+              "id": 1934,
               "nodeType": "StructuredDocumentation",
               "src": "463:46:4",
               "text": "The Tower size map of towerAddress to size"
             },
             "functionSelector": "0077285b",
-            "id": 1778,
+            "id": 1938,
             "mutability": "mutable",
             "name": "towersSize",
             "nameLocation": "550:10:4",
             "nodeType": "VariableDeclaration",
-            "scope": 1893,
+            "scope": 2065,
             "src": "515:45:4",
             "stateVariable": true,
             "storageLocation": "default",
@@ -563,9 +691,9 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 1777,
+              "id": 1937,
               "keyType": {
-                "id": 1775,
+                "id": 1935,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "523:7:4",
@@ -581,7 +709,7 @@
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 1776,
+                "id": 1936,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
                 "src": "534:7:4",
@@ -596,18 +724,18 @@
           {
             "constant": false,
             "documentation": {
-              "id": 1779,
+              "id": 1939,
               "nodeType": "StructuredDocumentation",
               "src": "567:61:4",
               "text": "The end block of the hosts map of hostAddress to endBlock"
             },
             "functionSelector": "2e926915",
-            "id": 1783,
+            "id": 1943,
             "mutability": "mutable",
             "name": "hostsEndBlock",
             "nameLocation": "669:13:4",
             "nodeType": "VariableDeclaration",
-            "scope": 1893,
+            "scope": 2065,
             "src": "634:48:4",
             "stateVariable": true,
             "storageLocation": "default",
@@ -616,9 +744,9 @@
               "typeString": "mapping(address => uint256)"
             },
             "typeName": {
-              "id": 1782,
+              "id": 1942,
               "keyType": {
-                "id": 1780,
+                "id": 1940,
                 "name": "address",
                 "nodeType": "ElementaryTypeName",
                 "src": "642:7:4",
@@ -634,7 +762,7 @@
                 "typeString": "mapping(address => uint256)"
               },
               "valueType": {
-                "id": 1781,
+                "id": 1941,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
                 "src": "653:7:4",
@@ -648,23 +776,23 @@
           },
           {
             "body": {
-              "id": 1791,
+              "id": 1951,
               "nodeType": "Block",
               "src": "837:8:4",
               "statements": []
             },
-            "id": 1792,
+            "id": 1952,
             "implemented": true,
             "kind": "constructor",
             "modifiers": [
               {
                 "arguments": [
                   {
-                    "id": 1788,
+                    "id": 1948,
                     "name": "schedulerFee",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1785,
+                    "referencedDeclaration": 1945,
                     "src": "818:12:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
@@ -672,16 +800,16 @@
                     }
                   }
                 ],
-                "id": 1789,
+                "id": 1949,
                 "kind": "baseConstructorSpecifier",
                 "modifierName": {
-                  "id": 1787,
+                  "id": 1947,
                   "name": "MecaSchedulerAbstractContract",
                   "nameLocations": [
                     "788:29:4"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 1762,
+                  "referencedDeclaration": 1922,
                   "src": "788:29:4"
                 },
                 "nodeType": "ModifierInvocation",
@@ -692,17 +820,17 @@
             "nameLocation": "-1:-1:-1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1786,
+              "id": 1946,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1785,
+                  "id": 1945,
                   "mutability": "mutable",
                   "name": "schedulerFee",
                   "nameLocation": "768:12:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1792,
+                  "scope": 1952,
                   "src": "760:20:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -711,7 +839,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1784,
+                    "id": 1944,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "760:7:4",
@@ -726,12 +854,12 @@
               "src": "749:38:4"
             },
             "returnParameters": {
-              "id": 1790,
+              "id": 1950,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "837:0:4"
             },
-            "scope": 1893,
+            "scope": 2065,
             "src": "738:107:4",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -739,26 +867,26 @@
           },
           {
             "baseFunctions": [
-              1725
+              1799
             ],
             "body": {
-              "id": 1819,
+              "id": 1979,
               "nodeType": "Block",
               "src": "1116:239:4",
               "statements": [
                 {
                   "assignments": [
-                    1801
+                    1961
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1801,
+                      "id": 1961,
                       "mutability": "mutable",
                       "name": "hostFirstAvailableBlock",
                       "nameLocation": "1135:23:4",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1819,
+                      "scope": 1979,
                       "src": "1127:31:4",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -767,7 +895,7 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 1800,
+                        "id": 1960,
                         "name": "uint256",
                         "nodeType": "ElementaryTypeName",
                         "src": "1127:7:4",
@@ -779,27 +907,27 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1805,
+                  "id": 1965,
                   "initialValue": {
                     "baseExpression": {
-                      "id": 1802,
+                      "id": 1962,
                       "name": "hostsEndBlock",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1783,
+                      "referencedDeclaration": 1943,
                       "src": "1161:13:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
                         "typeString": "mapping(address => uint256)"
                       }
                     },
-                    "id": 1804,
+                    "id": 1964,
                     "indexExpression": {
-                      "id": 1803,
+                      "id": 1963,
                       "name": "hostAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1794,
+                      "referencedDeclaration": 1954,
                       "src": "1175:11:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -826,17 +954,17 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1809,
+                    "id": 1969,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
-                      "id": 1806,
+                      "id": 1966,
                       "name": "hostFirstAvailableBlock",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1801,
+                      "referencedDeclaration": 1961,
                       "src": "1202:23:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -847,7 +975,7 @@
                     "operator": "<",
                     "rightExpression": {
                       "expression": {
-                        "id": 1807,
+                        "id": 1967,
                         "name": "block",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
@@ -858,7 +986,7 @@
                           "typeString": "block"
                         }
                       },
-                      "id": 1808,
+                      "id": 1968,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -878,27 +1006,27 @@
                       "typeString": "bool"
                     }
                   },
-                  "id": 1816,
+                  "id": 1976,
                   "nodeType": "IfStatement",
                   "src": "1198:109:4",
                   "trueBody": {
-                    "id": 1815,
+                    "id": 1975,
                     "nodeType": "Block",
                     "src": "1242:65:4",
                     "statements": [
                       {
                         "expression": {
-                          "id": 1813,
+                          "id": 1973,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "lValueRequested": false,
                           "leftHandSide": {
-                            "id": 1810,
+                            "id": 1970,
                             "name": "hostFirstAvailableBlock",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1801,
+                            "referencedDeclaration": 1961,
                             "src": "1257:23:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint256",
@@ -909,7 +1037,7 @@
                           "operator": "=",
                           "rightHandSide": {
                             "expression": {
-                              "id": 1811,
+                              "id": 1971,
                               "name": "block",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
@@ -920,7 +1048,7 @@
                                 "typeString": "block"
                               }
                             },
-                            "id": 1812,
+                            "id": 1972,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
@@ -940,7 +1068,7 @@
                             "typeString": "uint256"
                           }
                         },
-                        "id": 1814,
+                        "id": 1974,
                         "nodeType": "ExpressionStatement",
                         "src": "1257:38:4"
                       }
@@ -949,26 +1077,26 @@
                 },
                 {
                   "expression": {
-                    "id": 1817,
+                    "id": 1977,
                     "name": "hostFirstAvailableBlock",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 1801,
+                    "referencedDeclaration": 1961,
                     "src": "1324:23:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 1799,
-                  "id": 1818,
+                  "functionReturnParameters": 1959,
+                  "id": 1978,
                   "nodeType": "Return",
                   "src": "1317:30:4"
                 }
               ]
             },
             "functionSelector": "66041a73",
-            "id": 1820,
+            "id": 1980,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -976,23 +1104,23 @@
             "nameLocation": "1008:26:4",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 1796,
+              "id": 1956,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "1084:8:4"
             },
             "parameters": {
-              "id": 1795,
+              "id": 1955,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1794,
+                  "id": 1954,
                   "mutability": "mutable",
                   "name": "hostAddress",
                   "nameLocation": "1053:11:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1820,
+                  "scope": 1980,
                   "src": "1045:19:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1001,7 +1129,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1793,
+                    "id": 1953,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1045:7:4",
@@ -1017,17 +1145,17 @@
               "src": "1034:37:4"
             },
             "returnParameters": {
-              "id": 1799,
+              "id": 1959,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1798,
+                  "id": 1958,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1820,
+                  "scope": 1980,
                   "src": "1102:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1036,7 +1164,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1797,
+                    "id": 1957,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1102:7:4",
@@ -1050,7 +1178,7 @@
               ],
               "src": "1101:9:4"
             },
-            "scope": 1893,
+            "scope": 2065,
             "src": "999:356:4",
             "stateMutability": "view",
             "virtual": false,
@@ -1058,34 +1186,34 @@
           },
           {
             "baseFunctions": [
-              1733
+              1807
             ],
             "body": {
-              "id": 1832,
+              "id": 1992,
               "nodeType": "Block",
               "src": "1474:50:4",
               "statements": [
                 {
                   "expression": {
                     "baseExpression": {
-                      "id": 1828,
+                      "id": 1988,
                       "name": "towersSize",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1778,
+                      "referencedDeclaration": 1938,
                       "src": "1492:10:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
                         "typeString": "mapping(address => uint256)"
                       }
                     },
-                    "id": 1830,
+                    "id": 1990,
                     "indexExpression": {
-                      "id": 1829,
+                      "id": 1989,
                       "name": "towerAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1822,
+                      "referencedDeclaration": 1982,
                       "src": "1503:12:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1103,15 +1231,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 1827,
-                  "id": 1831,
+                  "functionReturnParameters": 1987,
+                  "id": 1991,
                   "nodeType": "Return",
                   "src": "1485:31:4"
                 }
               ]
             },
             "functionSelector": "0182d79e",
-            "id": 1833,
+            "id": 1993,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -1119,23 +1247,23 @@
             "nameLocation": "1372:19:4",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 1824,
+              "id": 1984,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "1442:8:4"
             },
             "parameters": {
-              "id": 1823,
+              "id": 1983,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1822,
+                  "id": 1982,
                   "mutability": "mutable",
                   "name": "towerAddress",
                   "nameLocation": "1410:12:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1833,
+                  "scope": 1993,
                   "src": "1402:20:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1144,7 +1272,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1821,
+                    "id": 1981,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1402:7:4",
@@ -1160,17 +1288,17 @@
               "src": "1391:38:4"
             },
             "returnParameters": {
-              "id": 1827,
+              "id": 1987,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1826,
+                  "id": 1986,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1833,
+                  "scope": 1993,
                   "src": "1460:7:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1179,7 +1307,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1825,
+                    "id": 1985,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1460:7:4",
@@ -1193,7 +1321,7 @@
               ],
               "src": "1459:9:4"
             },
-            "scope": 1893,
+            "scope": 2065,
             "src": "1363:161:4",
             "stateMutability": "view",
             "virtual": false,
@@ -1201,15 +1329,15 @@
           },
           {
             "baseFunctions": [
-              1737
+              1811
             ],
             "body": {
-              "id": 1837,
+              "id": 1997,
               "nodeType": "Block",
               "src": "1602:8:4",
               "statements": []
             },
-            "id": 1838,
+            "id": 1998,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -1217,24 +1345,24 @@
             "nameLocation": "1570:6:4",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 1835,
+              "id": 1995,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "1588:8:4"
             },
             "parameters": {
-              "id": 1834,
+              "id": 1994,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1576:2:4"
             },
             "returnParameters": {
-              "id": 1836,
+              "id": 1996,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1602:0:4"
             },
-            "scope": 1893,
+            "scope": 2065,
             "src": "1561:49:4",
             "stateMutability": "nonpayable",
             "virtual": false,
@@ -1242,40 +1370,40 @@
           },
           {
             "baseFunctions": [
-              1746
+              1906
             ],
             "body": {
-              "id": 1853,
+              "id": 2025,
               "nodeType": "Block",
-              "src": "1739:53:4",
+              "src": "1739:138:4",
               "statements": [
                 {
                   "expression": {
-                    "id": 1851,
+                    "id": 2011,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 1847,
+                        "id": 2007,
                         "name": "runningTasks",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1773,
+                        "referencedDeclaration": 1933,
                         "src": "1750:12:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1237_storage_$",
+                          "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
                           "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask storage ref)"
                         }
                       },
-                      "id": 1849,
+                      "id": 2009,
                       "indexExpression": {
-                        "id": 1848,
+                        "id": 2008,
                         "name": "taskId",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1840,
+                        "referencedDeclaration": 2000,
                         "src": "1763:6:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
@@ -1289,37 +1417,187 @@
                       "nodeType": "IndexAccess",
                       "src": "1750:20:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_RunningTask_$1237_storage",
+                        "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
                         "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
                       }
                     },
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 1850,
+                      "id": 2010,
                       "name": "runningTask",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1843,
+                      "referencedDeclaration": 2003,
                       "src": "1773:11:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_RunningTask_$1237_memory_ptr",
+                        "typeIdentifier": "t_struct$_RunningTask_$1330_memory_ptr",
                         "typeString": "struct MecaSchedulerAbstractContract.RunningTask memory"
                       }
                     },
                     "src": "1750:34:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_RunningTask_$1237_storage",
+                      "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
                       "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
                     }
                   },
-                  "id": 1852,
+                  "id": 2012,
                   "nodeType": "ExpressionStatement",
                   "src": "1750:34:4"
+                },
+                {
+                  "expression": {
+                    "id": 2023,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "baseExpression": {
+                        "id": 2013,
+                        "name": "towersSize",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1938,
+                        "src": "1795:10:4",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
+                          "typeString": "mapping(address => uint256)"
+                        }
+                      },
+                      "id": 2018,
+                      "indexExpression": {
+                        "expression": {
+                          "baseExpression": {
+                            "id": 2014,
+                            "name": "runningTasks",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1933,
+                            "src": "1806:12:4",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
+                              "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask storage ref)"
+                            }
+                          },
+                          "id": 2016,
+                          "indexExpression": {
+                            "id": 2015,
+                            "name": "taskId",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2000,
+                            "src": "1819:6:4",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_bytes32",
+                              "typeString": "bytes32"
+                            }
+                          },
+                          "isConstant": false,
+                          "isLValue": true,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "IndexAccess",
+                          "src": "1806:20:4",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
+                            "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
+                          }
+                        },
+                        "id": 2017,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberLocation": "1827:12:4",
+                        "memberName": "towerAddress",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 1318,
+                        "src": "1806:33:4",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "1795:45:4",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "+=",
+                    "rightHandSide": {
+                      "expression": {
+                        "baseExpression": {
+                          "id": 2019,
+                          "name": "runningTasks",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1933,
+                          "src": "1844:12:4",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
+                            "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask storage ref)"
+                          }
+                        },
+                        "id": 2021,
+                        "indexExpression": {
+                          "id": 2020,
+                          "name": "taskId",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2000,
+                          "src": "1857:6:4",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bytes32",
+                            "typeString": "bytes32"
+                          }
+                        },
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "nodeType": "IndexAccess",
+                        "src": "1844:20:4",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
+                          "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
+                        }
+                      },
+                      "id": 2022,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberLocation": "1865:4:4",
+                      "memberName": "size",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 1316,
+                      "src": "1844:25:4",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "1795:74:4",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 2024,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1795:74:4"
                 }
               ]
             },
-            "id": 1854,
+            "id": 2026,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -1327,23 +1605,23 @@
             "nameLocation": "1627:15:4",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 1845,
+              "id": 2005,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "1725:8:4"
             },
             "parameters": {
-              "id": 1844,
+              "id": 2004,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1840,
+                  "id": 2000,
                   "mutability": "mutable",
                   "name": "taskId",
                   "nameLocation": "1661:6:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1854,
+                  "scope": 2026,
                   "src": "1653:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1352,7 +1630,7 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 1839,
+                    "id": 1999,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "1653:7:4",
@@ -1365,36 +1643,36 @@
                 },
                 {
                   "constant": false,
-                  "id": 1843,
+                  "id": 2003,
                   "mutability": "mutable",
                   "name": "runningTask",
                   "nameLocation": "1697:11:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1854,
+                  "scope": 2026,
                   "src": "1678:30:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_RunningTask_$1237_memory_ptr",
+                    "typeIdentifier": "t_struct$_RunningTask_$1330_memory_ptr",
                     "typeString": "struct MecaSchedulerAbstractContract.RunningTask"
                   },
                   "typeName": {
-                    "id": 1842,
+                    "id": 2002,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1841,
+                      "id": 2001,
                       "name": "RunningTask",
                       "nameLocations": [
                         "1678:11:4"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1237,
+                      "referencedDeclaration": 1330,
                       "src": "1678:11:4"
                     },
-                    "referencedDeclaration": 1237,
+                    "referencedDeclaration": 1330,
                     "src": "1678:11:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_RunningTask_$1237_storage_ptr",
+                      "typeIdentifier": "t_struct$_RunningTask_$1330_storage_ptr",
                       "typeString": "struct MecaSchedulerAbstractContract.RunningTask"
                     }
                   },
@@ -1404,69 +1682,69 @@
               "src": "1642:73:4"
             },
             "returnParameters": {
-              "id": 1846,
+              "id": 2006,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1739:0:4"
             },
-            "scope": 1893,
-            "src": "1618:174:4",
+            "scope": 2065,
+            "src": "1618:259:4",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
             "baseFunctions": [
-              1752
+              1912
             ],
             "body": {
-              "id": 1877,
+              "id": 2049,
               "nodeType": "Block",
-              "src": "1883:131:4",
+              "src": "1968:131:4",
               "statements": [
                 {
                   "expression": {
-                    "id": 1870,
+                    "id": 2042,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 1860,
+                        "id": 2032,
                         "name": "towersSize",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1778,
-                        "src": "1894:10:4",
+                        "referencedDeclaration": 1938,
+                        "src": "1979:10:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
                           "typeString": "mapping(address => uint256)"
                         }
                       },
-                      "id": 1865,
+                      "id": 2037,
                       "indexExpression": {
                         "expression": {
                           "baseExpression": {
-                            "id": 1861,
+                            "id": 2033,
                             "name": "runningTasks",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1773,
-                            "src": "1905:12:4",
+                            "referencedDeclaration": 1933,
+                            "src": "1990:12:4",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1237_storage_$",
+                              "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
                               "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask storage ref)"
                             }
                           },
-                          "id": 1863,
+                          "id": 2035,
                           "indexExpression": {
-                            "id": 1862,
+                            "id": 2034,
                             "name": "taskId",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1856,
-                            "src": "1918:6:4",
+                            "referencedDeclaration": 2028,
+                            "src": "2003:6:4",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
                               "typeString": "bytes32"
@@ -1477,22 +1755,22 @@
                           "isPure": false,
                           "lValueRequested": false,
                           "nodeType": "IndexAccess",
-                          "src": "1905:20:4",
+                          "src": "1990:20:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_RunningTask_$1237_storage",
+                            "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
                             "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
                           }
                         },
-                        "id": 1864,
+                        "id": 2036,
                         "isConstant": false,
                         "isLValue": true,
                         "isPure": false,
                         "lValueRequested": false,
-                        "memberLocation": "1926:12:4",
+                        "memberLocation": "2011:12:4",
                         "memberName": "towerAddress",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 1225,
-                        "src": "1905:33:4",
+                        "referencedDeclaration": 1318,
+                        "src": "1990:33:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -1503,7 +1781,7 @@
                       "isPure": false,
                       "lValueRequested": true,
                       "nodeType": "IndexAccess",
-                      "src": "1894:45:4",
+                      "src": "1979:45:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1514,25 +1792,25 @@
                     "rightHandSide": {
                       "expression": {
                         "baseExpression": {
-                          "id": 1866,
+                          "id": 2038,
                           "name": "runningTasks",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1773,
-                          "src": "1943:12:4",
+                          "referencedDeclaration": 1933,
+                          "src": "2028:12:4",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1237_storage_$",
+                            "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
                             "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask storage ref)"
                           }
                         },
-                        "id": 1868,
+                        "id": 2040,
                         "indexExpression": {
-                          "id": 1867,
+                          "id": 2039,
                           "name": "taskId",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 1856,
-                          "src": "1956:6:4",
+                          "referencedDeclaration": 2028,
+                          "src": "2041:6:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_bytes32",
                             "typeString": "bytes32"
@@ -1543,40 +1821,40 @@
                         "isPure": false,
                         "lValueRequested": false,
                         "nodeType": "IndexAccess",
-                        "src": "1943:20:4",
+                        "src": "2028:20:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_RunningTask_$1237_storage",
+                          "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
                           "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
                         }
                       },
-                      "id": 1869,
+                      "id": 2041,
                       "isConstant": false,
                       "isLValue": true,
                       "isPure": false,
                       "lValueRequested": false,
-                      "memberLocation": "1964:4:4",
+                      "memberLocation": "2049:4:4",
                       "memberName": "size",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 1223,
-                      "src": "1943:25:4",
+                      "referencedDeclaration": 1316,
+                      "src": "2028:25:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "1894:74:4",
+                    "src": "1979:74:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
-                  "id": 1871,
+                  "id": 2043,
                   "nodeType": "ExpressionStatement",
-                  "src": "1894:74:4"
+                  "src": "1979:74:4"
                 },
                 {
                   "expression": {
-                    "id": 1875,
+                    "id": 2047,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -1584,28 +1862,28 @@
                     "nodeType": "UnaryOperation",
                     "operator": "delete",
                     "prefix": true,
-                    "src": "1979:27:4",
+                    "src": "2064:27:4",
                     "subExpression": {
                       "baseExpression": {
-                        "id": 1872,
+                        "id": 2044,
                         "name": "runningTasks",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1773,
-                        "src": "1986:12:4",
+                        "referencedDeclaration": 1933,
+                        "src": "2071:12:4",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1237_storage_$",
+                          "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
                           "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask storage ref)"
                         }
                       },
-                      "id": 1874,
+                      "id": 2046,
                       "indexExpression": {
-                        "id": 1873,
+                        "id": 2045,
                         "name": "taskId",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1856,
-                        "src": "1999:6:4",
+                        "referencedDeclaration": 2028,
+                        "src": "2084:6:4",
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes32",
                           "typeString": "bytes32"
@@ -1616,9 +1894,9 @@
                       "isPure": false,
                       "lValueRequested": true,
                       "nodeType": "IndexAccess",
-                      "src": "1986:20:4",
+                      "src": "2071:20:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_RunningTask_$1237_storage",
+                        "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
                         "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
                       }
                     },
@@ -1627,38 +1905,38 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1876,
+                  "id": 2048,
                   "nodeType": "ExpressionStatement",
-                  "src": "1979:27:4"
+                  "src": "2064:27:4"
                 }
               ]
             },
-            "id": 1878,
+            "id": 2050,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "_deleteRunningTask",
-            "nameLocation": "1809:18:4",
+            "nameLocation": "1894:18:4",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 1858,
+              "id": 2030,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
-              "src": "1869:8:4"
+              "src": "1954:8:4"
             },
             "parameters": {
-              "id": 1857,
+              "id": 2029,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1856,
+                  "id": 2028,
                   "mutability": "mutable",
                   "name": "taskId",
-                  "nameLocation": "1846:6:4",
+                  "nameLocation": "1931:6:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1878,
-                  "src": "1838:14:4",
+                  "scope": 2050,
+                  "src": "1923:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1666,10 +1944,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 1855,
+                    "id": 2027,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1838:7:4",
+                    "src": "1923:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1678,51 +1956,51 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1827:32:4"
+              "src": "1912:32:4"
             },
             "returnParameters": {
-              "id": 1859,
+              "id": 2031,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1883:0:4"
+              "src": "1968:0:4"
             },
-            "scope": 1893,
-            "src": "1800:214:4",
+            "scope": 2065,
+            "src": "1885:214:4",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
             "baseFunctions": [
-              1761
+              1921
             ],
             "body": {
-              "id": 1891,
+              "id": 2063,
               "nodeType": "Block",
-              "src": "2179:46:4",
+              "src": "2264:46:4",
               "statements": [
                 {
                   "expression": {
                     "baseExpression": {
-                      "id": 1887,
+                      "id": 2059,
                       "name": "runningTasks",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1773,
-                      "src": "2197:12:4",
+                      "referencedDeclaration": 1933,
+                      "src": "2282:12:4",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1237_storage_$",
+                        "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_RunningTask_$1330_storage_$",
                         "typeString": "mapping(bytes32 => struct MecaSchedulerAbstractContract.RunningTask storage ref)"
                       }
                     },
-                    "id": 1889,
+                    "id": 2061,
                     "indexExpression": {
-                      "id": 1888,
+                      "id": 2060,
                       "name": "taskId",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1880,
-                      "src": "2210:6:4",
+                      "referencedDeclaration": 2052,
+                      "src": "2295:6:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_bytes32",
                         "typeString": "bytes32"
@@ -1733,45 +2011,45 @@
                     "isPure": false,
                     "lValueRequested": false,
                     "nodeType": "IndexAccess",
-                    "src": "2197:20:4",
+                    "src": "2282:20:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_RunningTask_$1237_storage",
+                      "typeIdentifier": "t_struct$_RunningTask_$1330_storage",
                       "typeString": "struct MecaSchedulerAbstractContract.RunningTask storage ref"
                     }
                   },
-                  "functionReturnParameters": 1886,
-                  "id": 1890,
+                  "functionReturnParameters": 2058,
+                  "id": 2062,
                   "nodeType": "Return",
-                  "src": "2190:27:4"
+                  "src": "2275:27:4"
                 }
               ]
             },
-            "id": 1892,
+            "id": 2064,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "_getRunningTask",
-            "nameLocation": "2074:15:4",
+            "nameLocation": "2159:15:4",
             "nodeType": "FunctionDefinition",
             "overrides": {
-              "id": 1882,
+              "id": 2054,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
-              "src": "2136:8:4"
+              "src": "2221:8:4"
             },
             "parameters": {
-              "id": 1881,
+              "id": 2053,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1880,
+                  "id": 2052,
                   "mutability": "mutable",
                   "name": "taskId",
-                  "nameLocation": "2108:6:4",
+                  "nameLocation": "2193:6:4",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1892,
-                  "src": "2100:14:4",
+                  "scope": 2064,
+                  "src": "2185:14:4",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1779,10 +2057,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 1879,
+                    "id": 2051,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2100:7:4",
+                    "src": "2185:7:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1791,73 +2069,117 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2089:32:4"
+              "src": "2174:32:4"
             },
             "returnParameters": {
-              "id": 1886,
+              "id": 2058,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1885,
+                  "id": 2057,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1892,
-                  "src": "2154:18:4",
+                  "scope": 2064,
+                  "src": "2239:18:4",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_RunningTask_$1237_memory_ptr",
+                    "typeIdentifier": "t_struct$_RunningTask_$1330_memory_ptr",
                     "typeString": "struct MecaSchedulerAbstractContract.RunningTask"
                   },
                   "typeName": {
-                    "id": 1884,
+                    "id": 2056,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1883,
+                      "id": 2055,
                       "name": "RunningTask",
                       "nameLocations": [
-                        "2154:11:4"
+                        "2239:11:4"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1237,
-                      "src": "2154:11:4"
+                      "referencedDeclaration": 1330,
+                      "src": "2239:11:4"
                     },
-                    "referencedDeclaration": 1237,
-                    "src": "2154:11:4",
+                    "referencedDeclaration": 1330,
+                    "src": "2239:11:4",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_RunningTask_$1237_storage_ptr",
+                      "typeIdentifier": "t_struct$_RunningTask_$1330_storage_ptr",
                       "typeString": "struct MecaSchedulerAbstractContract.RunningTask"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "2153:20:4"
+              "src": "2238:20:4"
             },
-            "scope": 1893,
-            "src": "2065:160:4",
+            "scope": 2065,
+            "src": "2150:160:4",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "internal"
           }
         ],
-        "scope": 1894,
-        "src": "276:1982:4",
+        "scope": 2066,
+        "src": "276:2067:4",
         "usedErrors": []
       }
     ],
-    "src": "211:2047:4"
+    "src": "211:2132:4"
   },
   "compiler": {
     "name": "solc",
     "version": "0.8.17+commit.8df45f5f.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "1709024341832": {
+      "events": {},
+      "links": {},
+      "address": "0xB409FCd95b4aDeB57fE653200B04ea2b9a7a64e4",
+      "transactionHash": "0x7f62b0a90798e992a374c918df058b30b47337afff4d834118a293e994f2fda0"
+    },
+    "1709027721628": {
+      "events": {},
+      "links": {},
+      "address": "0xB409FCd95b4aDeB57fE653200B04ea2b9a7a64e4",
+      "transactionHash": "0x7f62b0a90798e992a374c918df058b30b47337afff4d834118a293e994f2fda0"
+    },
+    "1709028005748": {
+      "events": {},
+      "links": {},
+      "address": "0xB409FCd95b4aDeB57fE653200B04ea2b9a7a64e4",
+      "transactionHash": "0x7f62b0a90798e992a374c918df058b30b47337afff4d834118a293e994f2fda0"
+    },
+    "1709086571086": {
+      "events": {},
+      "links": {},
+      "address": "0xB409FCd95b4aDeB57fE653200B04ea2b9a7a64e4",
+      "transactionHash": "0x7f62b0a90798e992a374c918df058b30b47337afff4d834118a293e994f2fda0"
+    },
+    "1709087406796": {
+      "events": {},
+      "links": {},
+      "address": "0xB409FCd95b4aDeB57fE653200B04ea2b9a7a64e4",
+      "transactionHash": "0x7f62b0a90798e992a374c918df058b30b47337afff4d834118a293e994f2fda0"
+    },
+    "1709108111091": {
+      "events": {},
+      "links": {},
+      "address": "0xB409FCd95b4aDeB57fE653200B04ea2b9a7a64e4",
+      "transactionHash": "0x7f62b0a90798e992a374c918df058b30b47337afff4d834118a293e994f2fda0"
+    },
+    "1709171512567": {
+      "events": {},
+      "links": {},
+      "address": "0x4169D71D56563eA9FDE76D92185bEB7aa1Da6fB8",
+      "transactionHash": "0x39e1705c1a8fea384236e32959f41022469b2343fb30ac98681ac1335d0643b4"
+    }
+  },
   "schemaVersion": "3.4.12",
-  "updatedAt": "2024-02-26T02:39:08.443Z",
+  "updatedAt": "2024-02-29T01:53:47.033Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {
@@ -1875,6 +2197,14 @@
         },
         "returns": {
           "_0": "uint256 The first available block"
+        }
+      },
+      "getRunningTask(bytes32)": {
+        "params": {
+          "taskId": "The ID of the task"
+        },
+        "returns": {
+          "_0": "RunningTask The running task"
         }
       },
       "getTowerCurrentSize(address)": {
@@ -1933,6 +2263,9 @@
       },
       "getHostFirstAvailableBlock(address)": {
         "notice": "Get the host first available block"
+      },
+      "getRunningTask(bytes32)": {
+        "notice": "Get the running task"
       },
       "getTaskContract()": {
         "notice": "Get the task contract"

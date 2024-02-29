@@ -7,7 +7,7 @@ class SchedulerContract(Contract):
 
     def send_task(self, tower_address: str, host_address: str, task_hash: str, caller_host_fee: int, input_size: int, input_hash: bytes):
         unbuilt_function = self.contract.functions.sendTask(tower_address, host_address, task_hash, caller_host_fee, input_size, input_hash)
-        self.call_function(unbuilt_function, {"gas": 300000})
+        self.call_function(unbuilt_function)
     
     def get_running_task(self, task_id: str):
         task_tuple = self.contract.functions.getRunningTask(task_id).call()
@@ -15,4 +15,4 @@ class SchedulerContract(Contract):
     
     def finish_task(self, task_id: bytes):
         unbuilt_function = self.contract.functions.finishTask(task_id)
-        self.call_function(unbuilt_function, {"gas": 300000})
+        self.call_function(unbuilt_function)
