@@ -48,8 +48,6 @@ services:
         condition: service_started
       rabbitmq:
         condition: service_healthy
-      blockchain:
-        condition: service_started
     secrets:
       - wallet_private_key
       - wallet_address

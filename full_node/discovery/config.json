@@ -30,7 +30,7 @@
                 "contract_address": "0xE6dC2c8d5F4FC50fB88a36bffcC864C60c0b5c0D",
                 "abi_path": "../../contract/build/contracts/MecaTowerContract.json"
             },
-            "url": "http://blockchain:8545/"
+            "url": "http://localhost:9000/"
         },
         "redis": {
             "host": "redis",

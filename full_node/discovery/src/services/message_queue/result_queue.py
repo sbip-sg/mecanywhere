@@ -1,5 +1,6 @@
 import pika
 from config import Config
+from services.message_queue.queue_config import declare_result_queue
 from services.cache import DCache
 import models.schema_pb2 as schema
 from google.protobuf import json_format
@@ -47,11 +48,7 @@ class ResultQueue:
             ),
         )
         self.channel = self.connection.channel()
-        self.channel.queue_declare(
-            queue=ResultQueue.result_queue,
-            durable=True,
-            arguments={"x-expires": 1000 * 60 * 30},
-        )
+        declare_result_queue(self.channel, ResultQueue.result_queue)
         self.channel.basic_consume(
             queue=ResultQueue.result_queue,
             on_message_callback=self.callback,
