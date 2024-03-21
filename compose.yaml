@@ -1,56 +1,22 @@
 services:
-  blockchain:
+  # did:
+  #   build:
+  #     context: ./did-go
+  #   ports:
+  #     - "2592:2592"
+  #   depends_on:
+  #     - blockchain
+
+  tower:
     build:
-      context: deps/meca_contracts/src
-    # image:
-    #   trufflesuite/ganache-cli:latest
-    ports:
-      - "8545:8545"
-    # command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 -s "123"
-
-  did:
-    build:
-      context: ./did-go
-    ports:
-      - "2592:2592"
-    depends_on:
-      - blockchain
-
-  redis:
-    image:
-      redis:latest
-    ports:
-      - "6379:6379"
-
-  rabbitmq:
-    image:
-      rabbitmq:3-management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    healthcheck:
-      test: "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"
-      interval: 10s
-      timeout: 10s
-      retries: 5
-
-  fn-discovery:
-    build:
-      context: ./full_node
-      dockerfile: Dockerfile.discovery
+      context: ./tower
+      dockerfile: Dockerfile
     ports:
       - "7000:7000"
     volumes: # volume mounts ignore dockerignore
-      - ./full_node/discovery:/app/discovery
-      - ./full_node/common:/app/discovery/src/common
-    depends_on:
-      redis:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
+      - ./tower/src:/app/src
     secrets:
-      - wallet_private_key
-      - wallet_address
+      - tower_private_key
 
 networks:
   default:
@@ -58,7 +24,5 @@ networks:
     external: true
 
 secrets:
-  wallet_address:
-    file: ./keys/wallet_address.txt
-  wallet_private_key:
-    file: ./keys/wallet_private_key.txt
+  tower_private_key:
+    file: ./keys/tower_private_key.txt

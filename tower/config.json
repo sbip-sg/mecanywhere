@@ -1,0 +1,5 @@
+{
+    "blockchain": {
+        "url": "http://localhost:9000"
+    }
+}
