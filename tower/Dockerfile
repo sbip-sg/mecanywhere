@@ -16,6 +16,7 @@ WORKDIR /app/src
 ENTRYPOINT ["uvicorn", "main:app", "--port", "7000", \
     "--host", "0.0.0.0", \
     "--reload", \
-    "--forwarded-allow-ips", "*"]
+    "--forwarded-allow-ips", "*",\
+    "--ws-ping-timeout", "60"]
 
 EXPOSE 7000

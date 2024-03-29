@@ -1,5 +1,5 @@
 {
     "blockchain": {
-        "url": "http://localhost:9000"
+        "url": "http://172.17.0.1:9000"
     }
 }

@@ -5,7 +5,6 @@ from pymeca.tower import MecaTower
 from pymeca.dao import get_DAO_ADDRESS
 
 from config import Config
-from websocket_manager import WebsocketManager
 
 def get_dao_address():
     return get_DAO_ADDRESS()
@@ -26,6 +25,3 @@ def get_meca_tower(config: Config = Depends(get_config), web3: Web3 = Depends(ge
         dao_contract_address=get_dao_address(),
     )
     return meca_tower
-
-def get_websocket_manager():
-    return WebsocketManager()

@@ -261,3 +261,5 @@ cython_debug/
 .vscode/
 
 **/keys
+
+**/accounts.json

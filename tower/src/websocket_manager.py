@@ -1,4 +1,5 @@
 from fastapi import WebSocket
+from fastapi.websockets import WebSocketState
 
 
 class WebsocketManager:
@@ -13,6 +14,12 @@ class WebsocketManager:
     def disconnect(self, client_id: str):
         if client_id in self.connected_clients:
             del self.connected_clients[client_id]
+    
+    async def shutdown(self):
+        for client_id in self.connected_clients:
+            if self.connected_clients[client_id].client_state != WebSocketState.CONNECTED:
+                await self.connected_clients[client_id].close()
+        self.connected_clients = {}
 
     async def send_message(self, client_id: str, data: str):
         if client_id in self.connected_clients:
