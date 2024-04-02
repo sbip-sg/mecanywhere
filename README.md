@@ -29,8 +29,8 @@ https://www.figma.com/file/JkjN5hBQYfCFEMpc2QS4eH/MECAnywhere-Architecture-Diagr
         - http://localhost:7000
         - http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-discovery
     - API Documentation: {host}/docs
-- Blockchain
-    - Blockchain for development can be set up in pymeca repo
+- Pymeca actors
+    - template actors that use pymeca library to interact with the smart contracts
 
 
 # Quick Start (local)
