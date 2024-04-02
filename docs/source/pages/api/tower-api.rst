@@ -1,2 +1,2 @@
-Discovery API
+Tower API
 =============

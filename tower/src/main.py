@@ -1,11 +1,13 @@
 from contextlib import asynccontextmanager
 from fastapi.websockets import WebSocketState
 from pymeca.tower import MecaTower
-from fastapi import FastAPI, HTTPException, WebSocket, Request, Depends, WebSocketDisconnect, status
+from fastapi import FastAPI, HTTPException, WebSocket, Depends, WebSocketDisconnect, status
 import json
 import asyncio
 
 from dependencies import get_meca_tower
+from models.requests import SendMessageRequest
+from models.responses import SendMessageResponse
 from websocket_manager import WebsocketManager
 
 
@@ -43,23 +45,23 @@ async def websocket_endpoint(
         manager.disconnect(client_id)
 
 
-@app.post("/send_message")
+@app.post("/send_message", response_model=SendMessageResponse)
 async def send_message(
-    request: Request,
+    request: SendMessageRequest,
     meca_tower: MecaTower = Depends(get_meca_tower)
 ):
-    data = await request.json()
-    task_id = data["taskId"]
+    task_id = request.taskId
     # Check if the task is submitted on the blockchain
     running_task = meca_tower.get_running_task(task_id)
     if running_task is None:
-        return {"error": f"Task {task_id} not found."}
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Task not found.")
     print("Running task found.")
 
     target_client_id = running_task["hostAddress"]
     try:
-        await manager.send_message(target_client_id, json.dumps(data))
-        return await manager.receive_message(target_client_id)
+        await manager.send_message(target_client_id, request.model_dump_json())
+        reply = await manager.receive_message(target_client_id)
+        return json.loads(reply)
     except ValueError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Client not found.")
 
@@ -67,3 +69,7 @@ async def send_message(
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the FastAPI WebSocket server."}
+
+
+with open("openapi.json", "w") as f:
+    json.dump(app.openapi(), f)

@@ -20,8 +20,5 @@ This is for developers working on MECAnywhere backend.
    :maxdepth: 2
    :caption: Contents
    
-   pages/structure
-   pages/algorithms
-   pages/services/services
    pages/api/api
 

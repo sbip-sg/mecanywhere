@@ -34,9 +34,9 @@ html_static_path = ['_static']
 
 redoc = [
     {
-        'name': 'Discovery API',
-        'page': 'pages/api/discovery-api',
-        'spec': '../../full_node/discovery/src/openapi.json',
+        'name': 'Tower API',
+        'page': 'pages/api/tower-api',
+        'spec': '../../tower/src/openapi.json',
         'embed': True,
     }
 ]

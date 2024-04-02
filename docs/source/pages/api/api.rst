@@ -5,4 +5,4 @@ API
    :maxdepth: 2
    :caption: Contents
    
-   discovery-api
+   tower-api

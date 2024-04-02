@@ -26,7 +26,7 @@ def send_message_to_tower(tower_uri, task_id, message):
     if res.status_code != 200:
         print(f"Failed to send message to tower. Status code: {res.status_code}")
         return
-    message = json.loads(res.json())
+    message = res.json()
     if "success" in message and message["success"]:
         try:
             # save to png
