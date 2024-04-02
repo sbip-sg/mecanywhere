@@ -1,53 +1,46 @@
 version: "3.7"
 services:
-  blockchain:
-    image:
-      trufflesuite/ganache-cli:latest
-    ports:
-      - "8545:8545"
-    command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 -s "123"
+  # did:
+  #   build:
+  #     context: ./did-go
+  #   ports:
+  #     - "2592:2592"
+  #   depends_on:
+  #     - blockchain
 
-  redis:
-    image:
-      redis:latest
-    ports:
-      - "11002:6379"
-
-  rabbitmq:
-    image:
-      rabbitmq:3-management
-    ports:
-      - "11006:15672"
-      - "11007:5672"
-    healthcheck:
-      test: "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  fn-discovery:
+  tower:
     build:
-      context: ./full_node
-      dockerfile: Dockerfile.discovery
+      context: ./tower
+      dockerfile: Dockerfile
     ports:
-      - "11008:7000"
-    depends_on:
-      redis:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
+      - "7000:7000"
     secrets:
-      - wallet_private_key
-      - wallet_address
-    command: --root-path /fn-discovery # for reverse proxy
+      - tower_private_key
 
+  # host:
+  #   build: 
+  #     context: 
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     task-executor:
+  #       condition: service_started
+  #   restart: on-failure
+  #   secrets:
+  #     - host_private_key
+
+  # task-executor:
+  # build:
+  #   context: deps/mec_anywhere_desktop/task_executor
+  #   dockerfile: docker/Dockerfile
+  # volumes:
+  #   - /var/run/docker.sock:/var/run/docker.sock
+  #   - deps/mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
+  
 networks:
   default:
     name: meca
     external: true
 
 secrets:
-  wallet_address:
-    file: ./keys/wallet_address.txt
-  wallet_private_key:
-    file: ./keys/wallet_private_key.txt
+  tower_private_key:
+    file: ./keys/tower_private_key.txt
