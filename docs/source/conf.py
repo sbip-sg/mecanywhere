@@ -34,29 +34,11 @@ html_static_path = ['_static']
 
 redoc = [
     {
-        'name': 'Discovery API',
-        'page': 'pages/api/discovery-api',
-        'spec': '../../full_node/discovery/src/openapi.json',
+        'name': 'Tower API',
+        'page': 'pages/api/tower-api',
+        'spec': '../../tower/src/openapi.json',
         'embed': True,
-    },
-    {
-        'name': 'Transaction API',
-        'page': 'pages/api/transaction-api',
-        'spec': '../../full_node/transaction/openapi.json',
-        'embed': True,
-    },
-    {
-        'name': 'Payment API',
-        'page': 'pages/api/payment-api',
-        'spec': '../../payment/openapi.json',
-        'embed': True,
-    },
-    {
-        'name': 'PO API',
-        'page': 'pages/api/po-api',
-        'spec': '../../po/openapi.json',
-        'embed': True,
-    },
+    }
 ]
 
 redoc_uri = "https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"

@@ -21,7 +21,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Quick Start" href="quick-start.html" />
+    <link rel="next" title="Quick Start (local)" href="quick-start.html" />
     <link rel="prev" title="Welcome to MECAnywhere’s documentation!" href="../../index.html" /> 
 </head>
 
@@ -49,15 +49,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#services">Services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#smart-contracts">Smart contracts</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start (local)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../algorithms.html">Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/api.html">API</a></li>
 </ul>
 
@@ -89,8 +86,7 @@
 <h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
 <section id="architecture">
 <h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
-<p><a class="reference external" href="https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&amp;amp;node-id=0%3A1&amp;amp;t=IANJCjD1wgNtEChu-1">https://www.figma.com/file/eBlw4rqX7MT3He8O4t7nxI/MECAnywhere-Architecture-Diagram?type=whiteboard&amp;node-id=0%3A1&amp;t=IANJCjD1wgNtEChu-1</a></p>
-<iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="750" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FeBlw4rqX7MT3He8O4t7nxI%2FMECAnywhere-Architecture-Diagram%3Ftype%3Dwhiteboard%26node-id%3D0%253A1%26t%3DKMSVEWp4c3UO9Rgy-1" allowfullscreen></iframe>
+<p>https://www.figma.com/file/JkjN5hBQYfCFEMpc2QS4eH/MECAnywhere-Architecture-Diagram-(V2)?type=whiteboard&amp;node-id=0%3A1&amp;t=VgoZo4ZXrVZtnZ9s-1</p>
 </section>
 <section id="services">
 <h2>Services<a class="headerlink" href="#services" title="Link to this heading"></a></h2>
@@ -103,82 +99,25 @@
 <li><p>Host URL: http://sbip-g2.d2.comp.nus.edu.sg:11000</p></li>
 </ul>
 </li>
-<li><p>PO - Authentication service</p>
+<li><p>Tower</p>
 <ul>
-<li><p>Hosted by Parent Organisation to issue VC to users of that PO</p></li>
+<li><p>discovery port: 7000</p></li>
+<li><p>Hosted on the edge to provide task forwarding for end users</p></li>
 <li><p>Host URL:</p>
 <ul>
-<li><p>http://localhost:8000</p></li>
-<li><p>http://sbip-g2.d2.comp.nus.edu.sg:11000/po</p></li>
+<li><p>http://localhost:7000</p></li>
+<li><p>http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-discovery</p></li>
 </ul>
 </li>
 <li><p>API Documentation: {host}/docs</p></li>
 </ul>
 </li>
-<li><p>Cloud - DID &amp; VC verification service</p>
+<li><p>Pymeca actors</p>
 <ul>
-<li><p>verifier port: 8080, issuer port: 9090</p></li>
-<li><p>Hosted by MECA to provide DID and VC verification services</p></li>
-<li><p>Host URL:</p>
-<ul>
-<li><p>http://localhost:8080, http://localhost:9090</p></li>
-<li><p>http://sbip-g2.d2.comp.nus.edu.sg:11000/did-verifier, http://sbip-g2.d2.comp.nus.edu.sg:11000/did-issuer</p></li>
-</ul>
-</li>
-<li><p>API Documentation: {host}/swagger-ui</p></li>
-</ul>
-</li>
-<li><p>Full Node - Discovery &amp; Transaction service</p>
-<ul>
-<li><p>discovery port: 7000, transaction port: 7001</p></li>
-<li><p>Hosted on the edge to provide MECA service for end users</p></li>
-<li><p>Host URL:</p>
-<ul>
-<li><p>http://localhost:7000, http://localhost:7001</p></li>
-<li><p>http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-discovery, http://sbip-g2.d2.comp.nus.edu.sg:11000/fn-transaction</p></li>
-</ul>
-</li>
-<li><p>API Documentation: {host}/docs</p></li>
-</ul>
-</li>
-<li><p>Cloud - Payment service</p>
-<ul>
-<li><p>Hosted by MECA to provide payment service for POs</p></li>
-<li><p>Host URL:</p>
-<ul>
-<li><p>http://localhost:7002</p></li>
-<li><p>http://sbip-g2.d2.comp.nus.edu.sg:11000/payment</p></li>
-</ul>
-</li>
-<li><p>API Documentation: {host}/docs</p></li>
-</ul>
-</li>
-<li><p>Server-host</p>
-<ul>
-<li><p>Hosted on the edge to ensure availability of hosts</p></li>
-<li><p>No host URL</p></li>
-</ul>
-</li>
-<li><p>Ganache</p>
-<ul>
-<li><p>Blockchain for development</p></li>
-<li><p>Host URL:</p>
-<ul>
-<li><p>http://localhost:8545</p></li>
-<li><p>http://sbip-g2.d2.comp.nus.edu.sg:11011</p></li>
+<li><p>template actors that use pymeca library to interact with the smart contracts</p></li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-</section>
-<section id="smart-contracts">
-<h2>Smart contracts<a class="headerlink" href="#smart-contracts" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">did/contract/contracts/DIDContract.sol</span></code>, <code class="docutils literal notranslate"><span class="pre">did/contract/contracts/CptContract.sol</span></code>: used by verifier and issuer services</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">full_node/contract/contracts/PaymentContract.sol</span></code>: used by payment and transaction services</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">full_node/contract/contracts/DiscoveryContract.sol</span></code>: used by discovery service</p></li>
-</ol>
 </section>
 </section>
 
@@ -187,7 +126,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../../index.html" class="btn btn-neutral float-left" title="Welcome to MECAnywhere’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="quick-start.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quick-start.html" class="btn btn-neutral float-right" title="Quick Start (local)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

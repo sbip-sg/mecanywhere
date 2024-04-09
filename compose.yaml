@@ -1,144 +1,41 @@
 services:
-  ganache:
-    image:
-      trufflesuite/ganache-cli:latest
-    ports:
-      - "8545:8545"
-    command: ganache-cli --host 0.0.0.0 --gasLimit 10000000 --mnemonic "baby blame blast picnic asthma topic guilt lock shoulder humble fortune control"
-      
-  redis:
-    image:
-      redis:latest
-    ports:
-      - "6379:6379"
-  
-  did-verifier:
-    build:
-      context: ./did
-      dockerfile: Dockerfile.verifier
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./did/src:/app/src
-    secrets:
-      - wallet_private_key
-  
-  did-issuer:
-    build:
-      context: ./did
-      dockerfile: Dockerfile.issuer
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./did/src:/app/src
-    depends_on:
-      - did-verifier
-    secrets:
-      - wallet_private_key
-      - 52c328ef8b382b1d71cc262b868d803a137ab8d8
+  # did:
+  #   build:
+  #     context: ./did-go
+  #   ports:
+  #     - "2592:2592"
+  #   depends_on:
+  #     - blockchain
 
-  po:
-    build: 
-      context: ./po
-    ports:
-      - "8000:8000"
-    volumes: # volume mounts ignore dockerignore
-      - ./po:/app
-    depends_on:
-      - did-verifier
-      - did-issuer
-
-  rabbitmq:
-    image:
-      rabbitmq:3-management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    healthcheck:
-      test: "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"
-      interval: 10s
-      timeout: 10s
-      retries: 5
-
-  fn-discovery:
+  tower:
     build:
-      context: ./full_node
-      dockerfile: Dockerfile.discovery
+      context: ./tower
+      dockerfile: Dockerfile
     ports:
       - "7000:7000"
     volumes: # volume mounts ignore dockerignore
-      - ./full_node/discovery:/app/discovery
-      - ./full_node/common:/app/discovery/src/common
-    depends_on:
-      did-verifier:
-        condition: service_started
-      redis:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
+      - ./tower/src:/app/src
     secrets:
-      - wallet_private_key
-      - wallet_address
-      - access_token_key
-      - refresh_token_key
-      - server_host_name
-      - server_host_did
-      - server_host_po_did
+      - tower_private_key
 
-  fn-transaction:
-    build:
-      context: ./full_node
-      dockerfile: Dockerfile.transaction
-    ports:
-      - "7001:7001"
-    volumes: # volume mounts ignore dockerignore
-      - ./full_node/transaction:/app/transaction
-      - ./full_node/common:/app/transaction/common
-    depends_on:
-      - did-verifier
-      - redis
-    secrets:
-      - wallet_private_key
-      - wallet_address
-      - access_token_key
-      - refresh_token_key
-  
-  payment:
-    build:
-      context: ./payment
-    ports:
-      - "7002:7002"
-    volumes: # volume mounts ignore dockerignore
-      - ./payment:/app
-      - ./full_node/common:/app/common
-    depends_on:
-      - did-verifier
-    secrets:
-      - wallet_private_key
-      - wallet_address
-      - access_token_key
-      - refresh_token_key
+  # host:
+  #   build: 
+  #     context: 
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     task-executor:
+  #       condition: service_started
+  #   restart: on-failure
+  #   secrets:
+  #     - host_private_key
 
-  host:
-    build: 
-      context: ./server_host
-      dockerfile: Dockerfile.host
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      task-executor:
-        condition: service_started
-    restart: on-failure
-    secrets:
-      - server_host_name
-
-  task-executor:
-    build:
-      context: ../mec_anywhere_desktop/task_executor
-      dockerfile: docker/Dockerfile
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ../mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
+  # task-executor:
+  # build:
+  #   context: deps/mec_anywhere_desktop/task_executor
+  #   dockerfile: docker/Dockerfile
+  # volumes:
+  #   - /var/run/docker.sock:/var/run/docker.sock
+  #   - deps/mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
 
 networks:
   default:
@@ -146,19 +43,5 @@ networks:
     external: true
 
 secrets:
-  access_token_key:
-    file: ./keys/access_token_key.txt
-  refresh_token_key:
-    file: ./keys/refresh_token_key.txt
-  52c328ef8b382b1d71cc262b868d803a137ab8d8:
-    file: ./keys/0x52c328ef8b382b1d71cc262b868d803a137ab8d8
-  wallet_address:
-    file: ./keys/wallet_address.txt
-  wallet_private_key:
-    file: ./keys/wallet_private_key.txt
-  server_host_name:
-    file: ./keys/server_host_name.txt
-  server_host_did:
-    file: ./keys/server_host_did.txt
-  server_host_po_did:
-    file: ./keys/server_host_po_did.txt
+  tower_private_key:
+    file: ./keys/tower_private_key.txt

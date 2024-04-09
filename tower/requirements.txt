@@ -1,0 +1,6 @@
+asyncio
+fastapi
+pydantic-settings
+pymeca
+uvicorn
+web3

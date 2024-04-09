@@ -1,0 +1,5 @@
+docker
+eciespy
+IPFS-Toolkit
+pymeca
+web3

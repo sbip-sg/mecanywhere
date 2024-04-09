@@ -1,2 +1,0 @@
-DID Verifier API
-================
