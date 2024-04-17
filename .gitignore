@@ -263,3 +263,7 @@ cython_debug/
 **/keys
 
 **/accounts.json
+
+.env
+poetry.lock
+
