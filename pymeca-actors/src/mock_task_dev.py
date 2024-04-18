@@ -6,14 +6,13 @@ import os
 
 import pymeca.utils
 from pymeca.task import MecaTaskDeveloper
-from pymeca.dao import get_DAO_ADDRESS
 from cli import MecaCLI
 
 config = json.load(open("../config/config.json", "r"))
 IPFS_HOST = config["ipfs_api_host"]
 IPFS_PORT = config["ipfs_api_port"]
 BLOCKCHAIN_URL = config["blockchain_url"]
-DAO_CONTRACT_ADDRESS = get_DAO_ADDRESS()
+DAO_CONTRACT_ADDRESS = config["dao_contract_address"]
 ACCOUNTS = json.load(open(config["accounts_path"], "r"))
 
 

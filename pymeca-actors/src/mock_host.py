@@ -1,7 +1,6 @@
 import asyncio
 import hashlib
 import pathlib
-import signal
 from ecies import decrypt
 from web3 import Web3
 import json
@@ -13,7 +12,6 @@ import docker
 
 import pymeca.utils
 from pymeca.host import MecaHost
-from pymeca.dao import get_DAO_ADDRESS
 from cli import MecaCLI
 import threading
 
@@ -22,7 +20,7 @@ TASK_EXECUTOR_URL = config["task_executor_url"]
 IPFS_HOST = config["ipfs_gateway_host"]
 IPFS_PORT = config["ipfs_gateway_port"]
 BLOCKCHAIN_URL = config["blockchain_url"]
-DAO_CONTRACT_ADDRESS = get_DAO_ADDRESS()
+DAO_CONTRACT_ADDRESS = config["dao_contract_address"]
 ACCOUNTS = json.load(open(config["accounts_path"], "r"))
 CONTAINER_FOLDER = pathlib.Path(config["build_folder"])
 

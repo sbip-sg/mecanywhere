@@ -42,6 +42,9 @@ class Config:
 
     def get_blockchain_provider_url(self) -> str:
         return self.configuration["blockchain"]["url"]
+    
+    def get_dao_contract_address(self) -> str:
+        return self.configuration["blockchain"]["dao_contract_address"]
 
     def get_tower_private_key(self) -> str:
         return self.secrets.tower_private_key

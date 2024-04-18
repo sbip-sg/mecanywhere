@@ -9,12 +9,11 @@ import json
 
 import pymeca.utils
 from pymeca.user import MecaUser
-from pymeca.dao import get_DAO_ADDRESS
 from cli import MecaCLI
 
 config = json.load(open("../config/config.json", "r"))
 BLOCKCHAIN_URL = config["blockchain_url"]
-DAO_CONTRACT_ADDRESS = get_DAO_ADDRESS()
+DAO_CONTRACT_ADDRESS = config["dao_contract_address"]
 ACCOUNTS = json.load(open(config["accounts_path"], "r"))
 OUTPUT_FOLDER = pathlib.Path(config["build_folder"])
 
