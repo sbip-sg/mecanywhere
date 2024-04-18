@@ -6,6 +6,7 @@ from ecies import encrypt
 import requests
 from web3 import Web3
 import json
+import ipfs_api
 
 import pymeca.utils
 from pymeca.user import MecaUser
@@ -16,7 +17,8 @@ BLOCKCHAIN_URL = config["blockchain_url"]
 DAO_CONTRACT_ADDRESS = config["dao_contract_address"]
 ACCOUNTS = json.load(open(config["accounts_path"], "r"))
 OUTPUT_FOLDER = pathlib.Path(config["build_folder"])
-
+IPFS_HOST = config["ipfs_gateway_host"]
+IPFS_PORT = config["ipfs_gateway_port"]
 
 def send_message_to_tower(tower_uri, task_id, message):
     tower_uri = tower_uri.replace("localhost", "172.17.0.1", 1)
@@ -70,6 +72,7 @@ class MecaUserCLI(MecaCLI):
             input_str = json.dumps(task_input)
             input_hash = hashlib.sha256(input_str.encode("utf-8")).hexdigest()
 
+            print("Sending task to blockchain")
             success, task_id = meca_user.send_task_on_blockchain(ipfs_sha, host_address, tower_address, input_hash)
             print(f"Task sent to blockchain: task id: {task_id}\n")
 
@@ -79,6 +82,19 @@ class MecaUserCLI(MecaCLI):
             host_public_key = meca_user.get_host_public_key(host_address)
             input_enc = encrypt(host_public_key, input_str.encode("utf-8")).hex()
             send_message_to_tower(tower_url, task_id, input_enc)
+        elif func.__name__ == "get_tasks":
+            print(func.__name__, ":")
+            tasks = await super().run_func(func, args)
+            with ipfs_api.ipfshttpclient.connect(f"/dns/{IPFS_HOST}/tcp/{IPFS_PORT}/http") as client:
+                for i, task in enumerate(tasks):
+                    ipfs_sha = task["ipfsSha256"]
+                    ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
+                    description = client.cat(ipfs_cid + "/description.txt")
+                    name = client.cat(ipfs_cid + "/name.txt")
+                    print(f"Task {i+1})")
+                    print(" Name:", name.decode("utf-8").strip())
+                    print(" Description:", description.decode("utf-8").strip())
+                    print(" Details:", task)
         else:
             print(func.__name__, ":")
             print(await super().run_func(func, args))

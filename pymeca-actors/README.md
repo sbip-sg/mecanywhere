@@ -5,7 +5,7 @@
 docker build -t mock_actor -f Dockerfile .
 
 For user and tower:
-docker run -it --rm mock_actor mock_user.py
+docker run -it --rm -v ./build/:/app/src/build/ mock_actor mock_user.py
 docker run -it --rm mock_actor mock_tower.py
 
 For task developer, mount a folder for IPFS staging:
