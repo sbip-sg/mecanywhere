@@ -1,85 +1,153 @@
 import asyncio
 import base64
-import hashlib
+import websockets
 import pathlib
+import os
 from ecies import encrypt
-import requests
+from ecies import decrypt
 from web3 import Web3
-import json
+from eth_hash.auto import keccak
+from dotenv import load_dotenv
 
-import pymeca.utils
-from pymeca.user import MecaUser
-from pymeca.dao import get_DAO_ADDRESS
+import pymeca
+
 from cli import MecaCLI
 
-config = json.load(open("../config/config.json", "r"))
-BLOCKCHAIN_URL = config["blockchain_url"]
-DAO_CONTRACT_ADDRESS = get_DAO_ADDRESS()
-ACCOUNTS = json.load(open(config["accounts_path"], "r"))
-OUTPUT_FOLDER = pathlib.Path(config["build_folder"])
+load_dotenv()
 
 
-def send_message_to_tower(tower_uri, task_id, message):
-    tower_uri = tower_uri.replace("localhost", "172.17.0.1", 1)
-    tower_url = f"{tower_uri}/send_message"
-    res = requests.post(tower_url, json={"taskId": task_id, "message": message})
-    if res.status_code != 200:
-        print(f"Failed to send message to tower. Status code: {res.status_code}")
-        return
-    message = res.json()
-    if "success" in message and message["success"]:
-        try:
-            # save to png
-            OUTPUT_FOLDER.mkdir(exist_ok=True)
-            with open(f"{OUTPUT_FOLDER}/output.png", "wb") as f:
-                f.write(base64.b64decode(message['msg']))
-            print("Message result saved to output.png")
-        except Exception as e:
-            print(f"Failed to save {message}\n {e}")
-    elif "msg" in message and message["msg"]:
-        print(f"Host failed to process the message. {message['msg']}")
-    else:
-        print("Unexpected message from host.", message)
-    return message
+BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
+MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+MECA_USER_PRIVATE_KEY = os.getenv("MECA_USER_PRIVATE_KEY", None)
+OUTPUT_FOLDER = pathlib.Path("./build")
 
 
 class MecaUserCLI(MecaCLI):
     def __init__(self):
         web3 = Web3(Web3.HTTPProvider(BLOCKCHAIN_URL))
-        meca_user = MecaUser(
+        meca_user = pymeca.user.MecaUser(
             w3=web3,
-            private_key=ACCOUNTS["meca_user"]["private_key"],
-            dao_contract_address=DAO_CONTRACT_ADDRESS,
+            private_key=MECA_USER_PRIVATE_KEY,
+            dao_contract_address=MECA_DAO_CONTRACT_ADDRESS,
         )
         print("Started user with address:", meca_user.account.address)
         super().__init__(meca_user)
 
+    async def wait_for_task(self, websocket, task_id):
+        task_output = await websocket.recv()
+        print("Task output received.")
+        print(task_output)
+        task_id = "0x" + task_output[0:32].hex()
+        signature = task_output[-65:]
+        verify = pymeca.utils.verify_signature(
+            signature_bytes=signature,
+            message_bytes=task_output[0:-65]
+        )
+        if not verify:
+            print("Signature verification failed.")
+            return
+        host_ecc_pub_key = pymeca.utils.get_public_key_from_signature(
+            signature_bytes=signature,
+            message_bytes=task_output[0:-65]
+        )
+        host_ecc_pub_key_hex = host_ecc_pub_key.to_hex()
+
+        runningTask = self.actor.get_running_task(task_id)
+        host_address = runningTask["hostAddress"]
+        blockcahin_host_pub_key = self.actor.get_host_public_key(
+            host_address
+        )
+
+        if host_ecc_pub_key_hex != blockcahin_host_pub_key:
+            print("Invalid host encryption public key")
+            return
+
+        encrypted_message = task_output[32:-65]
+        message = decrypt(
+            self.actor.private_key,
+            encrypted_message
+        )
+
+        output_hash = runningTask["outputHash"]
+        received_hash = "0x" + keccak(message).hex()
+        if output_hash != received_hash:
+            print("Output hash mismatch")
+            return
+
+        print("Task output hash verified.")
+
+        if runningTask["ipfsSha256"] == ("0x" + "0" * 64):
+            print("Output: ", message)
+        else:
+            OUTPUT_FOLDER.mkdir(exist_ok=True)
+            with open(f"{OUTPUT_FOLDER}/output.png", "wb") as f:
+                f.write(base64.b64decode(message))
+
+        print("Task output saved to output.png")
+
+    async def finish_task(self, task_id):
+        # wait for the task to be over on blockchain
+        while not self.actor.is_task_done(task_id=task_id):
+            await asyncio.sleep(1)
+
+        self.actor.finish_task(task_id=task_id)
+        print("sent finish task transaction.")
+
     async def run_func(self, func, args):
         if func.__name__ == "send_task_on_blockchain":
-            meca_user = self.actor
             ipfs_sha = args[0]
-            ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
             host_address = args[1]
             tower_address = args[2]
             content = args[3]
-            task_input = {
-                "id": ipfs_cid,
-                "input": content,
-            }
 
-            # Hash the input and submit it to the blockchain
-            input_str = json.dumps(task_input)
-            input_hash = hashlib.sha256(input_str.encode("utf-8")).hexdigest()
+            input_bytes = content.encode()
+            # because I set the input in pymeca as a hex string
+            input_hash = "0x" + keccak(input_bytes).hex()
+            success, task_id = self.actor.send_task_on_blockchain(
+                ipfs_sha256=ipfs_sha,
+                host_address=host_address,
+                tower_address=tower_address,
+                input_hash=input_hash
+            )
+            tower_url = self.actor.get_tower_public_uri(tower_address)
+            blockcahin_host_pub_key = self.actor.get_host_public_key(
+                host_address
+            )
+            encrypted_input_bytes = encrypt(
+                blockcahin_host_pub_key,
+                input_bytes
+            )
+            task_id_bytes = pymeca.utils.bytes_from_hex(task_id)
+            to_send = task_id_bytes + encrypted_input_bytes
+            signature = self.actor.sign_bytes(to_send)
+            to_send = to_send + signature
+            tower_uri = tower_url.replace("http://", "ws://")
+            tower_uri = tower_uri.replace("https://", "wss://")
+            tower_uri = f"{tower_uri}/client"
+            async with websockets.connect(tower_uri) as websocket:
+                await websocket.send(to_send)
+                reponse_text = await websocket.recv()
+                print(reponse_text)
+                if reponse_text != "Task connected":
+                    print("Task connection failed")
+                    return
+                tasks = [
+                    asyncio.ensure_future(
+                        self.wait_for_task(websocket, task_id)
+                    ),
+                    asyncio.ensure_future(
+                        self.finish_task(task_id)
+                    )
+                ]
+                finished, unfinished = await asyncio.wait(
+                    tasks,
+                    return_when=asyncio.FIRST_COMPLETED
+                )
+                if tasks[0] in unfinished:
+                    tasks[0].cancel()
+                else:
+                    await tasks[1]
 
-            success, task_id = meca_user.send_task_on_blockchain(ipfs_sha, host_address, tower_address, input_hash)
-            print(f"Task sent to blockchain: task id: {task_id}\n")
-
-            # Send the encrypted input to the tower
-            tower_url = meca_user.get_tower_public_uri(tower_address)
-            print(f"Sending encrypted input to the tower at {tower_url}")
-            host_public_key = meca_user.get_host_public_key(host_address)
-            input_enc = encrypt(host_public_key, input_str.encode("utf-8")).hex()
-            send_message_to_tower(tower_url, task_id, input_enc)
         else:
             print(func.__name__, ":")
             print(await super().run_func(func, args))

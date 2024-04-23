@@ -1,4 +1,9 @@
 import inspect
+import asyncio
+
+
+async def ainput(prompt: str) -> str:
+    return await asyncio.to_thread(input, f'{prompt} ')
 
 
 class MecaCLI:
@@ -8,7 +13,8 @@ class MecaCLI:
         parent_methods = dir(actor.__class__.__base__)
         self.child_methods = []
         for method in all_methods:
-            if method not in parent_methods and callable(getattr(actor, method)):
+            if (method not in parent_methods and
+                    callable(getattr(actor, method))):
                 self.child_methods.append(getattr(actor, method))
 
     async def run_func(self, func, args):
@@ -34,7 +40,8 @@ class MecaCLI:
                 for i, method in enumerate(self.child_methods):
                     print(f"{i}. " + method.__name__)
                 print("x. Exit")
-                choice = input("Enter action: ").strip()
+                choice = await ainput("Enter action: ")
+                choice = choice.strip()
 
                 if choice == "x" or choice == "X":
                     self.shutdown()
@@ -51,14 +58,16 @@ class MecaCLI:
                     args = []
                     for param_name, param in params.items():
                         param_type = param.annotation
-                        arg = param_type(input(f"Enter {param_name}: ").strip())
+                        tmp = await ainput(f"Enter {param_name}: ")
+                        tmp = tmp.strip()
+                        arg = param_type(tmp)
                         args.append(arg)
                 except KeyboardInterrupt:
                     continue
 
                 print()
                 await self.run_func(func, args)
-                input("Press Enter to continue...")
+                await ainput("Press Enter to continue...")
 
         except KeyboardInterrupt:
             self.shutdown()

@@ -1,6 +1,19 @@
 # Setup
 
 ## Template actors
+For running within the same network, 
+```
+docker network create --subnet=172.18.0.0/16 intern_network
+docker build -t mock_actor_intern -f DockerfileInternal ../..
+
+docker run -it --rm --net intern_network --ip 172.18.0.2 -w /tmp/pymeca/src/pymeca/scripts  mock_actor_intern ganache.py --port 9000 --ganache-server-script-path ../../../meca-contracts/src/ganache/index.js --accounts_file_path ../../config/accounts.json --dao-address-file-path ../dao_contract_address.txt --dao-file-path ../../../meca-contracts/src/contracts/MecaContract.sol --scheduler-file-path ../../../meca-contracts/src/contracts/SchedulerContract.sol --host-file-path ../../../meca-contracts/src/contracts/HostContract.sol --tower-file-path ../../../meca-contracts/src/contracts/TowerContract.sol --task-file-path ../../../meca-contracts/src/contracts/TaskContract.sol --scheduler-fee 100 --host-register-fee 100 --host-initial-stake 100 --host-task-register-fee 100 --host-failed-task-penalty 100 --tower-initial-stake 100 --tower-host-request-fee 100 --tower-failed-task-penalty 100 --task-addition-fee 100
+docker run -it --rm --net intern_network --ip 172.18.0.3  mock_actor_intern tower_websocket.py 7777
+docker run -it --rm --net intern_network --ip 172.18.0.4  mock_actor_intern mock_tower.py
+docker run -it --rm --net intern_network --ip 172.18.0.5  mock_actor_intern mock_host.p
+docker run -it --rm --net intern_network --ip 172.18.0.6  mock_actor_intern mock_user.py
+docker run -it --rm --net intern_network --ip 172.18.0.7  mock_actor_intern mock_task_dev.py
+```
+For general use,
 ```
 docker build -t mock_actor -f Dockerfile .
 

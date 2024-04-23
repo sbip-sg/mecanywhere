@@ -1,24 +1,26 @@
 import asyncio
+import pathlib
+import os
 from web3 import Web3
-import json
+from dotenv import load_dotenv
+import pymeca
 
-from pymeca.tower import MecaTower
-from pymeca.dao import get_DAO_ADDRESS
 from cli import MecaCLI
 
-config = json.load(open("../config/config.json", "r"))
-BLOCKCHAIN_URL = config["blockchain_url"]
-DAO_CONTRACT_ADDRESS = get_DAO_ADDRESS()
-ACCOUNTS = json.load(open(config["accounts_path"], "r"))
+load_dotenv()
+
+BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
+MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+MECA_TOWER_PRIVATE_KEY = os.getenv("MECA_TOWER_PRIVATE_KEY", None)
 
 
 class MecaTowerCLI(MecaCLI):
     def __init__(self):
         web3 = Web3(Web3.HTTPProvider(BLOCKCHAIN_URL))
-        meca_tower = MecaTower(
+        meca_tower = pymeca.tower.MecaTower(
             w3=web3,
-            private_key=ACCOUNTS["meca_tower"]["private_key"],
-            dao_contract_address=DAO_CONTRACT_ADDRESS,
+            private_key=MECA_TOWER_PRIVATE_KEY,
+            dao_contract_address=MECA_DAO_CONTRACT_ADDRESS,
         )
         print("Started tower with address:", meca_tower.account.address)
         super().__init__(meca_tower)
@@ -36,7 +38,7 @@ async def main():
     if not meca_tower.is_registered():
         print("\nTower is not registered. Registering...")
         default_size_limit = 10000
-        default_public_connection = "http://localhost:7000"
+        default_public_connection = "http://localhost:7777"
         default_fee = 10
         default_fee_type = 0
         default_initial_deposit = meca_tower.get_tower_initial_stake()
@@ -53,5 +55,4 @@ async def main():
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    asyncio.run(main())
