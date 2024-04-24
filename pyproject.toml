@@ -16,7 +16,7 @@ fastapi = "^0.110.1"
 uvicorn = {extras = ["standard"], version = "^0.29.0"}
 ipfs-toolkit = "^0.5.20"
 docker = "^7.0.0"
-
+python-dotenv = "^1.0.1"
 
 [build-system]
 requires = ["poetry-core"]
