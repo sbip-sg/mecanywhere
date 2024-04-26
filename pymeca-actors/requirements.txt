@@ -2,4 +2,5 @@ docker
 eciespy
 IPFS-Toolkit
 pymeca
+python-dotenv
 web3

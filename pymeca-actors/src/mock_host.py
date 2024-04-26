@@ -1,4 +1,8 @@
 import asyncio
+import json
+import threading
+
+import requests
 import websockets
 import pathlib
 import os
@@ -69,137 +73,156 @@ def build_docker_image(ipfs_cid):
             print(e)
     print("Built docker image.")
 
+class TaskThread(threading.Thread):
+    def __init__(self, kill_event, args=(), kwargs=None):
+        self.kill_event = kill_event
+        super().__init__(target=self.wrap_wait_for_task, args=args, kwargs=kwargs)
 
-async def connect_to_tower(meca_host, tower_address):
-    tower_uri = meca_host.get_tower_public_uri(tower_address)
-    tower_uri = tower_uri.replace("http://", "ws://")
-    tower_uri = tower_uri.replace("https://", "wss://")
-    tower_uri = f"{tower_uri}/host"
-    async with websockets.connect(tower_uri) as websocket:
-        print("Connected to tower.")
-        token = await websocket.recv()
-        print("Received token:", token.hex())
-        # Send host address to tower
-        host_address_bytes = pymeca.utils.bytes_from_hex(
-            meca_host.account.address
-        )
-        to_send = host_address_bytes + token
-        # sign the message
-        signature = pymeca.utils.sign_bytes(
-            private_key=MECA_HOST_ENCRYPTION_PRIVATE_KEY,
-            message_bytes=to_send
-        )
-        to_send = to_send + signature
-        await websocket.send(to_send)
-        text_response = await websocket.recv()
-        if text_response != "Host connected":
-            print("Failed to connect to tower.")
-            print(text_response)
-            return
+    def wrap_wait_for_task(self, mec_host, tower_address):
+        loop = asyncio.new_event_loop()
+        loop.create_task(self.connect_to_tower(mec_host, tower_address))
+        loop.run_forever()
+        # asyncio.run(self.wait_for_task(mec_host, tower_address))
 
-        print("Host connected to tower.")
-        while True:
-            input_bytes = await websocket.recv()
-            print("Received input from tower.")
-            task_id = "0x" + input_bytes[0:32].hex()
-            print("Task ID:", task_id)
-            signature = input_bytes[-65:]
-            verify = pymeca.utils.verify_signature(
-                signature_bytes=signature,
-                message_bytes=input_bytes[0:-65]
+    def stop(self):
+        self.kill_event.set()
+        asyncio.get_event_loop().stop()
+
+    async def connect_to_tower(self, meca_host, tower_address):
+        tower_uri = meca_host.get_tower_public_uri(tower_address)
+        tower_uri = tower_uri.replace("http://", "ws://")
+        tower_uri = tower_uri.replace("https://", "wss://")
+        tower_uri = f"{tower_uri}/host"
+        async with websockets.connect(tower_uri) as websocket:
+            print("Connected to tower.")
+            token = await websocket.recv()
+            print("Received token:", token.hex())
+            # Send host address to tower
+            host_address_bytes = pymeca.utils.bytes_from_hex(
+                meca_host.account.address
             )
-            if not verify:
-                await websocket.send("Invalid signature")
-                return
-
-            user_eth_address = pymeca.utils.get_eth_address_hex_from_signature(
-                signature_bytes=signature,
-                message_bytes=input_bytes[0:-65]
-            )
-            user_eth_address = meca_host.w3.to_checksum_address(
-                user_eth_address
-            )
-            user_public_key = pymeca.utils.get_public_key_from_signature(
-                signature_bytes=signature,
-                message_bytes=input_bytes[0:-65]
-            )
-            blockchain_task = meca_host.get_running_task(
-                task_id=task_id
-            )
-
-            if blockchain_task is None:
-                await websocket.send("Task not found")
-                print("Task not found")
-                return
-
-            if blockchain_task["owner"] != user_eth_address:
-                await websocket.send("Not the right owner")
-                print("Not the right owner")
-                return
-
-            if blockchain_task["hostAddress"] != meca_host.account.address:
-                await websocket.send("Wrong host")
-                print("Wrong host")
-                return
-            if blockchain_task["towerAddress"] != tower_address:
-                print("Wrong tower")
-                await websocket.send("Wrong tower")
-                return
-
-            # decrypt the input
-            input_message = decrypt(
-                MECA_HOST_ENCRYPTION_PRIVATE_KEY,
-                input_bytes[32:-65]
-            )
-
-            # verify the hash of the input
-            input_hash = "0x" + keccak(input_message).hex()
-            if blockchain_task["inputHash"] != input_hash:
-                await websocket.send("Invalid input hash")
-                print("Invalid input hash")
-                return
-
-            # run the task
-            # TODO:
-            # get task ipfs cid
-            ipfs_sha256 = blockchain_task["ipfsSha256"]
-            print("Task IPFS SHA256:", ipfs_sha256)
-            # ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha256)
-            # verify is 0 sha so it is identity task
-            if ipfs_sha256 == ("0x" + "0" * 64):
-                output_bytes = input_message
-            # else:
-                # DO the task
-
-            # hash the output
-            print("Output:", output_bytes)
-            output_hash = "0x" + keccak(output_bytes).hex()
-            # send the output to the blockchain
-            meca_host.register_task_output(
-                task_id=task_id,
-                output_hash=output_hash
-            )
-
-            # send the output to the user
-            # encrypt the output
-            output_encrypted = encrypt(
-                user_public_key.to_hex(),
-                output_bytes
-            )
-            to_send = input_bytes[0:32] + output_encrypted
+            to_send = host_address_bytes + token
+            # sign the message
             signature = pymeca.utils.sign_bytes(
                 private_key=MECA_HOST_ENCRYPTION_PRIVATE_KEY,
                 message_bytes=to_send
             )
             to_send = to_send + signature
             await websocket.send(to_send)
-            print("Sent output to user.")
-            text_reply = await websocket.recv()
-            if text_reply != "Task output sent":
-                print("Problems with the websocket")
-                print(text_reply)
-            else:
-                print("Task output sent")
+            text_response = await websocket.recv()
+            if text_response != "Host connected":
+                print("Failed to connect to tower.")
+                print(text_response)
+                return
+
+            print("Host connected to tower.")
+            while True:
+                input_bytes = await websocket.recv()
+                print("Received input from tower.")
+                task_id = "0x" + input_bytes[0:32].hex()
+                print("Task ID:", task_id)
+                signature = input_bytes[-65:]
+                verify = pymeca.utils.verify_signature(
+                    signature_bytes=signature,
+                    message_bytes=input_bytes[0:-65]
+                )
+                if not verify:
+                    await websocket.send("Invalid signature")
+                    return
+
+                user_eth_address = pymeca.utils.get_eth_address_hex_from_signature(
+                    signature_bytes=signature,
+                    message_bytes=input_bytes[0:-65]
+                )
+                user_eth_address = meca_host.w3.to_checksum_address(
+                    user_eth_address
+                )
+                user_public_key = pymeca.utils.get_public_key_from_signature(
+                    signature_bytes=signature,
+                    message_bytes=input_bytes[0:-65]
+                )
+                blockchain_task = meca_host.get_running_task(
+                    task_id=task_id
+                )
+
+                if blockchain_task is None:
+                    await websocket.send("Task not found")
+                    print("Task not found")
+                    return
+
+                if blockchain_task["owner"] != user_eth_address:
+                    await websocket.send("Not the right owner")
+                    print("Not the right owner")
+                    return
+
+                if blockchain_task["hostAddress"] != meca_host.account.address:
+                    await websocket.send("Wrong host")
+                    print("Wrong host")
+                    return
+                if blockchain_task["towerAddress"] != tower_address:
+                    print("Wrong tower")
+                    await websocket.send("Wrong tower")
+                    return
+
+                # decrypt the input
+                input_message = decrypt(
+                    MECA_HOST_ENCRYPTION_PRIVATE_KEY,
+                    input_bytes[32:-65]
+                )
+
+                # verify the hash of the input
+                input_hash = "0x" + keccak(input_message).hex()
+                if blockchain_task["inputHash"] != input_hash:
+                    await websocket.send("Invalid input hash")
+                    print("Invalid input hash")
+                    return
+
+                # run the task
+                ipfs_sha256 = blockchain_task["ipfsSha256"]
+                print("Task IPFS SHA256:", ipfs_sha256)
+                # verify is 0 sha so it is identity task
+                if ipfs_sha256 == ("0x" + "0" * 64):
+                    output_bytes = input_message
+                else:
+                    # DO the task
+                    message_dict = json.loads(input_message)
+                    message_dict["id"] = message_dict["id"][-CONTAINER_NAME_LIMIT:] + ":latest"
+                    message_dict["resource"] = RESOURCES
+
+                    # Send task to executor
+                    res = requests.post(MECA_TASK_EXECUTOR_URL, json=message_dict)
+                    print(res.status_code)
+                    output_bytes = res.content
+
+                # hash the output
+                print("Output:", output_bytes)
+                output_hash = "0x" + keccak(output_bytes).hex()
+                # send the output to the blockchain
+                meca_host.register_task_output(
+                    task_id=task_id,
+                    output_hash=output_hash
+                )
+
+                # send the output to the user
+                # encrypt the output
+                output_encrypted = encrypt(
+                    user_public_key.to_hex(),
+                    output_bytes
+                )
+                to_send = input_bytes[0:32] + output_encrypted
+                signature = pymeca.utils.sign_bytes(
+                    private_key=MECA_HOST_ENCRYPTION_PRIVATE_KEY,
+                    message_bytes=to_send
+                )
+                to_send = to_send + signature
+                await websocket.send(to_send)
+                print("Sent output to user.")
+                text_reply = await websocket.recv()
+                if text_reply != "Task output sent":
+                    print("Problems with the websocket")
+                    print(text_reply)
+                else:
+                    print("Task output sent")
 
 
 class MecaHostCLI(MecaCLI):
@@ -213,11 +236,6 @@ class MecaHostCLI(MecaCLI):
         print("Started host with address:", meca_host.account.address)
         super().__init__(meca_host)
 
-        # Generate asymmetric keys for host decryption and user encryption
-        eth_k = generate_eth_key()
-        self.secret_key = eth_k.to_hex()
-        self.public_key = eth_k.public_key.to_hex()
-
     async def run_func(self, func, args):
         if func.__name__ == "add_task":
             ipfs_sha = args[0]
@@ -228,6 +246,10 @@ class MecaHostCLI(MecaCLI):
         print(func.__name__, ":")
         print(await super().run_func(func, args))
 
+    def shutdown(self):
+        for thread in threading.enumerate():
+            if isinstance(thread, TaskThread):
+                thread.stop()
 
 async def main():
     cli = MecaHostCLI()
@@ -256,7 +278,9 @@ async def main():
 
     # Blocking function to wait for tasks from a given tower
     async def wait_for_my_task(tower_address: str):
-        await connect_to_tower(meca_host, tower_address)
+        kill_event = threading.Event()
+        task_thread = TaskThread(kill_event, args=(meca_host, tower_address))
+        task_thread.start()
 
     cli.add_method(wait_for_my_task)
     cli.add_method(meca_host.get_tasks)

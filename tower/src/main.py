@@ -1,11 +1,12 @@
 import secrets
+import sys
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import json
 import asyncio
 import pymeca
 
-import ClientConnectionManager
-import HostConnectionManager
+from client_connection_manager import ClientConnectionManager
+from host_connection_manager import HostConnectionManager
 from dependencies import get_meca_tower
 
 
@@ -121,14 +122,11 @@ async def websocket_endpoint(websocket: WebSocket):
     )
     host_ecc_pub_key_hex = host_ecc_pub_key.to_hex()
 
-    blockcahin_host_pub_key = meca_tower.get_host_public_key(
+    blockchain_host_pub_key = meca_tower.get_host_public_key(
         host_address=host_address
     )
 
-    print(host_ecc_pub_key_hex)
-    print(blockcahin_host_pub_key)
-
-    if host_ecc_pub_key_hex != blockcahin_host_pub_key:
+    if host_ecc_pub_key_hex != blockchain_host_pub_key:
         await websocket.send_text("Invalid host encryption public key")
         return
 
@@ -178,5 +176,25 @@ async def read_root():
     return {"message": "Welcome to the FastAPI WebSocket server."}
 
 
-with open("openapi.json", "w") as f:
-    json.dump(app.openapi(), f)
+async def run_websocket_server(port: int = 7777):
+    import uvicorn
+    config = uvicorn.Config(
+        "main:app",
+        host="0.0.0.0",
+        port=port,
+        forwarded_allow_ips="*",
+        ws_ping_timeout=60,
+        log_level="info")
+    server = uvicorn.Server(config)
+    await server.serve()
+
+
+if __name__ == "__main__":
+    with open("openapi.json", "w") as f:
+        json.dump(app.openapi(), f)
+    try:
+        asyncio.run(run_websocket_server(port=int(sys.argv[1])))
+    except KeyboardInterrupt:
+        print("Exiting")
+        exit(0)
+

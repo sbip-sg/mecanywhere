@@ -1,9 +1,4 @@
 import inspect
-import asyncio
-
-
-async def ainput(prompt: str) -> str:
-    return await asyncio.to_thread(input, f'{prompt} ')
 
 
 class MecaCLI:
@@ -40,7 +35,7 @@ class MecaCLI:
                 for i, method in enumerate(self.child_methods):
                     print(f"{i}. " + method.__name__)
                 print("x. Exit")
-                choice = await ainput("Enter action: ")
+                choice = input("Enter action: ")
                 choice = choice.strip()
 
                 if choice == "x" or choice == "X":
@@ -58,7 +53,7 @@ class MecaCLI:
                     args = []
                     for param_name, param in params.items():
                         param_type = param.annotation
-                        tmp = await ainput(f"Enter {param_name}: ")
+                        tmp = input(f"Enter {param_name}: ")
                         tmp = tmp.strip()
                         arg = param_type(tmp)
                         args.append(arg)
@@ -67,7 +62,7 @@ class MecaCLI:
 
                 print()
                 await self.run_func(func, args)
-                await ainput("Press Enter to continue...")
+                input("Press Enter to continue...")
 
         except KeyboardInterrupt:
             self.shutdown()

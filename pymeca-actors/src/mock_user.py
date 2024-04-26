@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import json
 import websockets
 import pathlib
 import os
@@ -79,9 +80,11 @@ class MecaUserCLI(MecaCLI):
         if runningTask["ipfsSha256"] == ("0x" + "0" * 64):
             print("Output: ", message)
         else:
-            OUTPUT_FOLDER.mkdir(exist_ok=True)
-            with open(f"{OUTPUT_FOLDER}/output.png", "wb") as f:
-                f.write(base64.b64decode(message))
+            with open(f"{OUTPUT_FOLDER}/output.txt", "wb") as f:
+                f.write(message)
+            # OUTPUT_FOLDER.mkdir(exist_ok=True)
+            # with open(f"{OUTPUT_FOLDER}/output.png", "wb") as f:
+            #     f.write(base64.b64decode(message))
 
         print("Task output saved to output.png")
 
@@ -96,11 +99,15 @@ class MecaUserCLI(MecaCLI):
     async def run_func(self, func, args):
         if func.__name__ == "send_task_on_blockchain":
             ipfs_sha = args[0]
+            ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
             host_address = args[1]
             tower_address = args[2]
-            content = args[3]
+            content = {
+                "id": ipfs_cid,
+                "input": args[3],
+            }
 
-            input_bytes = content.encode()
+            input_bytes = json.dumps(content).encode()
             # because I set the input in pymeca as a hex string
             input_hash = "0x" + keccak(input_bytes).hex()
             success, task_id = self.actor.send_task_on_blockchain(

@@ -38,7 +38,7 @@ async def main():
     if not meca_tower.is_registered():
         print("\nTower is not registered. Registering...")
         default_size_limit = 10000
-        default_public_connection = "http://localhost:7777"
+        default_public_connection = "http://172.17.0.1:7777"
         default_fee = 10
         default_fee_type = 0
         default_initial_deposit = meca_tower.get_tower_initial_stake()

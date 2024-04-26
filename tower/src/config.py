@@ -9,7 +9,7 @@ class Config:
         tower_private_key: str = None
 
         class Config:
-            env_file = ".env"
+            env_file = os.path.join(os.path.dirname(__file__), '.env')
 
     def __init__(self, *paths: str) -> None:
         self.configuration = {}

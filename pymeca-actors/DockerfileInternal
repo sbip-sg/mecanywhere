@@ -48,7 +48,7 @@ RUN tar -xvzf kubo_v0.27.0_linux-amd64.tar.gz
 WORKDIR /kubo
 RUN bash install.sh
 
-# install ganache deps first
+# install ganache server deps first
 COPY ./pymeca/meca-contracts/src/ganache /tmp/pymeca/meca-contracts/src/ganache
 WORKDIR /tmp/pymeca/meca-contracts/src/ganache
 RUN npm install
@@ -62,6 +62,7 @@ COPY ./pyproject.toml /tmp/main/pyproject.toml
 WORKDIR /tmp/main
 RUN poetry install
 
-COPY ./src/meca-actors /scripts
-WORKDIR /scripts
+COPY ./pymeca-actors /scripts
+COPY ./tower /scripts/src/tower
+WORKDIR /scripts/src
 ENTRYPOINT ["python"]
