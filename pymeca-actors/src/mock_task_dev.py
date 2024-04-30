@@ -24,7 +24,7 @@ async def add_folder_to_ipfs(folder_path: str):
     with ipfs_api.ipfshttpclient.connect(
             f"/dns/{MECA_IPFS_API_HOST}/tcp/{MECA_IPFS_API_PORT}/http"
             ) as client:
-        for res in client.add(folder_path, recursive=True, cid_version=1):
+        for res in client.add(folder_path, recursive=True, cid_version=1, pin=False):
             print(res.as_json())
 
 
