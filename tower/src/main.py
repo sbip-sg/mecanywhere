@@ -18,7 +18,7 @@ from models.requests import SendMessageRequest
 from models.responses import SendMessageResponse
 from websocket_manager import WebsocketManager
 
-from store import MecaLocalFsStore
+from store import MecaLocalFsStore, MecaStoreError
 
 manager = WebsocketManager()
 store = MecaLocalFsStore()
@@ -63,6 +63,7 @@ async def send_message(
     task_id = request.taskId
     # Check if the task is submitted on the blockchain
     running_task = meca_tower.get_running_task(task_id)
+    print(f"Running task: {running_task}")
     if running_task is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Task not found."
@@ -74,7 +75,7 @@ async def send_message(
     try:
         result = store.retrieve("results", task_id)
         return json.loads(result)
-    except store.MecaStoreError:
+    except MecaStoreError:
         pass
 
     try:
@@ -86,7 +87,7 @@ async def send_message(
 
         # generate acknowledgement (maybe include a signed digest)
         # [TODO] here the block number is a TTL for cleanup at tower. Now no cleanup yet.
-        store.store("results", task_id, reply, running_task["blockno"])
+        store.store("results", task_id, reply, running_task["startBlock"]+running_task["blockTimeout"])
         await manager.send_message(target_client_id, json.dumps({"ack": reply_hash}))
 
         return json.loads(reply)

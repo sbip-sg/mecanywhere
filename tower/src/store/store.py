@@ -86,6 +86,7 @@ class MecaLocalFsStore(MecaStore):
             # empty folders already removed in __init__
             return
 
+        os.makedirs(f"{self.path}/{bucket}/{key}")
         with open(f"{self.path}/{bucket}/{key}/{blockno}", "w") as f:
             f.write(value)
 
