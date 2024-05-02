@@ -1,6 +1,13 @@
 # Setup
 
-## Template actors
+## Containers
+- [Template actors - CLI](#template-actors-cli)
+- [Template actors - Server](#template-actors-server)
+- [IPFS (local isolation)](#ipfs-local-isolation)
+- [Task Executor](#task-executor)
+- [Tower Server](#tower-server)
+
+## Template actors CLI
 First, load `.env`
 For running within the same network and with pymeca changes, 
 ```
@@ -30,6 +37,12 @@ For host, mount the docker socket for docker in docker:
 docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock mock_actor mock_host.py
 ```
 
+## Template actors Server
+First, load `.env`
+```
+uvicorn server:app
+```
+
 ## IPFS (local isolation)
 Start IPFS node if you want to upload (task developer) folders. The node where the host downloads from should be accessible from the node the task developer uploads to. i.e. They could be the same node or accessed from a public gateway.
 
@@ -45,9 +58,62 @@ Start task executor for the host to execute tasks.
 
 ## Tower Server
 Start tower server to relay tasks from client to host.
+If mock_actor_intern image was built, the tower server can be started with that image:
+```
+docker run -it --rm mock_actor_intern tower/src/main.py 7777
+```
+Else:
+
 In `../tower`
 ```
 docker build -t tower_server .
 docker run -p 7777:7777 tower_server 7777
 ```
 Change `--net`/`--ip`/exposed port if you want.
+
+# Usage
+
+## CLI
+Follow prompts
+
+## Server
+
+- `/init_actor/{actor_type}` : Initialize actor of type `actor_type`
+    - params:
+        - `actor_type`: host / tower / task_dev / user
+    - returns:
+        - list of methods available to the actor
+- `/{function_name}` : Call function `function_name`
+    - params:
+        - `function_name`: name of the function to call
+    - returns:
+        - result of the function call
+
+For example:
+```
+curl -L 'http://localhost:8000/init_actor/host' -X POST -H 'Content-Type: application/json'
+curl -L 'http://localhost:8000/register' -X POST -H 'Content-
+Type: applcation/json' -d '{"block_timeout_limit": 10, "public_key":"","initial_deposit":100}'
+curl -L 'http://localhost:8000/get_my_tasks' -X POST -H 'Content-Type: applcation/json'
+```
+
+## Workflow
+
+1. **Tower**: register_as_tower
+2. **Task Dev**: add_task
+    
+    IPFS node should be running
+
+3. **Host**: register_as_host
+4. **Host**: get_tasks, add_task
+5. **Host**: get_towers, register_for_tower
+
+    Tower Server should be running
+
+6. **Tower**: get_pending_hosts, accept_host
+7. **Host**: wait_for_my_task
+8. **User**: get_tasks, get_towers_hosts_for_task, send_task
+    
+    Task Executor should be running
+
+9. **User**: finish_task
