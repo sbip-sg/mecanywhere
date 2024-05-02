@@ -1,12 +1,12 @@
 import asyncio
 from web3 import Web3
-import ipfs_api
 import os
 from dotenv import load_dotenv
 
 import pymeca
 
 from cli import MecaCLI
+from functions.task_dev_functions import add_folder_to_ipfs_host
 
 load_dotenv()
 
@@ -15,17 +15,6 @@ MECA_IPFS_API_PORT = os.getenv("MECA_IPFS_API_PORT", None)
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
 MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
 MECA_DEV_PRIVATE_KEY = os.getenv("MECA_DEV_PRIVATE_KEY", None)
-
-
-async def add_folder_to_ipfs(folder_path: str):
-    if not os.path.exists(folder_path) or not os.path.isdir(folder_path):
-        print("Folder not found.")
-        return
-    with ipfs_api.ipfshttpclient.connect(
-            f"/dns/{MECA_IPFS_API_HOST}/tcp/{MECA_IPFS_API_PORT}/http"
-            ) as client:
-        for res in client.add(folder_path, recursive=True, cid_version=1, pin=False):
-            print(res.as_json())
 
 
 class TaskDeveloperCLI(MecaCLI):
@@ -44,12 +33,18 @@ class TaskDeveloperCLI(MecaCLI):
 
     async def run_func(self, func, args):
         print(func.__name__, ":")
-        print(await super().run_func(func, args))
+        res = await super().run_func(func, args)
+        print(res)
+        return res
 
 
 async def main():
     cli = TaskDeveloperCLI()
     cli.add_method(pymeca.utils.get_sha256_from_cid)
+
+    async def add_folder_to_ipfs(folder_path: str):
+        await add_folder_to_ipfs_host(folder_path, MECA_IPFS_API_HOST, MECA_IPFS_API_PORT)
+
     cli.add_method(add_folder_to_ipfs)
     await cli.start()
 
