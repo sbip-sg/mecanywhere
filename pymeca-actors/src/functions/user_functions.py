@@ -131,6 +131,4 @@ async def send_task_on_blockchain(
             if tasks[0] in unfinished:
                 tasks[0].cancel()
             else:
-                # await tasks[1]
-                tasks[1].cancel()
-                actor.finish_task(task_id=task_id)
+                await tasks[1]
