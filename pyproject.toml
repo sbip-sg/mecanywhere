@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "meca-actors"
+version = "0.1.0"
+description = "The meca actors working with pymeca"
+authors = ["sdcioc <stefan_dan@xn--ciocrlan-o2a.ro>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pycryptodome = "^3.20.0"
+websockets = "^12.0"
+eciespy = "^0.4.1"
+fastapi = "^0.110.1"
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
+ipfs-toolkit = "^0.5.20"
+docker = "^7.0.0"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
