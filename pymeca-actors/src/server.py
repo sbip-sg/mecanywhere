@@ -1,3 +1,6 @@
+import asyncio
+import json
+import sys
 from fastapi import FastAPI, HTTPException, Request
 
 from mock_host import MecaHostCLI
@@ -48,3 +51,30 @@ def init_actor(actor_name: str):
         return list(actor.name_to_child_method.keys())
     except ValueError as e:
         return str(e)
+
+@app.get('/get_account')
+def get_account():
+    if actor is None:
+        # using an arbitrary actor to get the address
+        return MecaUserCLI().account.address
+    return actor.account.address
+
+async def run_websocket_server(port: int = 9999):
+    import uvicorn
+    config = uvicorn.Config(
+        "server:app",
+        host="0.0.0.0",
+        port=port,
+        forwarded_allow_ips="*",
+        log_level="info")
+    server = uvicorn.Server(config)
+    await server.serve()
+
+if __name__ == "__main__":
+    with open("openapi.json", "w") as f:
+        json.dump(app.openapi(), f)
+    try:
+        asyncio.run(run_websocket_server(port=int(sys.argv[1])))
+    except KeyboardInterrupt:
+        print("Exiting")
+        exit(0)

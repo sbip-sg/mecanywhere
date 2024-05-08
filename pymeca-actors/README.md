@@ -40,7 +40,8 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock mock_actor mock
 ## Template actors Server
 First, load `.env`
 ```
-uvicorn server:app
+docker build -t mock_actor_intern -f DockerfileInternal ..
+docker run --rm -p 9999:9999 mock_actor_intern server.py 9999
 ```
 
 ## IPFS (local isolation)
