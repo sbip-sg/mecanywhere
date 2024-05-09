@@ -155,12 +155,18 @@ class TaskThread(threading.Thread):
                     input_bytes[32:-65]
                 )
 
-                # verify the hash of the input
-                input_hash = "0x" + keccak(input_message).hex()
-                if blockchain_task["inputHash"] != input_hash:
-                    await websocket.send("Invalid input hash")
-                    print("Invalid input hash")
-                    return
+                # parse the input 
+                message_dict = json.loads(input_message)
+                print("Input:", message_dict)
+
+                # check if use_sgx is set
+                if "use_sgx" not in message_dict or not message_dict["use_sgx"]:
+                    # verify the hash of the input
+                    input_hash = "0x" + keccak(input_message).hex()
+                    if blockchain_task["inputHash"] != input_hash:
+                        await websocket.send("Invalid input hash")
+                        print("Invalid input hash")
+                        return
 
                 # run the task
                 ipfs_sha256 = blockchain_task["ipfsSha256"]
@@ -170,11 +176,11 @@ class TaskThread(threading.Thread):
                     output_bytes = input_message
                 else:
                     # DO the task
-                    message_dict = json.loads(input_message)
                     message_dict["id"] = message_dict["id"][-container_name_limit:] + ":latest"
                     message_dict["resource"] = resources
 
                     # Send task to executor
+                    print("Sending:", message_dict)
                     res = requests.post(task_executor_url, json=message_dict)
                     print(res.status_code)
                     output_bytes = res.content
@@ -182,11 +188,13 @@ class TaskThread(threading.Thread):
                 # hash the output
                 print("Output:", output_bytes)
                 output_hash = "0x" + keccak(output_bytes).hex()
-                # send the output to the blockchain
-                meca_host.register_task_output(
-                    task_id=task_id,
-                    output_hash=output_hash
-                )
+
+                if message_dict["input"] != "SGXRAREQUEST":
+                    # send the output to the blockchain
+                    meca_host.register_task_output(
+                        task_id=task_id,
+                        output_hash=output_hash
+                    )
 
                 # send the output to the user
                 # encrypt the output
