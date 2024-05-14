@@ -80,6 +80,7 @@ async def send_task_on_blockchain(
         output_folder
     ):
         ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
+        # TODO: pull info from somewhere else specified by task dev (resources, sgx, gpu)
         input_with_id = {
             "id": ipfs_cid,
             "input": input,

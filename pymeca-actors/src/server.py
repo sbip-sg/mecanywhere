@@ -66,6 +66,14 @@ def init_actor(actor_name: str):
         return True
     except ValueError as e:
         return str(e)
+    
+@app.post('/close_actor')
+def close_actor():
+    global actor
+    if actor is None:
+        raise HTTPException(status_code=400, detail="Actor not initialized")
+    actor = None
+    return True
 
 @app.get('/get_account')
 def get_account():
