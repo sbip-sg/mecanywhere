@@ -30,13 +30,16 @@ class MecaUserCLI(MecaCLI):
 
     async def run_func(self, func, args):
         if func.__name__ == "send_task_on_blockchain":
+            use_sgx = input(f"Enter use_sgx: ")
+            use_sgx = use_sgx.lower() == "true"
             await send_task_on_blockchain(
                 self.actor,
                 args['ipfs_sha256'],
                 args['host_address'],
                 args['tower_address'],
                 args['input_hash'],
-                OUTPUT_FOLDER
+                OUTPUT_FOLDER,
+                use_sgx
             )
         else:
             print(func.__name__, ":")

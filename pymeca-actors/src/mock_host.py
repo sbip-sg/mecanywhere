@@ -33,8 +33,10 @@ CONTAINER_FOLDER = pathlib.Path("./build")
 CONTAINER_NAME_LIMIT = 10
 DEFAULT_BLOCK_TIMEOUT_LIMIT = 10
 RESOURCES = {
-    "cpu": 16,
-    "mem": 32000,
+    # "cpu": 16,
+    # "mem": 32000,
+    "cpu": 1,
+    "mem": 128,
 }
 
 

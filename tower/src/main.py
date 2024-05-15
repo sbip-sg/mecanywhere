@@ -20,6 +20,9 @@ host_manager = HostConnectionManager()
 
 @app.websocket("/client")
 async def websocket_endpoint_client(websocket: WebSocket):
+    # try:
+    #     while True:
+    
     await websocket.accept()
 
     input_bytes = await websocket.receive_bytes()
@@ -67,9 +70,10 @@ async def websocket_endpoint_client(websocket: WebSocket):
         await websocket.send_text("Host not found")
         return
 
-    if not await client_manager.connect(websocket, task_id, host_address):
-        await websocket.send_text("Task already connected")
-        return
+    # if not await client_manager.connect(websocket, task_id, host_address):
+    #     await websocket.send_text("Task already connected")
+    #     return
+    await client_manager.connect(websocket, task_id, host_address)
 
     # output_bytes = input_bytes[32:-65]
 
