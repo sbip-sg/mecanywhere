@@ -28,6 +28,7 @@ class MecaCLI:
 
     def add_method(self, method):
         self.child_methods.append(method)
+        self.name_to_child_method[method.__name__] = method
 
     def get_method(self, method_name):
         return self.name_to_child_method.get(method_name)
