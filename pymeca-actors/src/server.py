@@ -3,15 +3,19 @@ import inspect
 import json
 import os
 import sys
+import threading
 from fastapi import FastAPI, HTTPException, Request
 import pymeca
 from dotenv import load_dotenv
+from functions.user_functions import send_task_on_blockchain
+from functions.host_functions import TaskThread
 
 from web3 import Web3
 
 load_dotenv()
 
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", "http://localhost:8545")
+TASK_EXECUTOR_URL = os.getenv("MECA_TASK_EXECUTOR_URL", "http://host.docker.internal:2591")
 DAO_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
 
 app = FastAPI()
@@ -21,10 +25,11 @@ actor = None
 def home():
     return "Meca Server"
 
-@app.post('/{function_name}')
+@app.post('/exec/{function_name}')
 async def entry_point(function_name: str, request: Request = None):
     if actor is None:
-        raise HTTPException(status_code=400, detail="Actor not initialized")
+        # TODO: Change
+        init_actor("host")
     func = getattr(actor, function_name, None)
     if func is None:
         raise HTTPException(status_code=404, detail=f"Function {function_name} not found")
@@ -45,8 +50,6 @@ async def entry_point(function_name: str, request: Request = None):
 @app.post('/init_actor/{actor_name}')
 def init_actor(actor_name: str):
     global actor
-    if actor is not None:
-        raise HTTPException(status_code=400, detail="Actor already initialized")
     try:
         web3 = Web3(Web3.HTTPProvider(BLOCKCHAIN_URL))
         if actor_name == "host":
@@ -84,6 +87,23 @@ def get_account():
 @app.get('/cid_from_sha256/{sha256}')
 def cid_from_sha256(sha256: str):
     return pymeca.utils.cid_from_sha256(sha256)
+
+@app.post('/send_task_on_blockchain')
+async def send_task(request: Request):
+    if actor is None:
+        init_actor("user")
+    args = await request.json()
+    return await send_task_on_blockchain(actor, **args)
+
+@app.post('/wait_for_task')
+async def wait_for_my_task(request: Request):
+    if actor is None:
+        init_actor("host")
+    kill_event = threading.Event()
+    args = await request.json()
+    args["task_executor_url"] = TASK_EXECUTOR_URL
+    task_thread = TaskThread(kill_event, args=([actor]), kwargs=(args))
+    task_thread.start()
 
 async def run_websocket_server(port: int = 9999):
     import uvicorn

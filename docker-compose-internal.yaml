@@ -28,10 +28,10 @@ services:
       context: .
       dockerfile: pymeca-actors/DockerfileInternal
     ports:
-      - "7000:7000"
+      - "7777:7777"
     volumes: # volume mounts ignore dockerignore
       - ./tower:/scripts/src/tower
-    command: tower/src/main.py 7000
+    command: tower/src/main.py 7777
     secrets:
       - tower_private_key
 
