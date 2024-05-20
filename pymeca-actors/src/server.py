@@ -81,7 +81,7 @@ def close_actor():
 @app.get('/get_account')
 def get_account():
     if actor is None:
-        init_actor("user")
+        init_actor("host")
     return actor.account.address
 
 @app.get('/cid_from_sha256/{sha256}')
