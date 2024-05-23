@@ -170,7 +170,7 @@ class TaskThread(threading.Thread):
             if text_response != "Host connected":
                 print("Failed to connect to tower.")
                 print(text_response)
-                return
+                raise ValueError("Failed to connect to tower.", text_response)
 
             print("Host connected to tower.")
             while True:

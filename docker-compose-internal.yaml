@@ -1,0 +1,65 @@
+name: pymeca-actors
+version: "3.7"
+services:
+  blockchain:
+    build:
+      context: .
+      dockerfile: pymeca-actors/DockerfileInternal
+    ports:
+      - "9000:9000"
+    working_dir: /tmp/pymeca/src/pymeca/scripts
+    tty: true
+    command: >
+      ganache.py --port 9000 --generate-accounts 
+      --accounts_file_path ../../config/accounts.json 
+      --ganache-server-script-path ../../../meca-contracts/src/ganache/index.js 
+      --dao-address-file-path ../dao_contract_address.txt 
+      --dao-file-path ../../../meca-contracts/src/contracts/MecaContract.sol 
+      --scheduler-file-path ../../../meca-contracts/src/contracts/SchedulerContract.sol 
+      --host-file-path ../../../meca-contracts/src/contracts/HostContract.sol 
+      --tower-file-path ../../../meca-contracts/src/contracts/TowerContract.sol 
+      --task-file-path ../../../meca-contracts/src/contracts/TaskContract.sol 
+      --scheduler-fee 100 --host-register-fee 100 --host-initial-stake 100 --host-task-register-fee 100 
+      --host-failed-task-penalty 100 --tower-initial-stake 100 --tower-host-request-fee 100 
+      --tower-failed-task-penalty 100 --task-addition-fee 100
+
+  tower:
+    build:
+      context: .
+      dockerfile: pymeca-actors/DockerfileInternal
+    ports:
+      - "7777:7777"
+    volumes: # volume mounts ignore dockerignore
+      - ./tower:/scripts/src/tower
+    command: tower/src/main.py 7777
+    secrets:
+      - tower_private_key
+
+  ipfs:
+    image: ipfs/kubo:latest
+    ports:
+      - "4001:4001"
+      - "5001:5001"
+      - "8080:8080"
+    volumes:
+      - ./ipfs-data:/data/ipfs
+      - ./ipfs-staging:/export
+
+  pymeca-server:
+    build:
+      context: .
+      dockerfile: pymeca-actors/DockerfileInternal
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./pymeca-actors/src:/scripts/src
+    command: server.py 9999
+
+networks:
+  default:
+    name: meca
+    external: true
+
+secrets:
+  tower_private_key:
+    file: ./keys/tower_private_key.txt

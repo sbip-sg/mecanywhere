@@ -267,3 +267,5 @@ cython_debug/
 .env
 poetry.lock
 
+ipfs-data/
+ipfs-staging/
