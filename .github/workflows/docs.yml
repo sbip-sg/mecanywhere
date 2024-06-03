@@ -4,31 +4,34 @@ on:
     push:
         branches:
             - main
-        paths: 
+        paths:
             - docs
+    workflow_dispatch:
 
 
 permissions:
-  contents: read
+  contents: write
   pages: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: actions/setup-python@v4
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
       - name: Sphinx build
-        run: sphinx-build docs _build
+        run: sphinx-build docs/source _build
       - name: Upload page artifact
         uses: actions/upload-artifact@v4
         with:
           name: meca-docs-artifact
           path: docs/_build/html
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
