@@ -6,7 +6,7 @@
 Welcome to MECAnywhere's documentation!
 =======================================
 
-This is for developers working on MECAnywhere backend.
+This is for developers working on MECAnywhere backend. User guides are also available under Contents.
 
 
 .. toctree::
@@ -21,4 +21,4 @@ This is for developers working on MECAnywhere backend.
    :caption: Contents
    
    pages/api/api
-
+   pages/user_guides/guides

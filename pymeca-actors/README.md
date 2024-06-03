@@ -8,7 +8,7 @@
 - [Tower Server](#tower-server)
 
 ## Template actors CLI
-First, load `.env`
+First, load `.env`. An example `.env.example` file is provided.
 For running within the same network and with pymeca changes, 
 ```
 docker network create --subnet=172.18.0.0/16 intern_network
@@ -118,3 +118,5 @@ curl -L 'http://localhost:8000/get_my_tasks' -X POST -H 'Content-Type: applcatio
     Task Executor should be running
 
 9. **User**: finish_task
+
+https://drive.google.com/file/d/1nLUxS-Uul6fYmkau8aChEA7N0mNaZKwV/view?usp=sharing
