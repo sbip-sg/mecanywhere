@@ -1,4 +1,4 @@
-# MECAnywhere Services (Development)
+# MECAnywhere Services
 
 Table of Contents
 
@@ -11,30 +11,36 @@ Table of Contents
 
 # Overview
 
+This repository contains the services for the MECAnywhere project that are used to interact with pymeca and the smart contracts. Use the pymeca-actors to join the MECAnywhere ecosystem now! 
+
 ### Architecture
 
 https://www.figma.com/file/JkjN5hBQYfCFEMpc2QS4eH/MECAnywhere-Architecture-Diagram-(V2)?type=whiteboard&node-id=0%3A1&t=VgoZo4ZXrVZtnZ9s-1
 
 ### Services
 
-> Open `docs/build/index.html` to view the offline API documentation.
+> Open https://sbip-sg.github.io/mec_anywhere/ for online documentation + user guides.
 
 - did-go
     - Decentalized Identity (DID) service written in Golang
 - Tower
     - Hosted on the edge to provide task forwarding for end users
-    - API Documentation: {host}/docs
+    - [README](tower/README.md)
 - Pymeca actors
-    - template actors that use pymeca library to interact with the smart contracts
+    - Template actors that use pymeca library to interact with the smart contracts. These come in the form of CLI.
+    - [README to setup](pymeca-actors/README.md)
+    - User guides in docs
 
 # Quick Start (local)
 1. Configure keys/env variables (see [Configuration -> Secret keys](#secret-keys))
 
-2. Run docker services
+2. Pull submodules with `git submodule update --init --recursive` in `pymeca` folder.
+
+3. Run docker services
 - `docker-compose up` to start all services as containers. 
 - `docker-compose up --build <service_name>` to rebuild a specific service.
-- `-f docker-compose-internal.yaml` is for working with pymeca library changes.
-- `-f docker-compose.yaml` is for working with pymeca version from pypi.
+- \+ `-f docker-compose-internal.yaml` is for working with pymeca library changes.
+- \+ `-f docker-compose.yaml` is for working with pymeca version from pypi.
 
 # Configuration
 
