@@ -3,7 +3,9 @@ name: documentation
 on: 
     push:
         branches:
-            - guides2
+            - main
+        paths:
+            - docs
     workflow_dispatch:
 
 
