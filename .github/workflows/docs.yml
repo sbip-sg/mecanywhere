@@ -12,7 +12,7 @@ permissions:
   pages: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
       - name: Sphinx build
-        run: sphinx-build docs _build
+        run: sphinx-build docs/source _build
       - name: Upload page artifact
         uses: actions/upload-artifact@v4
         with:
