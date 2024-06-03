@@ -17,7 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: docs
           submodules: false
       - uses: actions/setup-python@v4
       - name: Install dependencies
