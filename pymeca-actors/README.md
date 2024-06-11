@@ -8,37 +8,36 @@
 - [Tower Server](#tower-server)
 
 ## Template actors CLI
-First, load `.env`. An example `.env.example` file is provided.
+First, create and fill `.env`. An example `.env.example` file is provided.
 For running within the same network and with pymeca changes, 
 ```
 docker network create --subnet=172.18.0.0/16 intern_network
 docker build -t mock_actor_intern -f DockerfileInternal ..
 
 docker run -it --rm --net intern_network --ip 172.18.0.2 -w /tmp/pymeca/src/pymeca/scripts  mock_actor_intern ganache.py --port 9000 --ganache-server-script-path ../../../meca-contracts/src/ganache/index.js --generate-accounts --accounts_file_path ../../config/accounts.json --dao-address-file-path ../dao_contract_address.txt --dao-file-path ../../../meca-contracts/src/contracts/MecaContract.sol --scheduler-file-path ../../../meca-contracts/src/contracts/SchedulerContract.sol --host-file-path ../../../meca-contracts/src/contracts/HostContract.sol --tower-file-path ../../../meca-contracts/src/contracts/TowerContract.sol --task-file-path ../../../meca-contracts/src/contracts/TaskContract.sol --scheduler-fee 100 --host-register-fee 100 --host-initial-stake 100 --host-task-register-fee 100 --host-failed-task-penalty 100 --tower-initial-stake 100 --tower-host-request-fee 100 --tower-failed-task-penalty 100 --task-addition-fee 100
-docker run -it --rm --net intern_network --ip 172.18.0.3 mock_actor_intern tower/src/main.py 7777
-docker run -it --rm --net intern_network --ip 172.18.0.4  mock_actor_intern mock_tower.py
-docker run -it --rm --net intern_network --ip 172.18.0.5 -v /var/run/docker.sock:/var/run/docker.sock mock_actor_intern mock_host.py
-docker run -it --rm --net intern_network --ip 172.18.0.6 -v $PWD/build:/scripts/src/build  mock_actor_intern mock_user.py
-docker run -it --rm --net intern_network --ip 172.18.0.7 -v <ABSOLUTE_PATH_TO_FOLDER>:/build mock_actor_intern mock_task_dev.py
+docker run -it --rm --net intern_network --ip 172.18.0.4 --env-file .env mock_actor_intern mock_tower.py
+docker run -it --rm --net intern_network --ip 172.18.0.5 --env-file .env -v /var/run/docker.sock:/var/run/docker.sock mock_actor_intern mock_host.py
+docker run -it --rm --net intern_network --ip 172.18.0.6 --env-file .env -v $PWD/build:/scripts/src/build  mock_actor_intern mock_user.py
+docker run -it --rm --net intern_network --ip 172.18.0.7 --env-file .env -v <ABSOLUTE_PATH_TO_FOLDER>:/build mock_actor_intern mock_task_dev.py
 ```
 For general use,
 ```
 docker build -t mock_actor -f Dockerfile .
 
-docker run -it --rm mock_actor mock_tower.py
+docker run -it --rm --env-file .env mock_actor mock_tower.py
 
 For user, mount a folder to retrieve task output:
-docker run -it --rm -v $PWD/build:/scripts/src/build mock_actor mock_user.py
+docker run -it --rm --env-file .env -v $PWD/build:/scripts/src/build mock_actor mock_user.py
 
 For task developer, mount a folder for IPFS staging:
-docker run -it --rm -v <ABSOLUTE_PATH_TO_FOLDER>:/build mock_actor mock_task_dev.py
+docker run -it --rm --env-file .env -v <ABSOLUTE_PATH_TO_FOLDER>:/build mock_actor mock_task_dev.py
 
 For host, mount the docker socket for docker in docker:
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock mock_actor mock_host.py
+docker run -it --rm --env-file .env -v /var/run/docker.sock:/var/run/docker.sock mock_actor mock_host.py
 ```
 
 ## Template actors Server
-First, load `.env`
+First, create and fill `.env`. An example `.env.example` file is provided.
 ```
 docker build -t mock_actor_intern -f DockerfileInternal ..
 docker run --rm -p 9999:9999 mock_actor_intern server.py 9999

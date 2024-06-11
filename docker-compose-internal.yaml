@@ -29,8 +29,8 @@ services:
       dockerfile: pymeca-actors/DockerfileInternal
     ports:
       - "7777:7777"
-    volumes: # volume mounts ignore dockerignore
-      - ./tower:/scripts/src/tower
+    # volumes: # volume mounts ignore dockerignore
+      # - ./tower:/scripts/src/tower
     command: tower/src/main.py 7777
     secrets:
       - tower_private_key
@@ -45,15 +45,15 @@ services:
       - ./ipfs-data:/data/ipfs
       - ./ipfs-staging:/export
 
-  pymeca-server:
-    build:
-      context: .
-      dockerfile: pymeca-actors/DockerfileInternal
-    ports:
-      - "9999:9999"
-    volumes:
-      - ./pymeca-actors/src:/scripts/src
-    command: server.py 9999
+  # pymeca-server:
+  #   build:
+  #     context: .
+  #     dockerfile: pymeca-actors/DockerfileInternal
+  #   ports:
+  #     - "9999:9999"
+  #   volumes:
+  #     - ./pymeca-actors/src:/scripts/src
+  #   command: server.py 9999
 
 networks:
   default:

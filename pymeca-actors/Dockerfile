@@ -9,7 +9,6 @@ RUN echo "STARTING TEMPLATE SERVICE..." && \
     pip install -r requirements.txt
 
 COPY src src
-COPY config config
 
 WORKDIR /app/src
 

@@ -3,7 +3,6 @@ import os
 from web3 import Web3
 from pymeca.tower import MecaTower
 from pymeca.dao import get_DAO_ADDRESS
-
 from config import Config
 
 def get_dao_address():
