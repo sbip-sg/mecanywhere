@@ -78,7 +78,6 @@ def verify_and_parse_task_input(
     task_input: bytes,
     host_encryption_private_key: str,
     tower_address: str,
-    verify_input_hash: bool = True,
 ):
     # Verify signature
     task_id = "0x" + task_input[0:32].hex()
@@ -117,11 +116,23 @@ def verify_and_parse_task_input(
     print("Input:", message_dict)
 
     # verify the input hash
-    if verify_input_hash:
-        if "use_sgx" not in message_dict or not message_dict["use_sgx"]:
-            input_hash = "0x" + keccak(task_input).hex()
+    input_hash = "0x" + keccak(task_input).hex()
+    if "use_sgx" not in message_dict or not message_dict["use_sgx"]:
+        if blockchain_task["inputHash"] != input_hash:
+            raise ValueError("Invalid input hash")
+    else:
+        if message_dict["input"] == "SGXRAREQUEST":
             if blockchain_task["inputHash"] != input_hash:
                 raise ValueError("Invalid input hash")
+        else:
+            tee_task = actor.get_tee_task(task_id)
+            if tee_task is None:
+                raise ValueError("TEE task not found")
+            if not tee_task["encryptedInputHash"]:
+                raise ValueError("Encrypted input hash not found")
+            if tee_task["encryptedInputHash"] != input_hash:
+                raise ValueError("Invalid encrypted input hash")
+
     return message_dict, task_id, user_public_key, blockchain_task["ipfsSha256"]
 
 class TaskThread(threading.Thread):

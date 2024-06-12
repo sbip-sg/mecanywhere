@@ -87,7 +87,7 @@ def format_tower_uri_for_client(tower_uri: str):
 
 
 def verify_and_parse_task_output(
-    actor: pymeca.user.MecaUser, task_output: bytes, verify_output_hash: bool = True
+    actor: pymeca.user.MecaUser, task_output: bytes, sgx_ra_round: bool = False
 ):
     task_id = "0x" + task_output[0:32].hex()
 
@@ -116,8 +116,9 @@ def verify_and_parse_task_output(
     print("message: ", message)
 
     # verify the output message hash
-    if verify_output_hash:
+    if not sgx_ra_round:
         output_hash = runningTask["outputHash"]
+        print("output hash: ", output_hash)
         received_hash = "0x" + keccak(message).hex()
         if output_hash != received_hash:
             raise ValueError("Output hash mismatch")
@@ -131,17 +132,17 @@ async def wait_for_task(
     websocket,
     task_id,
     output_folder,
-    use_sgx=False,
-    output_key=None,
+    sgx_ra_round=False,
+    sgx_output_key=None,
 ):
     task_output = await websocket.recv()
     print("Task output received.")
     message = verify_and_parse_task_output(
-        actor, task_output, verify_output_hash=not use_sgx
+        actor, task_output, sgx_ra_round=sgx_ra_round
     )
 
-    if use_sgx and output_key is not None:
-        message = decrypt_sgx_task_output(message, output_key)
+    if sgx_output_key is not None:
+        message = decrypt_sgx_task_output(message, sgx_output_key)
 
     output_folder.mkdir(exist_ok=True)
     with open(f"{output_folder}/output.txt", "wb") as f:
@@ -175,6 +176,8 @@ async def send_task_on_blockchain(
 ):
     ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
     input_bytes = prepare_input(ipfs_cid, input, use_sgx)
+    if use_sgx:
+        input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
     # because I set the input in pymeca as a hex string
     input_hash = "0x" + keccak(input_bytes).hex()
     success, task_id = actor.send_task_on_blockchain(
@@ -205,7 +208,7 @@ async def send_task_on_blockchain(
                 print("Task connection failed")
                 return
             host_resp = await wait_for_task(
-                actor, websocket, task_id, output_folder, use_sgx=True
+                actor, websocket, task_id, output_folder, sgx_ra_round=True
             )
             # print("Host response: ", host_resp)
             host_resp = json.loads(host_resp)
@@ -230,6 +233,9 @@ async def send_task_on_blockchain(
             input_bytes = prepare_input(
                 ipfs_cid, json.dumps({"value": encrypted_message.hex()}), use_sgx=True
             )
+            input_hash = "0x" + keccak(input_bytes).hex()
+            actor.register_tee_task_encrypted_input(task_id, input_hash)
+
             to_send = encrypt_and_sign_input(
                 actor, blockcahin_host_pub_key, input_bytes, task_id_bytes
             )
@@ -248,8 +254,8 @@ async def send_task_on_blockchain(
                     websocket,
                     task_id,
                     output_folder,
-                    use_sgx=use_sgx,
-                    output_key=output_key,
+                    sgx_ra_round=False,
+                    sgx_output_key=output_key,
                 )
             ),
             asyncio.ensure_future(finish_task(actor, task_id)),
