@@ -1,10 +1,12 @@
 import asyncio
 import json
 import websockets
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_v1_5, AES
-from Crypto.Util.Padding import pad
+from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives import serialization
 from ecies import encrypt
 from ecies import decrypt
 from eth_hash.auto import keccak
@@ -35,23 +37,30 @@ def encrypt_and_sign_input(
 
 def encrypt_sgx_task_input(enclave_msg: dict, output_key: bytes, input_bytes: bytes):
     pub_key_data = enclave_msg["msg"]["key"]
-    public_key = RSA.importKey(pub_key_data)
-    rsa_cipher = PKCS1_v1_5.new(public_key)
-    # not specifying iv here, python aes will generate a random one
+    peer_public_key = serialization.load_pem_public_key(pub_key_data.encode())
+    tmp_ec_key_pair = ec.generate_private_key(ec.SECP384R1())
+    shared_secret = tmp_ec_key_pair.exchange(ec.ECDH(), peer_public_key)
+    own_public_key_pem = tmp_ec_key_pair.public_key().public_bytes(
+        serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo
+    )
 
-    session_key = get_random_bytes(32)
+    session_key = HKDF(
+        algorithm=hashes.SHA256(),
+        length=16,
+        salt=None,
+        info=b"info",
+    ).derive(shared_secret)
     print("session key len: ", len(session_key))
-    aes_cipher = AES.new(key=session_key, mode=AES.MODE_CBC)
-    # retrieve the iv
-    iv = aes_cipher.iv
-    sensitive_data = bytes(input_bytes, "utf-8") + output_key
-    padded_sensitive_data = pad(sensitive_data, AES.block_size)
-    encrypted_data = aes_cipher.encrypt(padded_sensitive_data)
-    encrypted_key = rsa_cipher.encrypt(session_key)
-    # assemble the message
-    encrypted_message = encrypted_data + encrypted_key + iv
 
-    print("encrypted key size: ", len(encrypted_key))
+    iv = AES.get_random_bytes(12)
+    aes_cipher = AES.new(key=session_key, mode=AES.MODE_GCM, nonce=iv)
+    sensitive_data = bytes(input_bytes, "utf-8") + output_key
+    padded_sensitive_data = sensitive_data
+    encrypted_data = aes_cipher.encrypt(padded_sensitive_data)
+    tag = aes_cipher.digest()
+    # assemble the message
+    encrypted_message = encrypted_data + own_public_key_pem + iv + tag
+
     print("encrypted message length: ", len(encrypted_message))
     return encrypted_message
 
