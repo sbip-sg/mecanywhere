@@ -153,6 +153,9 @@ async def finish_task(actor: pymeca.user.MecaUser, task_id):
     actor.finish_task(task_id=task_id)
     print("sent finish task transaction.")
 
+async def get_all_executed_tasks(actor: pymeca.user.MecaActiveActor, user_address):
+    # actor_address = actor.get_host_contract_address # get the connected users address to filter events by
+    return actor.get_all_executed_tasks(address=user_address)
 
 async def send_task_on_blockchain(
     actor: pymeca.user.MecaUser,
