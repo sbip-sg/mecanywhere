@@ -7,7 +7,8 @@ Table of Contents
 1. `Introduction <#introduction>`__
 2. `Installation <#installation>`__
 3. `Usage <#usage>`__
-4. `Payment <#payment>`__
+4. `Functions <#functions>`__
+5. `Payment <#payment>`__
 
 Introduction
 ------------
@@ -41,9 +42,6 @@ The client CLI will look like this:
    x. Exit
    Enter action: 
 
-All functions are detailed in the `pymeca
-library <https://sbip-sg.github.io/pymeca/>`__.
-
 You can check tasks available and their hosts and towers. Then submit a
 task with the chosen combination. An example of submit task looks like
 this:
@@ -67,6 +65,10 @@ this:
    Enter use_sgx: -
 
 Results will be stored in $PWD/build if saved, or displayed on the CLI.
+
+Functions
+---------
+https://sbip-sg.github.io/pymeca/autoapi/pymeca/user/index.html
 
 Payment
 -------

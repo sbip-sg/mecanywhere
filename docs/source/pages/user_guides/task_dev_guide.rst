@@ -7,7 +7,8 @@ Table of Contents
 1. `Introduction <#introduction>`__
 2. `Installation <#installation>`__
 3. `Usage <#usage>`__
-4. `Payment <#payment>`__
+4. `Functions <#functions>`__
+5. `Payment <#payment>`__
 
 Introduction
 ------------
@@ -52,12 +53,24 @@ The task developer CLI will look like this:
    x. Exit
    Enter action:
 
-All functions are detailed in the `pymeca
-library <https://sbip-sg.github.io/pymeca/>`__.
-
 The CLI provides options to manage your tasks. ``add_folder_to_ipfs`` to
 upload a local folder to the IPFS node specified in the env variables.
 Then ``register_task`` using the IPFS CID.
+
+Functions
+---------
+https://sbip-sg.github.io/pymeca/autoapi/pymeca/task/index.html
+
+Additional non-util functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   - add_folder_to_ipfs(folder_path: str) -> str:
+      Adds a local folder on your host machine to IPFS. 
+      
+      Parameters: 
+         folder_path: ``/build/<folder_name_on_local_device>``.
+      Returns:
+         The result of adding a folder on IPFS, which is the metadata of each file in the folder and the folder itself.
+         You can then get the CID of the folder from the hash field of the metadata of the folder.
 
 Payment
 -------

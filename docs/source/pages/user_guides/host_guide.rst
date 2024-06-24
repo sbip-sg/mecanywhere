@@ -7,7 +7,8 @@ Table of Contents
 1. `Introduction <#introduction>`__
 2. `Installation <#installation>`__
 3. `Usage <#usage>`__
-4. `Payment <#payment>`__
+4. `Functions <#functions>`__
+5. `Payment <#payment>`__
 
 Introduction
 ------------
@@ -70,9 +71,6 @@ The host CLI will look like this:
    x. Exit
    Enter action:
 
-All functions are detailed in the `pymeca
-library <https://sbip-sg.github.io/pymeca/>`__.
-
 The CLI will prompt you to enter the necessary information to register
 the host if not yet done so. Then there are options to manage tasks and
 towers registered with the host. A task will be relayed through the
@@ -88,6 +86,21 @@ see tasks made available by task developers.
 Finally, ``wait_for_my_task`` to start receiving and processing tasks,
 which will be started and computed by the task executor which uses
 Docker.
+
+Functions
+---------
+https://sbip-sg.github.io/pymeca/autoapi/pymeca/host/index.html
+
+Additional non-util functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   - wait_for_my_task(tower_address: str) -> None
+      Sets up a threaded websocket connection to the given tower to receive tasks.
+      
+      Parameters: 
+         tower_address - The address of the tower to connect to. Host must be registered with the tower.
+      
+      Returns: None if the connection was successful.
 
 Payment
 -------

@@ -40,7 +40,7 @@ docker run -it --rm --env-file .env -v /var/run/docker.sock:/var/run/docker.sock
 First, create and fill `.env`. An example `.env.example` file is provided.
 ```
 docker build -t mock_actor_intern -f DockerfileInternal ..
-docker run --rm -p 9999:9999 mock_actor_intern server.py 9999
+docker run --rm --env-file .env -p 127.0.0.1:9999:9999 mock_actor_intern server.py 9999
 ```
 
 ## IPFS (local isolation)
