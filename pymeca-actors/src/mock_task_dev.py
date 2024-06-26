@@ -7,6 +7,7 @@ import pymeca
 
 from cli import MecaCLI
 from functions.task_dev_functions import add_folder_to_ipfs_host
+from functions.common import test_folder_structure
 
 load_dotenv()
 
@@ -43,6 +44,7 @@ async def main():
     cli.add_method(pymeca.utils.get_sha256_from_cid)
 
     async def add_folder_to_ipfs(folder_path: str):
+        test_folder_structure(folder_path)
         await add_folder_to_ipfs_host(folder_path, MECA_IPFS_API_HOST, MECA_IPFS_API_PORT)
 
     cli.add_method(add_folder_to_ipfs)
