@@ -118,7 +118,6 @@ async def send_task(request: SendTaskOnBlockchainArgs):
 
 class WaitForTaskArgs(BaseModel):
     tower_address: str
-    container_folder: str
 
 @app.post('/wait_for_task')
 async def wait_for_my_task(request: WaitForTaskArgs):
