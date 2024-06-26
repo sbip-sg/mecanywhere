@@ -32,12 +32,6 @@ CONTAINER_FOLDER = pathlib.Path("./build")
 
 CONTAINER_NAME_LIMIT = 10
 DEFAULT_BLOCK_TIMEOUT_LIMIT = 10
-RESOURCES = {
-    # "cpu": 16,
-    # "mem": 32000,
-    "cpu": 1,
-    "mem": 128,
-}
 
 
 class MecaHostCLI(MecaCLI):
@@ -101,8 +95,9 @@ async def main():
             tower_address,
             MECA_HOST_ENCRYPTION_PRIVATE_KEY,
             CONTAINER_NAME_LIMIT,
-            RESOURCES,
-            MECA_TASK_EXECUTOR_URL
+            MECA_TASK_EXECUTOR_URL,
+            MECA_IPFS_HOST,
+            MECA_IPFS_PORT,
         ))
         task_thread.start()
 

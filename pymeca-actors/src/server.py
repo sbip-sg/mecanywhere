@@ -2,6 +2,7 @@ import asyncio
 import inspect
 import json
 import os
+import pathlib
 import sys
 import threading
 from fastapi import FastAPI, HTTPException, Request
@@ -9,6 +10,7 @@ import pymeca
 from dotenv import load_dotenv
 from functions.user_functions import send_task_on_blockchain
 from functions.host_functions import TaskThread
+from pydantic import BaseModel
 
 from web3 import Web3
 
@@ -17,6 +19,12 @@ load_dotenv()
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", "http://localhost:8545")
 TASK_EXECUTOR_URL = os.getenv("MECA_TASK_EXECUTOR_URL", "http://host.docker.internal:2591")
 DAO_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+HOST_ENCRYPTION_PRIVATE_KEY = os.getenv("MECA_HOST_ENCRYPTION_PRIVATE_KEY", None)
+IPFS_HOST = os.getenv("MECA_IPFS_HOST", "host.docker.internal")
+IPFS_PORT = os.getenv("MECA_IPFS_PORT", "5001")
+
+CONTAINER_NAME_LIMIT = 10
+OUTPUT_FOLDER = pathlib.Path("./build")
 
 app = FastAPI()
 actor = None
@@ -28,8 +36,7 @@ def home():
 @app.post('/exec/{function_name}')
 async def entry_point(function_name: str, request: Request = None):
     if actor is None:
-        # TODO: Change
-        init_actor("host")
+        raise HTTPException(status_code=400, detail="Actor not initialized")
     func = getattr(actor, function_name, None)
     if func is None:
         raise HTTPException(status_code=404, detail=f"Function {function_name} not found")
@@ -47,7 +54,7 @@ async def entry_point(function_name: str, request: Request = None):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@app.post('/init_actor/{actor_name}')
+@app.post('/init_actor/{actor_name}', response_model=bool)
 def init_actor(actor_name: str):
     global actor
     try:
@@ -78,31 +85,55 @@ def close_actor():
     actor = None
     return True
 
-@app.get('/get_account')
+@app.get('/get_account', response_model=str)
 def get_account():
     if actor is None:
-        init_actor("host")
+        raise HTTPException(status_code=400, detail="Actor not initialized")
     return actor.account.address
 
-@app.get('/cid_from_sha256/{sha256}')
+@app.get('/cid_from_sha256/{sha256}', response_model=str)
 def cid_from_sha256(sha256: str):
     return pymeca.utils.cid_from_sha256(sha256)
 
+class SendTaskOnBlockchainArgs(BaseModel):
+    ipfs_sha256: str
+    host_address: str
+    tower_address: str
+    input_hash: str
+    use_sgx: bool = False
+
 @app.post('/send_task_on_blockchain')
-async def send_task(request: Request):
+async def send_task(request: SendTaskOnBlockchainArgs):
     if actor is None:
-        init_actor("user")
-    args = await request.json()
-    return await send_task_on_blockchain(actor, **args)
+        raise HTTPException(status_code=400, detail="Actor not initialized")
+    return await send_task_on_blockchain(
+        actor,
+        request.ipfs_sha256,
+        request.host_address,
+        request.tower_address,
+        request.input_hash,
+        OUTPUT_FOLDER,
+        request.use_sgx
+    )
+
+class WaitForTaskArgs(BaseModel):
+    tower_address: str
+    container_folder: str
 
 @app.post('/wait_for_task')
-async def wait_for_my_task(request: Request):
+async def wait_for_my_task(request: WaitForTaskArgs):
     if actor is None:
-        init_actor("host")
+        raise HTTPException(status_code=400, detail="Actor not initialized")
     kill_event = threading.Event()
-    args = await request.json()
-    args["task_executor_url"] = TASK_EXECUTOR_URL
-    task_thread = TaskThread(kill_event, args=([actor]), kwargs=(args))
+    task_thread = TaskThread(kill_event, args=(
+        actor,
+        request.tower_address,
+        HOST_ENCRYPTION_PRIVATE_KEY,
+        CONTAINER_NAME_LIMIT,
+        TASK_EXECUTOR_URL,
+        IPFS_HOST,
+        IPFS_PORT,
+    ))
     task_thread.start()
 
 async def run_websocket_server(port: int = 9999):

@@ -133,11 +133,11 @@ async def wait_for_task(
     if use_sgx and output_key is not None:
         message = decrypt_sgx_task_output(message, output_key)
 
+    output_folder.mkdir(exist_ok=True)
     with open(f"{output_folder}/output.txt", "wb") as f:
         f.write(message)
-        # output_folder.mkdir(exist_ok=True)
-        # with open(f"{output_folder}/output.png", "wb") as f:
-        #     f.write(base64.b64decode(message))
+    # with open(f"{output_folder}/output.png", "wb") as f:
+    #     f.write(base64.b64decode(message))
     print("Task output saved to output.txt")
 
     # also return the result
@@ -161,7 +161,7 @@ async def send_task_on_blockchain(
     tower_address,
     input,
     output_folder,
-    use_sgx: bool,
+    use_sgx: bool = False,
 ):
     ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
     input_bytes = prepare_input(ipfs_cid, input, use_sgx)
