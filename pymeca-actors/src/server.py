@@ -9,7 +9,6 @@ import pymeca
 from dotenv import load_dotenv
 from functions.user_functions import send_task_on_blockchain 
 from functions.host_functions import TaskThread
-from functions.user_functions import get_all_executed_tasks
 
 from web3 import Web3
 
@@ -88,12 +87,6 @@ def get_account():
 @app.get('/cid_from_sha256/{sha256}')
 def cid_from_sha256(sha256: str):
     return pymeca.utils.cid_from_sha256(sha256)
-
-@app.get('/get_all_executed_tasks/{user_address}')
-async def get_all_executed_tasks(user_address: str):
-    if actor is None:
-        init_actor("user")
-    return await get_all_executed_tasks(actor, user_address=user_address)
 
 @app.post('/send_task_on_blockchain')
 async def send_task(request: Request):
