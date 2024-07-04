@@ -1,6 +1,8 @@
 import json
 import os
 
+import pymeca
+
 from pydantic_settings import BaseSettings
 
 
@@ -44,7 +46,10 @@ class Config:
         return self.configuration["blockchain"]["url"]
     
     def get_dao_contract_address(self) -> str:
-        return self.configuration["blockchain"]["dao_contract_address"]
+        addr = self.configuration["blockchain"]["dao_contract_address"]
+        if addr is None or addr == "":
+            return pymeca.dao.get_DAO_ADDRESS()
+        return addr
 
     def get_tower_private_key(self) -> str:
         return self.secrets.tower_private_key
