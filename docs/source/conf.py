@@ -34,6 +34,12 @@ html_static_path = ['_static']
 
 redoc = [
     {
+        'name': 'Pymeca Actors Server API',
+        'page': 'pages/api/pymeca-actors-server-api',
+        'spec': '../../pymeca-actors/src/openapi.json',
+        'embed': True,
+    },
+    {
         'name': 'Tower API',
         'page': 'pages/api/tower-api',
         'spec': '../../tower/src/openapi.json',

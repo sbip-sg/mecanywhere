@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  # did:
+  #   build:
+  #     context: ./did-go
+  #   ports:
+  #     - "2592:2592"
+  #   depends_on:
+  #     - blockchain
+
+  tower:
+    build:
+      context: ./tower
+      dockerfile: Dockerfile
+    ports:
+      - "7000:7000"
+    secrets:
+      - tower_private_key
+
+  # host:
+  #   build: 
+  #     context: 
+  #     dockerfile: Dockerfile
+  #   depends_on:
+  #     task-executor:
+  #       condition: service_started
+  #   restart: on-failure
+  #   secrets:
+  #     - host_private_key
+
+  # task-executor:
+  # build:
+  #   context: deps/mec_anywhere_desktop/task_executor
+  #   dockerfile: docker/Dockerfile
+  # volumes:
+  #   - /var/run/docker.sock:/var/run/docker.sock
+  #   - deps/mec_anywhere_desktop/task_executor/conf/conf.yaml:/app/meca_executor.yaml
+  
+networks:
+  default:
+    name: meca
+    external: true
+
+secrets:
+  tower_private_key:
+    file: ./keys/tower_private_key.txt

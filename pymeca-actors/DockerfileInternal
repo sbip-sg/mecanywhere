@@ -1,0 +1,68 @@
+# Download base image ubuntu 22.04
+FROM ubuntu:22.04
+
+# LABEL about the custom image
+LABEL maintainer="dancioc@nus.edu.sg"
+LABEL version="0.1"
+LABEL description="This is a custom Docker Image for Meca Actors"
+
+# Disable Prompt During Packages Installation
+ARG DEBIAN_FRONTEND=noninteractive
+# display
+ENV DISPLAY=host.docker.internal:0.0
+# timezone
+ENV TZ=Asia/Singapore
+
+# Update Ubuntu Software repository
+# https://stackoverflow.com/questions/39760663/docker-ubuntu-bin-sh-1-locale-gen-not-found
+# https://askubuntu.com/questions/162391/how-do-i-fix-my-locale-issue/229512#229512
+# add etherum ppa
+# install python/pip/cmake/solc
+RUN apt-get update && apt upgrade -y
+RUN apt-get install -y locales && locale-gen "en_US.UTF-8" && dpkg-reconfigure locales 
+RUN apt-get install -y software-properties-common && apt-get update
+RUN add-apt-repository ppa:ethereum/ethereum && apt-get update
+RUN apt-get install -y curl zip unzip git cmake
+RUN apt-get install -y python3 python3-pip
+RUN apt-get install -y solc
+
+# install npm -> nodejs -> npm
+ARG NODEJS_VERSION=20.11.1
+ENV NVM_DIR=/usr/local/.nvm
+RUN mkdir -p $NVM_DIR
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+RUN /bin/bash -c "source $NVM_DIR/nvm.sh && nvm install $NODEJS_VERSION && nvm use $NODEJS_VERSION && nvm install-latest-npm"
+ENV NODE_PATH=$NVM_DIR/versions/node/v$NODEJS_VERSION/lib/node_modules
+ENV PATH=$NVM_DIR/versions/node/v$NODEJS_VERSION/bin:$PATH
+
+# install poetry
+RUN pip3 install poetry
+RUN poetry config virtualenvs.create false
+
+RUN apt-get install -y python-is-python3
+
+# install IPFS
+RUN apt-get install -y wget
+RUN wget https://github.com/ipfs/kubo/releases/download/v0.27.0/kubo_v0.27.0_linux-amd64.tar.gz
+RUN tar -xvzf kubo_v0.27.0_linux-amd64.tar.gz
+WORKDIR /kubo
+RUN bash install.sh
+
+# install ganache server deps first
+COPY ./pymeca/meca-contracts/src/ganache /tmp/pymeca/meca-contracts/src/ganache
+WORKDIR /tmp/pymeca/meca-contracts/src/ganache
+RUN npm install
+
+# copy the current repo
+# and install all the python dependencies
+COPY ./pymeca /tmp/pymeca
+WORKDIR /tmp/pymeca
+RUN poetry install
+COPY ./pyproject.toml /tmp/main/pyproject.toml
+WORKDIR /tmp/main
+RUN poetry install
+
+COPY ./pymeca-actors /scripts
+COPY ./tower /scripts/src/tower
+WORKDIR /scripts/src
+ENTRYPOINT ["python"]

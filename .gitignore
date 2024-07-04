@@ -189,6 +189,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/build/
 
 # PyBuilder
 .pybuilder/
@@ -263,3 +264,9 @@ cython_debug/
 **/keys
 
 **/accounts.json
+
+.env
+poetry.lock
+
+ipfs-data/
+ipfs-staging/

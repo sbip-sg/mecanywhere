@@ -1,0 +1,3 @@
+[submodule "pymeca"]
+	path = pymeca
+	url = ../pymeca.git

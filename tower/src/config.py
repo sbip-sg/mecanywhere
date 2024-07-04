@@ -6,10 +6,10 @@ from pydantic_settings import BaseSettings
 
 class Config:
     class SecretSettings(BaseSettings):
-        tower_private_key: str = None
+        tower_private_key: str = ""
 
         class Config:
-            env_file = ".env"
+            env_file = os.path.join(os.path.dirname(__file__), '.env')
 
     def __init__(self, *paths: str) -> None:
         self.configuration = {}
