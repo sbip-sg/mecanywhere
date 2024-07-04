@@ -2,9 +2,7 @@ import asyncio
 import pathlib
 import os
 from web3 import Web3
-import json
 import ipfs_api
-import pymeca.utils
 from dotenv import load_dotenv
 import pymeca
 
@@ -15,7 +13,7 @@ load_dotenv()
 
 
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
-MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+MECA_DAO_CONTRACT_ADDRESS = os.getenv("MECA_DAO_CONTRACT_ADDRESS", pymeca.dao.get_DAO_ADDRESS())
 MECA_USER_PRIVATE_KEY = os.getenv("MECA_USER_PRIVATE_KEY", None)
 OUTPUT_FOLDER = pathlib.Path("./build")
 

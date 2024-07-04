@@ -9,7 +9,7 @@ from cli import MecaCLI
 load_dotenv()
 
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
-MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+MECA_DAO_CONTRACT_ADDRESS = os.getenv("MECA_DAO_CONTRACT_ADDRESS", pymeca.dao.get_DAO_ADDRESS())
 MECA_TOWER_PRIVATE_KEY = os.getenv("MECA_TOWER_PRIVATE_KEY", None)
 
 

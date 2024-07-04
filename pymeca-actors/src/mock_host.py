@@ -1,8 +1,4 @@
 import asyncio
-import pathlib
-from web3 import Web3
-import pymeca.utils
-from cli import MecaCLI
 import threading
 import pathlib
 import os
@@ -19,7 +15,7 @@ load_dotenv()
 
 
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
-MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+MECA_DAO_CONTRACT_ADDRESS = os.getenv("MECA_DAO_CONTRACT_ADDRESS", pymeca.dao.get_DAO_ADDRESS())
 MECA_HOST_PRIVATE_KEY = os.getenv("MECA_HOST_PRIVATE_KEY", None)
 MECA_HOST_ENCRYPTION_PRIVATE_KEY = os.getenv(
     "MECA_HOST_ENCRYPTION_PRIVATE_KEY",
