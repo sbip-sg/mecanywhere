@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - pymeca-actors
+      - pymeca-actors/**
   workflow_dispatch:
 
 env:
