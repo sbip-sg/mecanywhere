@@ -2,9 +2,7 @@ import asyncio
 from web3 import Web3
 import os
 from dotenv import load_dotenv
-
 import pymeca
-
 from cli import MecaCLI
 from functions.task_dev_functions import add_folder_to_ipfs_host
 
@@ -13,7 +11,7 @@ load_dotenv()
 MECA_IPFS_API_HOST = os.getenv("MECA_IPFS_API_HOST", None)
 MECA_IPFS_API_PORT = os.getenv("MECA_IPFS_API_PORT", None)
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
-MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+MECA_DAO_CONTRACT_ADDRESS = os.getenv("MECA_DAO_CONTRACT_ADDRESS", pymeca.dao.get_DAO_ADDRESS())
 MECA_DEV_PRIVATE_KEY = os.getenv("MECA_DEV_PRIVATE_KEY", None)
 
 

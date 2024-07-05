@@ -25,6 +25,7 @@ For general use,
 ```
 docker build -t mock_actor -f Dockerfile .
 
+For tower:
 docker run -it --rm mock_actor mock_tower.py
 
 For user, mount a folder to retrieve task output:

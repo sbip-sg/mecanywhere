@@ -3,18 +3,19 @@ import pathlib
 import os
 from web3 import Web3
 from dotenv import load_dotenv
-
 import pymeca
 
 from cli import MecaCLI
-from functions.user_functions import send_task_on_blockchain
+from functions.user_functions import send_task_on_blockchain, print_task_details_from_ipfs
 
 load_dotenv()
 
 
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", None)
-MECA_DAO_CONTRACT_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+MECA_DAO_CONTRACT_ADDRESS = os.getenv("MECA_DAO_CONTRACT_ADDRESS", pymeca.dao.get_DAO_ADDRESS())
 MECA_USER_PRIVATE_KEY = os.getenv("MECA_USER_PRIVATE_KEY", None)
+IPFS_HOST = os.getenv("MECA_IPFS_HOST", None)
+IPFS_PORT = os.getenv("MECA_IPFS_PORT", None)
 OUTPUT_FOLDER = pathlib.Path("./build")
 
 class MecaUserCLI(MecaCLI):
@@ -41,6 +42,10 @@ class MecaUserCLI(MecaCLI):
                 OUTPUT_FOLDER,
                 use_sgx
             )
+        elif func.__name__ == "get_tasks":
+            print(func.__name__, ":")
+            tasks = await super().run_func(func, args)
+            print_task_details_from_ipfs(tasks, IPFS_HOST, IPFS_PORT)
         else:
             print(func.__name__, ":")
             res = await super().run_func(func, args)
