@@ -8,6 +8,7 @@ from Crypto.Random import get_random_bytes
 from ecies import encrypt
 from ecies import decrypt
 from eth_hash.auto import keccak
+import ipfs_api
 
 import pymeca
 
@@ -251,3 +252,15 @@ async def send_task_on_blockchain(
             tasks[0].cancel()
         else:
             await tasks[1]
+
+def print_task_details_from_ipfs(tasks, ipfs_host, ipfs_port):
+    with ipfs_api.ipfshttpclient.connect(f"/dns/{ipfs_host}/tcp/{ipfs_port}/http") as client:
+        for i, task in enumerate(tasks):
+            ipfs_sha = task["ipfsSha256"]
+            ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
+            description = client.cat(ipfs_cid + "/description.txt")
+            name = client.cat(ipfs_cid + "/name.txt")
+            print(f"Task {i+1})")
+            print(" Name:", name.decode("utf-8").strip())
+            print(" Description:", description.decode("utf-8").strip())
+            print(" Details:", task)
