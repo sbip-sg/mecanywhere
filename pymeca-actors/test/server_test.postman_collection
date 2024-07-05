@@ -1,0 +1,500 @@
+{
+	"info": {
+		"_postman_id": "c91f1f85-530f-4ae6-bbc1-8b25985cbbe9",
+		"name": "MECA test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12539624"
+	},
+	"item": [
+		{
+			"name": "INIT task dev",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/init_actor/task_dev",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"init_actor",
+						"task_dev"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_task_cid",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cid\": \"bafybeiht5xubmrzhsqgd5mq4aopzjohzf42upmpczmqbs2qlucwo2cehwm\",\r\n    \"fee\": 1,\r\n    \"computing_type\": 0,\r\n    \"size\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/exec/register_task_cid",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"exec",
+						"register_task_cid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INIT host",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/init_actor/host",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"init_actor",
+						"host"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"block_timeout_limit\": 10,\r\n    \"public_key\": \"0xefb690cea3ef14b607f1b5d49b4112f77c604fa3ff38a1ff05e13a6214e4c199346da45151ce3d59827f7d14b5ae24baa95fd349c6cfa0457ec83454fca6f846\",\r\n    \"initial_deposit\": 100\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/exec/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"exec",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INIT tower",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/init_actor/tower",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"init_actor",
+						"tower"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_tower",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"size_limit\": 10000,\r\n    \"public_connection\": \"http://host.docker.internal:7777\",\r\n    \"fee\": 10,\r\n    \"fee_type\": 0,\r\n    \"initial_deposit\": 100\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/exec/register_tower",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"exec",
+						"register_tower"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INIT host",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/init_actor/host",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"init_actor",
+						"host"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register_for_tower",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tower_address\": \"0x063E67c13622B6d2E07C1cE175d66bF35F5ad595\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/exec/register_for_tower",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"exec",
+						"register_for_tower"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INIT tower",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/init_actor/tower",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"init_actor",
+						"tower"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accept_host",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"host_address\": \"0x5aad26e6aDc5ade3f7FBD70faEB5A3598414DD2C\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/exec/accept_host",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"exec",
+						"accept_host"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INIT host",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/init_actor/host",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"init_actor",
+						"host"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get tasks",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/exec/get_tasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"exec",
+						"get_tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add_task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ipfs_sha256\": \"0xf3ede8164727940c3eb21c039f94b8f92f3547b1e2cb20196a0ba0aced0887b3\",\r\n    \"block_timeout\": 10,\r\n    \"fee\": 10\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/exec/add_task",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"exec",
+						"add_task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "wait task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tower_address\": \"0x063E67c13622B6d2E07C1cE175d66bF35F5ad595\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/wait_for_task",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"wait_for_task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INIT user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/init_actor/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"init_actor",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send_task_on_blockchain",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ipfs_sha256\": \"0xf3ede8164727940c3eb21c039f94b8f92f3547b1e2cb20196a0ba0aced0887b3\",\r\n    \"host_address\": \"0x5aad26e6aDc5ade3f7FBD70faEB5A3598414DD2C\",\r\n    \"tower_address\": \"0x063E67c13622B6d2E07C1cE175d66bF35F5ad595\",\r\n    \"input_hash\": \"{'dataset':[[1,2],[3,4],[5,6],[7,8],[9,10]],'point':[2,3],'k':2,'num_processes':2}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/send_task_on_blockchain",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"send_task_on_blockchain"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "finish_task",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"task_id\": \"\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9999/finish_task",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9999",
+					"path": [
+						"finish_task"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

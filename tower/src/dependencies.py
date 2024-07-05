@@ -2,7 +2,6 @@ from functools import lru_cache
 import os
 from web3 import Web3
 from pymeca.tower import MecaTower
-
 from config import Config
 
 

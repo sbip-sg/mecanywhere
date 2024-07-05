@@ -1,5 +1,4 @@
 name: pymeca-actors
-version: "3.8"
 services:
   blockchain:
     build:
@@ -29,8 +28,8 @@ services:
       dockerfile: pymeca-actors/DockerfileInternal
     ports:
       - "7777:7777"
-    volumes: # volume mounts ignore dockerignore
-      - ./tower:/scripts/src/tower
+    # volumes: # volume mounts ignore dockerignore
+      # - ./tower:/scripts/src/tower
     command: tower/src/main.py 7777
     secrets:
       - tower_private_key
@@ -55,10 +54,10 @@ services:
   #     - ./pymeca-actors/src:/scripts/src
   #   command: server.py 9999
 
-networks:
-  default:
-    name: meca
-    external: true
+# networks:
+#   default:
+#     name: meca
+#     external: true
 
 secrets:
   tower_private_key:

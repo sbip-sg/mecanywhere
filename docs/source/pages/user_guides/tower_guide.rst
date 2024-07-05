@@ -7,7 +7,8 @@ Table of Contents
 1. `Introduction <#introduction>`__
 2. `Installation <#installation>`__
 3. `Usage <#usage>`__
-4. `Payment <#payment>`__
+4. `Functions <#functions>`__
+5. `Payment <#payment>`__
 
 Introduction
 ------------
@@ -63,15 +64,16 @@ The tower CLI will look like this:
    x. Exit
    Enter action: 
 
-All functions are detailed in the `pymeca
-library <https://sbip-sg.github.io/pymeca/>`__.
-
 The CLI will prompt you to enter the necessary information to register
 the tower if not yet done so. Then there are options to manage hosts
 registered with the tower. A task will be relayed through the
 tower-server automatically when a client submits a task to a host
 registered with the tower. When a host registers with the tower, the
 tower will have to accept it before the host can start receiving tasks.
+
+Functions
+---------
+https://sbip-sg.github.io/pymeca/autoapi/pymeca/tower/index.html
 
 Payment
 -------
