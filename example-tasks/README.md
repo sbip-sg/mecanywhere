@@ -1,13 +1,23 @@
 # Example task containers
 
-This folder contains example task containers showing how to build your own task container. Each folder must contain all of the files listed in the structure below.
+This folder contains example task containers showing how to build your own task container. 
+
+## Examples
+
+Folder | Description
+--- | ---
+/python-template | A simple Python task container that returns the json input as output.
+/knn | A task container that uses the K-Nearest Neighbors algorithm to classify data.
+/stablediffusion | A task container that uses a prompt to generate an image.
+/sgx-task | A basic SGX container that runs code in a Trusted Execution Environment.
+
 
 ## Structure
 
-The structure of the task container is as follows:
+Each folder must contain all of the files listed in the structure as follows:
 
 ```
-- template
+- folder
   - Dockerfile
   - src
   - description.txt
@@ -60,7 +70,7 @@ CMD ["python", "-m", "flask", "--app", "flask_app.py", "run", "--host=0.0.0.0", 
 
 ### 3. config.json fields
 
-The `config.json` file contains the configuration of the task with the following default fields:
+The `config.json` file contains the configuration of the task, which it will use to build its container, with the following default fields:
 
 DEFAULTS:
 
@@ -82,7 +92,12 @@ field | description
 `resource.use_gpu` | Whether the task requires a GPU to run.
 `resource.gpu_count` | The number of GPUs to allocate to the task, if `use_gpu` is true.
 
-### 4. Using and uploading the container
+### 4. Describe your task
+
+Fill in the `description.txt` and `name.txt` files with the description and name of your task.
+In the `example_input.bin` and `example_output.bin` files, provide examples of the input and output of your task exactly as they are read in the body of a HTTP request and reply.
+
+### 5. Using and uploading the container
 
 Build the image and push it to IPFS via the MECA CLI as a task developer. You will be compensated with the task fee that you list for each task executed by a MECA client.
 

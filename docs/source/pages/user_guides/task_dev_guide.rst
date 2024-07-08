@@ -16,8 +16,7 @@ Introduction
 The task developer is responsible for creating tasks that can be
 executed by hosts. This guide will walk you through the process of
 setting up and managing a task developer using the CLI. To see how to
-develop tasks, check out
-https://github.com/sbip-sg/mec_anywhere_desktop/tree/main/sdk
+develop tasks, check out :ref:`example-tasks`.
 
 Installation
 ------------
@@ -25,10 +24,10 @@ Installation
 1. To install the task developer, you will need to have Docker installed
    on your machine. You can download Docker from the `official Docker
    website <https://www.docker.com/get-started>`__.
-2. Start and serve the task developer container. (see pymeca-actors
-   readme)
-3. Ensure that you have a valid connection to IPFS for uploading (see
-   https://docs.ipfs.tech/install/). You can also use the docker image
+2. Start and serve the task developer container. (see `pymeca-actors
+   readme <https://github.com/sbip-sg/mec_anywhere/blob/main/pymeca-actors/README.md>`__)
+3. Ensure that you have a valid connection to IPFS for uploading. (see
+   `IPFS installation docs <https://docs.ipfs.tech/install/>`__) You can also use the docker image
    from IPFS following instructions in pymeca-actors readme.
 
 Usage

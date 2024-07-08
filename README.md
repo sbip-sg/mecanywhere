@@ -23,15 +23,18 @@ https://www.figma.com/file/JkjN5hBQYfCFEMpc2QS4eH/MECAnywhere-Architecture-Diagr
 
 - did-go
     - Decentalized Identity (DID) service written in Golang
-- Tower
-    - Hosted on the edge to provide task forwarding for end users
-    - [README](tower/README.md)
+- example-tasks
+    - Example tasks for the MECAnywhere platform
+    - [README to build tasks](example-tasks/README.md)
 - Pymeca actors
     - Template actors that use pymeca library to interact with the smart contracts. These come in the form of CLI.
     - [README to setup](pymeca-actors/README.md)
     - User guides in docs
+- Tower
+    - Hosted on the edge to provide task forwarding for end users
+    - [README to setup](tower/README.md)
 
-# Quick Start (local)
+# Quick Start (local development)
 1. Configure keys/env variables (see [Configuration -> Secret keys](#secret-keys))
 
 2. Pull submodules with `git submodule update --init --recursive` in `pymeca` folder.
