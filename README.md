@@ -37,8 +37,8 @@ https://www.figma.com/file/JkjN5hBQYfCFEMpc2QS4eH/MECAnywhere-Architecture-Diagr
 2. Pull submodules with `git submodule update --init --recursive` in `pymeca` folder.
 
 3. Run docker services
-- `docker-compose up` to start all services as containers. 
-- `docker-compose up --build <service_name>` to rebuild a specific service.
+- `docker compose up` to start all services as containers. 
+- `docker compose up --build <service_name>` to rebuild a specific service.
 - \+ `-f docker-compose-internal.yaml` is for working with pymeca library changes.
 - \+ `-f docker-compose.yaml` is for working with pymeca version from pypi.
 

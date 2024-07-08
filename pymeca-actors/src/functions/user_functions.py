@@ -8,6 +8,7 @@ from Crypto.Random import get_random_bytes
 from ecies import encrypt
 from ecies import decrypt
 from eth_hash.auto import keccak
+import ipfs_api
 
 import pymeca
 
@@ -133,11 +134,11 @@ async def wait_for_task(
     if use_sgx and output_key is not None:
         message = decrypt_sgx_task_output(message, output_key)
 
+    output_folder.mkdir(exist_ok=True)
     with open(f"{output_folder}/output.txt", "wb") as f:
         f.write(message)
-        # output_folder.mkdir(exist_ok=True)
-        # with open(f"{output_folder}/output.png", "wb") as f:
-        #     f.write(base64.b64decode(message))
+    # with open(f"{output_folder}/output.png", "wb") as f:
+    #     f.write(base64.b64decode(message))
     print("Task output saved to output.txt")
 
     # also return the result
@@ -160,7 +161,7 @@ async def send_task_on_blockchain(
     tower_address,
     input,
     output_folder,
-    use_sgx: bool,
+    use_sgx: bool = False,
 ):
     ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
     input_bytes = prepare_input(ipfs_cid, input, use_sgx)
@@ -250,3 +251,15 @@ async def send_task_on_blockchain(
             tasks[0].cancel()
         else:
             await tasks[1]
+
+def print_task_details_from_ipfs(tasks, ipfs_host, ipfs_port):
+    with ipfs_api.ipfshttpclient.connect(f"/dns/{ipfs_host}/tcp/{ipfs_port}/http") as client:
+        for i, task in enumerate(tasks):
+            ipfs_sha = task["ipfsSha256"]
+            ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
+            description = client.cat(ipfs_cid + "/description.txt")
+            name = client.cat(ipfs_cid + "/name.txt")
+            print(f"Task {i+1})")
+            print(" Name:", name.decode("utf-8").strip())
+            print(" Description:", description.decode("utf-8").strip())
+            print(" Details:", task)

@@ -1,4 +1,5 @@
 import inspect
+from functions.common import test_folder_structure
 
 class MecaCLI:
     def __init__(self, actor):
@@ -34,6 +35,8 @@ class MecaCLI:
         return self.name_to_child_method.get(method_name)
     
     async def start(self):
+        self.add_method(test_folder_structure)
+
         try:
             while True:
                 print()

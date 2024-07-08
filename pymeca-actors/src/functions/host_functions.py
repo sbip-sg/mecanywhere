@@ -40,6 +40,17 @@ def build_docker_image(ipfs_cid, container_folder, container_name_limit):
     print("Built docker image.")
 
 
+def get_resources_from_task(ipfs_host, ipfs_port, ipfs_cid):
+    with ipfs_api.ipfshttpclient.connect(
+        f"/dns/{ipfs_host}/tcp/{ipfs_port}/http"
+    ) as client:
+        f = client.cat(f"{ipfs_cid}/config.json")
+        resources = json.loads(f.decode('utf-8'))
+    if resources is None:
+        resources = {}
+    return resources
+
+
 def sign_message(private_key, message):
     # Sign the message
     signature = pymeca.utils.sign_bytes(private_key=private_key, message_bytes=message)
@@ -113,7 +124,6 @@ def verify_and_parse_task_input(
                 raise ValueError("Invalid input hash")
     return message_dict, task_id, user_public_key, blockchain_task["ipfsSha256"]
 
-
 class TaskThread(threading.Thread):
     def __init__(self, kill_event, args=(), kwargs=None):
         self.kill_event = kill_event
@@ -125,8 +135,9 @@ class TaskThread(threading.Thread):
         tower_address,
         host_encryption_private_key,
         container_name_limit,
-        resources,
         task_executor_url,
+        ipfs_host,
+        ipfs_port,
     ):
         loop = asyncio.new_event_loop()
         loop.create_task(
@@ -135,8 +146,9 @@ class TaskThread(threading.Thread):
                 tower_address,
                 host_encryption_private_key,
                 container_name_limit,
-                resources,
                 task_executor_url,
+                ipfs_host,
+                ipfs_port,
             )
         )
         loop.run_forever()
@@ -152,8 +164,9 @@ class TaskThread(threading.Thread):
         tower_address,
         host_encryption_private_key,
         container_name_limit,
-        resources,
         task_executor_url,
+        ipfs_host,
+        ipfs_port,
     ):
         tower_uri = format_tower_uri_for_host(
             meca_host.get_tower_public_uri(tower_address)
@@ -191,45 +204,54 @@ class TaskThread(threading.Thread):
                     await websocket.send(str(e))
                     return
 
-                # run the task
-                if task_ipfs_sha256 == ("0x" + "0" * 64):
-                    output_bytes = json.dumps(message_dict).encode()
-                else:
-                    # DO the task
-                    message_dict["id"] = (
-                        message_dict["id"][-container_name_limit:] + ":latest"
+                try:
+                    # run the task
+                    if task_ipfs_sha256 == ("0x" + "0" * 64):
+                        output_bytes = json.dumps(message_dict).encode()
+                    else:
+                        # DO the task
+                        message_dict["id"] = (
+                            message_dict["id"][-container_name_limit:] + ":latest"
+                        )
+                        message_dict["resource"] = get_resources_from_task(
+                            ipfs_host,
+                            ipfs_port,
+                            pymeca.utils.cid_from_sha256(task_ipfs_sha256)
+                        )
+
+                        # Send task to executor
+                        print("Sending:", message_dict)
+                        res = requests.post(task_executor_url, json=message_dict)
+                        print(res.status_code)
+                        output_bytes = res.content
+
+                    # hash the output
+                    print("Output:", output_bytes)
+                    output_hash = "0x" + keccak(output_bytes).hex()
+
+                    if message_dict["input"] != "SGXRAREQUEST":
+                        # send the output to the blockchain
+                        meca_host.register_task_output(
+                            task_id=task_id, output_hash=output_hash
+                        )
+
+                    # send the output to the user
+                    await websocket.send(
+                        encrypt_and_sign_output(
+                            host_encryption_private_key,
+                            user_public_key.to_hex(),
+                            input_bytes[0:32],
+                            output_bytes,
+                        )
                     )
-                    message_dict["resource"] = resources
-
-                    # Send task to executor
-                    print("Sending:", message_dict)
-                    res = requests.post(task_executor_url, json=message_dict)
-                    print(res.status_code)
-                    output_bytes = res.content
-
-                # hash the output
-                print("Output:", output_bytes)
-                output_hash = "0x" + keccak(output_bytes).hex()
-
-                if message_dict["input"] != "SGXRAREQUEST":
-                    # send the output to the blockchain
-                    meca_host.register_task_output(
-                        task_id=task_id, output_hash=output_hash
-                    )
-
-                # send the output to the user
-                await websocket.send(
-                    encrypt_and_sign_output(
-                        host_encryption_private_key,
-                        user_public_key.to_hex(),
-                        input_bytes[0:32],
-                        output_bytes,
-                    )
-                )
-                print("Sent output to user.")
-                text_reply = await websocket.recv()
-                if text_reply != "Task output sent":
-                    print("Problems with the websocket")
-                    print(text_reply)
-                else:
-                    print("Task output sent")
+                    print("Sent output to user.")
+                    text_reply = await websocket.recv()
+                    if text_reply != "Task output sent":
+                        print("Problems with the websocket")
+                        print(text_reply)
+                    else:
+                        print("Task output sent")
+                except Exception as e:
+                    print(e)
+                    await websocket.send(str(e))
+                    return

@@ -1,5 +1,6 @@
 {
     "blockchain": {
-        "url": "http://172.17.0.1:9000"
+        "url": "http://172.17.0.1:9000",
+        "dao_contract_address": ""
     }
 }

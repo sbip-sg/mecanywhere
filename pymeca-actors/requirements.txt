@@ -4,3 +4,5 @@ IPFS-Toolkit
 pymeca
 python-dotenv
 web3
+fastapi
+uvicorn
