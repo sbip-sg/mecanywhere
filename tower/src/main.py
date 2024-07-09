@@ -147,7 +147,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
     try:
         while True:
-            task_output = await websocket.recv()
+            task_output = await websocket.receive_bytes()
             task_id = "0x" + task_output[0:32].hex()
             signature = task_output[-65:]
             verify = pymeca.utils.verify_signature_pub_key(
