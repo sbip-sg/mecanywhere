@@ -156,19 +156,19 @@ async def finish_task(actor: pymeca.user.MecaUser, task_id):
 
 async def send_task_on_blockchain(
     actor: pymeca.user.MecaUser,
-    ipfs_sha,
+    ipfs_sha256,
     host_address,
     tower_address,
     input,
     output_folder,
     use_sgx: bool = False,
 ):
-    ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
+    ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha256)
     input_bytes = prepare_input(ipfs_cid, input, use_sgx)
     # because I set the input in pymeca as a hex string
     input_hash = "0x" + keccak(input_bytes).hex()
     success, task_id = actor.send_task_on_blockchain(
-        ipfs_sha256=ipfs_sha,
+        ipfs_sha256=ipfs_sha256,
         host_address=host_address,
         tower_address=tower_address,
         input_hash=input_hash,
