@@ -201,8 +201,7 @@ class TaskThread(threading.Thread):
                     )
                 except ValueError as e:
                     print(e)
-                    await websocket.send(str(e))
-                    return
+                    await websocket.send(sign_message(host_encryption_private_key, repr(e).encode()))
 
                 try:
                     # run the task
@@ -253,5 +252,4 @@ class TaskThread(threading.Thread):
                         print("Task output sent")
                 except Exception as e:
                     print(e)
-                    await websocket.send(str(e))
-                    return
+                    await websocket.send(sign_message(host_encryption_private_key, repr(e).encode()))
