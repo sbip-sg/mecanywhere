@@ -45,7 +45,7 @@ def get_resources_from_task(ipfs_host, ipfs_port, ipfs_cid):
         f"/dns/{ipfs_host}/tcp/{ipfs_port}/http"
     ) as client:
         f = client.cat(f"{ipfs_cid}/config.json")
-        resources = json.loads(f.decode('utf-8'))
+        resources = json.loads(f.decode("utf-8"))
     if resources is None:
         resources = {}
     return resources
@@ -132,8 +132,12 @@ def verify_and_parse_task_input(
                 raise ValueError("Encrypted input hash not found")
             if tee_task["encryptedInputHash"] != input_hash:
                 raise ValueError("Invalid encrypted input hash")
+            # additionally we check that the plaintext input hash is set before processing the task
+            if not tee_task["initialInputHash"]:
+                raise ValueError("Initial input hash not found")
 
     return message_dict, task_id, user_public_key, blockchain_task["ipfsSha256"]
+
 
 class TaskThread(threading.Thread):
     def __init__(self, kill_event, args=(), kwargs=None):
@@ -212,7 +216,9 @@ class TaskThread(threading.Thread):
                     )
                 except ValueError as e:
                     print(e)
-                    await websocket.send(sign_message(host_encryption_private_key, repr(e).encode()))
+                    await websocket.send(
+                        sign_message(host_encryption_private_key, repr(e).encode())
+                    )
 
                 try:
                     # run the task
@@ -226,7 +232,7 @@ class TaskThread(threading.Thread):
                         message_dict["resource"] = get_resources_from_task(
                             ipfs_host,
                             ipfs_port,
-                            pymeca.utils.cid_from_sha256(task_ipfs_sha256)
+                            pymeca.utils.cid_from_sha256(task_ipfs_sha256),
                         )
 
                         # Send task to executor
@@ -263,4 +269,6 @@ class TaskThread(threading.Thread):
                         print("Task output sent")
                 except Exception as e:
                     print(e)
-                    await websocket.send(sign_message(host_encryption_private_key, repr(e).encode()))
+                    await websocket.send(
+                        sign_message(host_encryption_private_key, repr(e).encode())
+                    )

@@ -177,6 +177,7 @@ async def send_task_on_blockchain(
     ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
     input_bytes = prepare_input(ipfs_cid, input, use_sgx)
     if use_sgx:
+        # prepare the ra input for the enclave
         input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
     # because I set the input in pymeca as a hex string
     input_hash = "0x" + keccak(input_bytes).hex()
@@ -196,6 +197,11 @@ async def send_task_on_blockchain(
     output_key = None
     if use_sgx:
         async with websockets.connect(tower_uri) as websocket:
+            # register the plaintext input hash
+            actor.register_tee_task_initial_input(
+                task_id, "0x" + keccak(prepare_input(ipfs_cid, input, use_sgx)).hex()
+            )
+            # prepare input for ra
             ra_input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
             ra_to_send = encrypt_and_sign_input(
                 actor, blockcahin_host_pub_key, ra_input_bytes, task_id_bytes
@@ -268,8 +274,11 @@ async def send_task_on_blockchain(
         else:
             await tasks[1]
 
+
 def print_task_details_from_ipfs(tasks, ipfs_host, ipfs_port):
-    with ipfs_api.ipfshttpclient.connect(f"/dns/{ipfs_host}/tcp/{ipfs_port}/http") as client:
+    with ipfs_api.ipfshttpclient.connect(
+        f"/dns/{ipfs_host}/tcp/{ipfs_port}/http"
+    ) as client:
         for i, task in enumerate(tasks):
             ipfs_sha = task["ipfsSha256"]
             ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
