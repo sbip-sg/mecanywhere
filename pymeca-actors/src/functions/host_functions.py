@@ -121,20 +121,19 @@ def verify_and_parse_task_input(
         if blockchain_task["inputHash"] != input_hash:
             raise ValueError("Invalid input hash")
     else:
+        tee_task = actor.get_tee_task(task_id)
+        if tee_task is None:
+            raise ValueError("TEE task not found")
         if message_dict["input"] == "SGXRAREQUEST":
-            if blockchain_task["inputHash"] != input_hash:
-                raise ValueError("Invalid input hash")
+            if not tee_task["initialInputHash"]:
+                raise ValueError("Initial input hash not found")
+            if tee_task["initialInputHash"] != input_hash:
+                raise ValueError("Invalid initial input hash")
         else:
-            tee_task = actor.get_tee_task(task_id)
-            if tee_task is None:
-                raise ValueError("TEE task not found")
             if not tee_task["encryptedInputHash"]:
                 raise ValueError("Encrypted input hash not found")
             if tee_task["encryptedInputHash"] != input_hash:
                 raise ValueError("Invalid encrypted input hash")
-            # additionally we check that the plaintext input hash is set before processing the task
-            if not tee_task["initialInputHash"]:
-                raise ValueError("Initial input hash not found")
 
     return message_dict, task_id, user_public_key, blockchain_task["ipfsSha256"]
 

@@ -176,9 +176,6 @@ async def send_task_on_blockchain(
 ):
     ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)
     input_bytes = prepare_input(ipfs_cid, input, use_sgx)
-    if use_sgx:
-        # prepare the ra input for the enclave
-        input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
     # because I set the input in pymeca as a hex string
     input_hash = "0x" + keccak(input_bytes).hex()
     success, task_id = actor.send_task_on_blockchain(
@@ -190,6 +187,13 @@ async def send_task_on_blockchain(
     print("Task id: ", task_id)
     blockcahin_host_pub_key = actor.get_host_public_key(host_address)
     task_id_bytes = pymeca.utils.bytes_from_hex(task_id)
+    if use_sgx:
+        # prepare the ra input for the enclave
+        input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
+        # register the ra input hash
+        actor.register_tee_task_initial_input(
+            task_id, "0x" + keccak(input_bytes).hex()
+        )
     to_send = encrypt_and_sign_input(
         actor, blockcahin_host_pub_key, input_bytes, task_id_bytes
     )
@@ -197,10 +201,6 @@ async def send_task_on_blockchain(
     output_key = None
     if use_sgx:
         async with websockets.connect(tower_uri) as websocket:
-            # register the plaintext input hash
-            actor.register_tee_task_initial_input(
-                task_id, "0x" + keccak(prepare_input(ipfs_cid, input, use_sgx)).hex()
-            )
             # prepare input for ra
             ra_input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
             ra_to_send = encrypt_and_sign_input(
@@ -211,7 +211,7 @@ async def send_task_on_blockchain(
             response_text = await websocket.recv()
             # print(response_text)
             if response_text != "Task connected":
-                print("Task connection failed")
+                print(f"RA Task connection failed: {response_text}")
                 return
             host_resp = await wait_for_task(
                 actor, websocket, task_id, output_folder, sgx_ra_round=True
@@ -251,7 +251,7 @@ async def send_task_on_blockchain(
         response_text = await websocket.recv()
         print(response_text)
         if response_text != "Task connected":
-            print("Task connection failed")
+            print(f"Task connection failed: {response_text}")
             return
         tasks = [
             asyncio.ensure_future(
