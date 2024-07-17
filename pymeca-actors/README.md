@@ -18,6 +18,8 @@ docker run -it --rm --net intern_network --ip 172.18.0.2 -w /tmp/pymeca/src/pyme
 docker run -it --rm --net intern_network --ip 172.18.0.4 --env-file .env mock_actor_intern mock_tower.py
 docker run -it --rm --net intern_network --ip 172.18.0.5 --env-file .env -v /var/run/docker.sock:/var/run/docker.sock mock_actor_intern mock_host.py
 docker run -it --rm --net intern_network --ip 172.18.0.6 --env-file .env -v $PWD/build:/scripts/src/build  mock_actor_intern mock_user.py
+docker run -it --rm --net intern_network --ip 172.18.0.7 --env-file .env -v $PWD/../example-tasks:/build mock_actor_intern mock_task_dev.py
+or
 docker run -it --rm --net intern_network --ip 172.18.0.7 --env-file .env -v <ABSOLUTE_PATH_TO_FOLDER>:/build mock_actor_intern mock_task_dev.py
 ```
 For general use,
@@ -32,6 +34,7 @@ docker run -it --rm --env-file .env -v $PWD/build:/scripts/src/build mock_actor 
 
 For task developer, mount a folder for IPFS staging:
 docker run -it --rm --env-file .env -v <ABSOLUTE_PATH_TO_FOLDER>:/build mock_actor mock_task_dev.py
+docker run -it --rm --env-file .env -v $PWD/../example-tasks:/build mock_actor mock_task_dev.py
 
 For host, mount the docker socket for docker in docker:
 docker run -it --rm --env-file .env -v /var/run/docker.sock:/var/run/docker.sock mock_actor mock_host.py
