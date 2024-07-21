@@ -28,6 +28,7 @@ OUTPUT_FOLDER = pathlib.Path("./build")
 
 app = FastAPI()
 actor = None
+web3 = None
 
 @app.get('/')
 def home():
@@ -57,6 +58,7 @@ async def entry_point(function_name: str, request: Request = None):
 @app.post('/init_actor/{actor_name}', response_model=bool)
 def init_actor(actor_name: str):
     global actor
+    global web3
     try:
         web3 = Web3(Web3.HTTPProvider(BLOCKCHAIN_URL))
         if actor_name == "host":
@@ -134,6 +136,12 @@ async def wait_for_my_task(request: WaitForTaskArgs):
         IPFS_PORT,
     ))
     task_thread.start()
+
+@app.get('/get_block_timestamp/{block_number}', response_model=int)
+async def getBlockTimestamp(block_number: int):
+    if web3 is None:
+        raise HTTPException(status_code=400, detail="Service not initialized")
+    return web3.eth.getBlock(block_number).timestamp
 
 async def run_websocket_server(port: int = 9999):
     import uvicorn
