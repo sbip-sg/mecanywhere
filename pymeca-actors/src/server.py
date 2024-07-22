@@ -141,7 +141,7 @@ async def wait_for_my_task(request: WaitForTaskArgs):
 async def getBlockTimestamp(block_number: int):
     if web3 is None:
         raise HTTPException(status_code=400, detail="Service not initialized")
-    return web3.eth.getBlock(block_number).timestamp
+    return web3.eth.get_block(block_number).timestamp
 
 async def run_websocket_server(port: int = 9999):
     import uvicorn
