@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - pymeca-actors/**
+      - pymeca/**
   workflow_dispatch:
 
 env:
