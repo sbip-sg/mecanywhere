@@ -1,10 +1,12 @@
 import asyncio
 import json
 import websockets
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_v1_5, AES
-from Crypto.Util.Padding import pad
+from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives import serialization
 from ecies import encrypt
 from ecies import decrypt
 from eth_hash.auto import keccak
@@ -35,23 +37,30 @@ def encrypt_and_sign_input(
 
 def encrypt_sgx_task_input(enclave_msg: dict, output_key: bytes, input_bytes: bytes):
     pub_key_data = enclave_msg["msg"]["key"]
-    public_key = RSA.importKey(pub_key_data)
-    rsa_cipher = PKCS1_v1_5.new(public_key)
-    # not specifying iv here, python aes will generate a random one
+    peer_public_key = serialization.load_pem_public_key(pub_key_data.encode())
+    tmp_ec_key_pair = ec.generate_private_key(ec.SECP384R1())
+    shared_secret = tmp_ec_key_pair.exchange(ec.ECDH(), peer_public_key)
+    own_public_key_pem = tmp_ec_key_pair.public_key().public_bytes(
+        serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo
+    )
 
-    session_key = get_random_bytes(32)
+    session_key = HKDF(
+        algorithm=hashes.SHA256(),
+        length=16,
+        salt=None,
+        info=b"info",
+    ).derive(shared_secret)
     print("session key len: ", len(session_key))
-    aes_cipher = AES.new(key=session_key, mode=AES.MODE_CBC)
-    # retrieve the iv
-    iv = aes_cipher.iv
-    sensitive_data = bytes(input_bytes, "utf-8") + output_key
-    padded_sensitive_data = pad(sensitive_data, AES.block_size)
-    encrypted_data = aes_cipher.encrypt(padded_sensitive_data)
-    encrypted_key = rsa_cipher.encrypt(session_key)
-    # assemble the message
-    encrypted_message = encrypted_data + encrypted_key + iv
 
-    print("encrypted key size: ", len(encrypted_key))
+    iv = AES.get_random_bytes(12)
+    aes_cipher = AES.new(key=session_key, mode=AES.MODE_GCM, nonce=iv)
+    sensitive_data = bytes(input_bytes, "utf-8") + output_key
+    padded_sensitive_data = sensitive_data
+    encrypted_data = aes_cipher.encrypt(padded_sensitive_data)
+    tag = aes_cipher.digest()
+    # assemble the message
+    encrypted_message = encrypted_data + own_public_key_pem + iv + tag
+
     print("encrypted message length: ", len(encrypted_message))
     return encrypted_message
 
@@ -78,7 +87,7 @@ def format_tower_uri_for_client(tower_uri: str):
 
 
 def verify_and_parse_task_output(
-    actor: pymeca.user.MecaUser, task_output: bytes, verify_output_hash: bool = True
+    actor: pymeca.user.MecaUser, task_output: bytes, sgx_ra_round: bool = False
 ):
     task_id = "0x" + task_output[0:32].hex()
 
@@ -107,8 +116,9 @@ def verify_and_parse_task_output(
     print("message: ", message)
 
     # verify the output message hash
-    if verify_output_hash:
+    if not sgx_ra_round:
         output_hash = runningTask["outputHash"]
+        print("output hash: ", output_hash)
         received_hash = "0x" + keccak(message).hex()
         if output_hash != received_hash:
             raise ValueError("Output hash mismatch")
@@ -122,17 +132,17 @@ async def wait_for_task(
     websocket,
     task_id,
     output_folder,
-    use_sgx=False,
-    output_key=None,
+    sgx_ra_round=False,
+    sgx_output_key=None,
 ):
     task_output = await websocket.recv()
     print("Task output received.")
     message = verify_and_parse_task_output(
-        actor, task_output, verify_output_hash=not use_sgx
+        actor, task_output, sgx_ra_round=sgx_ra_round
     )
 
-    if use_sgx and output_key is not None:
-        message = decrypt_sgx_task_output(message, output_key)
+    if sgx_output_key is not None:
+        message = decrypt_sgx_task_output(message, sgx_output_key)
 
     output_folder.mkdir(exist_ok=True)
     with open(f"{output_folder}/output.txt", "wb") as f:
@@ -176,6 +186,13 @@ async def send_task_on_blockchain(
     print("Task id: ", task_id)
     blockcahin_host_pub_key = actor.get_host_public_key(host_address)
     task_id_bytes = pymeca.utils.bytes_from_hex(task_id)
+    if use_sgx:
+        # prepare the ra input for the enclave
+        input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
+        # register the ra input hash
+        actor.register_tee_task_initial_input(
+            task_id, "0x" + keccak(input_bytes).hex()
+        )
     to_send = encrypt_and_sign_input(
         actor, blockcahin_host_pub_key, input_bytes, task_id_bytes
     )
@@ -183,6 +200,7 @@ async def send_task_on_blockchain(
     output_key = None
     if use_sgx:
         async with websockets.connect(tower_uri) as websocket:
+            # prepare input for ra
             ra_input_bytes = prepare_input(ipfs_cid, "SGXRAREQUEST", use_sgx=True)
             ra_to_send = encrypt_and_sign_input(
                 actor, blockcahin_host_pub_key, ra_input_bytes, task_id_bytes
@@ -192,10 +210,10 @@ async def send_task_on_blockchain(
             response_text = await websocket.recv()
             # print(response_text)
             if response_text != "Task connected":
-                print("Task connection failed")
+                print(f"RA Task connection failed: {response_text}")
                 return
             host_resp = await wait_for_task(
-                actor, websocket, task_id, output_folder, use_sgx=True
+                actor, websocket, task_id, output_folder, sgx_ra_round=True
             )
             # print("Host response: ", host_resp)
             host_resp = json.loads(host_resp)
@@ -220,6 +238,9 @@ async def send_task_on_blockchain(
             input_bytes = prepare_input(
                 ipfs_cid, json.dumps({"value": encrypted_message.hex()}), use_sgx=True
             )
+            input_hash = "0x" + keccak(input_bytes).hex()
+            actor.register_tee_task_encrypted_input(task_id, input_hash)
+
             to_send = encrypt_and_sign_input(
                 actor, blockcahin_host_pub_key, input_bytes, task_id_bytes
             )
@@ -229,7 +250,7 @@ async def send_task_on_blockchain(
         response_text = await websocket.recv()
         print(response_text)
         if response_text != "Task connected":
-            print("Task connection failed")
+            print(f"Task connection failed: {response_text}")
             return
         tasks = [
             asyncio.ensure_future(
@@ -238,8 +259,8 @@ async def send_task_on_blockchain(
                     websocket,
                     task_id,
                     output_folder,
-                    use_sgx=use_sgx,
-                    output_key=output_key,
+                    sgx_ra_round=False,
+                    sgx_output_key=output_key,
                 )
             ),
             asyncio.ensure_future(finish_task(actor, task_id)),
@@ -252,8 +273,11 @@ async def send_task_on_blockchain(
         else:
             await tasks[1]
 
+
 def print_task_details_from_ipfs(tasks, ipfs_host, ipfs_port):
-    with ipfs_api.ipfshttpclient.connect(f"/dns/{ipfs_host}/tcp/{ipfs_port}/http") as client:
+    with ipfs_api.ipfshttpclient.connect(
+        f"/dns/{ipfs_host}/tcp/{ipfs_port}/http"
+    ) as client:
         for i, task in enumerate(tasks):
             ipfs_sha = task["ipfsSha256"]
             ipfs_cid = pymeca.utils.cid_from_sha256(ipfs_sha)

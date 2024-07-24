@@ -8,3 +8,4 @@ User Guides
    host_guide
    task_dev_guide
    tower_guide
+   example_tasks
