@@ -1,4 +1,4 @@
-# MECAnywhere Services
+# MECA Services
 
 Table of Contents
 
@@ -11,7 +11,7 @@ Table of Contents
 
 # Overview
 
-This repository contains the services for the MECAnywhere project that are used to interact with pymeca and the smart contracts. Use the pymeca-actors to join the MECAnywhere ecosystem now! 
+This repository contains the services for the MECA project that are used to interact with pymeca and the smart contracts. Use the pymeca-actors to join the MECA ecosystem now! 
 
 ### Architecture
 
@@ -19,12 +19,12 @@ https://www.figma.com/file/JkjN5hBQYfCFEMpc2QS4eH/MECAnywhere-Architecture-Diagr
 
 ### Services
 
-> Open https://sbip-sg.github.io/mec_anywhere/ for online documentation + user guides.
+> Open https://sbip-sg.github.io/meca/ for online documentation + user guides.
 
 - did-go
     - Decentalized Identity (DID) service written in Golang
 - example-tasks
-    - Example tasks for the MECAnywhere platform
+    - Example tasks for the MECA platform
     - [README to build tasks](example-tasks/README.md)
 - Pymeca actors
     - Template actors that use pymeca library to interact with the smart contracts. These come in the form of CLI.

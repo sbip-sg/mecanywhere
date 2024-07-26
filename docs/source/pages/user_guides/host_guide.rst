@@ -15,8 +15,8 @@ Introduction
 
 The host is the service that executes tasks submitted by clients. This
 guide will walk you through the process of setting up and managing a
-host using the CLI. You can also check out the `MECAnywhere Desktop
-application <https://github.com/sbip-sg/mec_anywhere_desktop>`__ for a
+host using the CLI. You can also check out the `MECA Desktop
+application <https://github.com/sbip-sg/meca_desktop>`__ for a
 more user-friendly experience.
 
 Installation
@@ -27,7 +27,7 @@ Installation
    website <https://www.docker.com/get-started>`__.
 2. Start and serve the host container. (see pymeca-actors readme)
 3. Build the `task
-   executor <https://github.com/sbip-sg/mec_anywhere_desktop/tree/main/task_executor>`__.
+   executor <https://github.com/sbip-sg/meca_desktop/tree/main/task_executor>`__.
 4. Ensure that you have a valid connection to IPFS for retrieval (see
    https://docs.ipfs.tech/quickstart/retrieve/#ipfs-retrieval-methods).
 
