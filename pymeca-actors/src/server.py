@@ -18,7 +18,7 @@ load_dotenv()
 
 BLOCKCHAIN_URL = os.getenv("MECA_BLOCKCHAIN_RPC_URL", "http://localhost:8545")
 TASK_EXECUTOR_URL = os.getenv("MECA_TASK_EXECUTOR_URL", "http://host.docker.internal:2591")
-DAO_ADDRESS = pymeca.dao.get_DAO_ADDRESS()
+DAO_ADDRESS = os.getenv("MECA_DAO_CONTRACT_ADDRESS", pymeca.dao.get_DAO_ADDRESS())
 HOST_ENCRYPTION_PRIVATE_KEY = os.getenv("MECA_HOST_ENCRYPTION_PRIVATE_KEY", None)
 IPFS_HOST = os.getenv("MECA_IPFS_HOST", "host.docker.internal")
 IPFS_PORT = os.getenv("MECA_IPFS_PORT", "5001")
