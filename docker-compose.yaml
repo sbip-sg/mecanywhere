@@ -12,7 +12,8 @@ services:
       context: ./tower
       dockerfile: Dockerfile
     ports:
-      - "7000:7000"
+      - "7777:7777"
+    command: "7777"
     secrets:
       - tower_private_key
 
