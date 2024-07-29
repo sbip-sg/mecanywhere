@@ -22,3 +22,14 @@ This is for developers working on MECA backend. User guides are also available u
    
    pages/api/api
    pages/user_guides/guides
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Links
+
+   Pymeca github <https://github.com/sbip-sg/pymeca>
+   Meca github <https://github.com/sbip-sg/meca>
+   Meca Desktop github <https://github.com/sbip-sg/meca_desktop>
+   Pymeca documentation <https://sbip-sg.github.io/pymeca/>
+   Meca documentation <https://sbip-sg.github.io/meca/index.html>
+   Meca Desktop documentation <https://sbip-sg.github.io/meca_desktop/index.html>
