@@ -33,3 +33,6 @@ This is for developers working on MECA backend. User guides are also available u
    Pymeca documentation <https://sbip-sg.github.io/pymeca/>
    Meca documentation <https://sbip-sg.github.io/meca/index.html>
    Meca Desktop documentation <https://sbip-sg.github.io/meca_desktop/index.html>
+   Youtube <https://www.youtube.com/watch?v=MDzbEvTyIgQ>
+   Technical guide video <https://drive.google.com/file/d/1mgZ0EfhlHWNPjgXgG-MpgPV32_b0Qx_g/view?usp=sharing>
+   
