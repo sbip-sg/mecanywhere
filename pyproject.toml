@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "meca-actors"
 version = "0.1.0"
-description = "The meca actors working with pymeca"
+description = "The mecanywhere actors working with pymeca"
 authors = ["sdcioc <stefan_dan@xn--ciocrlan-o2a.ro>"]
 license = "MIT"
 readme = "README.md"

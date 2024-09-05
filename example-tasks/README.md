@@ -99,6 +99,6 @@ In the `example_input.bin` and `example_output.bin` files, provide examples of t
 
 ### 5. Using and uploading the container
 
-Build the image and push it to IPFS via the MECA CLI as a task developer. You will be compensated with the task fee that you list for each task executed by a MECA client.
+Build the image and push it to IPFS via the MECAnywhere CLI as a task developer. You will be compensated with the task fee that you list for each task executed by a MECAnywhere client.
 
-Test your task folder structure by running the test function in the MECA CLI.
+Test your task folder structure by running the test function in the MECAnywhere CLI.

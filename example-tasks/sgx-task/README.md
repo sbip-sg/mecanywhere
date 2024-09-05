@@ -1,12 +1,12 @@
 # sgx-task-worker
 
-SGX task worker sample: It creates a server that conforms to the meca requirement and respond to users input `name` with `hello name`.
+SGX task worker sample: It creates a server that conforms to the mecanywhere requirement and respond to users input `name` with `hello name`.
 
 ## setup
 
 Environment setup
 
-Follow the DCAP setup guides to register the worker machine to Intel Platform Certification Service and cache its attestation collateral at the meca designated Platform Certification Caching Service server.
+Follow the DCAP setup guides to register the worker machine to Intel Platform Certification Service and cache its attestation collateral at the mecanywhere designated Platform Certification Caching Service server.
 
 The sgx-task server shall be able to prepare an attestation report during RA.
 
