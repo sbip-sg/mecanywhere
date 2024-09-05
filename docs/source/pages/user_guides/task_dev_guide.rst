@@ -25,7 +25,7 @@ Installation
    on your machine. You can download Docker from the `official Docker
    website <https://www.docker.com/get-started>`__.
 2. Start and serve the task developer container. (see `pymeca-actors
-   readme <https://github.com/sbip-sg/meca/blob/main/pymeca-actors/README.md>`__)
+   readme <https://github.com/sbip-sg/mecanywhere/blob/main/pymeca-actors/README.md>`__)
 3. Ensure that you have a valid connection to IPFS for uploading. (see
    `IPFS installation docs <https://docs.ipfs.tech/install/>`__) You can also use the docker image
    from IPFS following instructions in pymeca-actors readme.

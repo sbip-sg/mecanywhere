@@ -1,7 +1,7 @@
 Deployment
 ===========
 
-We have launched our smart contracts on the Ethereum Sepolia Testnet (address: ``0x56873484BFB38789624ADeff6aF642A41246976f``). You can get free testnet ETH from the `Sepolia Testnet Faucet <https://faucet.sepolia.io/>`__ and use those accounts to interact with the MECA network.
+We have launched our smart contracts on the Ethereum Sepolia Testnet (address: ``0x56873484BFB38789624ADeff6aF642A41246976f``). You can get free testnet ETH from the `Sepolia Testnet Faucet <https://faucet.sepolia.io/>`__ and use those accounts to interact with the MECAnywhere network.
 To configure for Sepolia:
 
 - MECA_BLOCKCHAIN_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/nf3vIJJEKzQWwbKW1UHXvw1aKAeE6B97
