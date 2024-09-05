@@ -56,7 +56,7 @@ services:
 
 networks:
   default:
-    name: meca
+    name: mecanywhere
     external: true
 
 secrets:
